@@ -1,0 +1,7 @@
+name: BetterKeepInventory
+version: ${project.version}
+main: dev.beeps.plugins.BetterKeepInventory
+api-version: 1.16
+prefix: betterKI
+authors: [ BeepSterr ]
+website: beeps.dev
