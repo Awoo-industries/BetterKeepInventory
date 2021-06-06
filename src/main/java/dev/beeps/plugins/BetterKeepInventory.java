@@ -1,9 +1,16 @@
 package dev.beeps.plugins;
 
+/*
+    COPYRIGHT (c) 2021 Jill "BeepSterr" Megens
+    @author BeepSterr
+ */
+
 import org.bstats.bukkit.Metrics;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,8 +29,10 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     public void onEnable() {
 
         config.addDefault("enabled", true);
-        config.addDefault("min_damage", 4);
-        config.addDefault("max_damage", 8);
+        config.addDefault("ignore_enchants", false);
+        config.addDefault("dont_break_items", false);
+        config.addDefault("min_damage_pct", 25);
+        config.addDefault("max_damage_pct", 35);
         config.options().copyDefaults(true);
         saveConfig();
 
@@ -42,11 +51,9 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
 
         Player ply = event.getEntity();
-        getServer().broadcastMessage(String.format("Player %s has died.", ply.getUniqueId()));
 
-
-        // ignore if no keepInventory is on
-        if(!event.getKeepInventory() || !config.getBoolean("enabled")){
+        // ignore if no keepInventory, config disabled or creative mode
+        if(!event.getKeepInventory() || !config.getBoolean("enabled") || ply.getGameMode() == GameMode.CREATIVE){
             return;
         }
 
@@ -58,20 +65,38 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
             ItemMeta meta = item.getItemMeta();
             if(meta instanceof Damageable){
+
                 Material type = item.getType();
+                Damageable damageableMeta = (Damageable) meta;
 
-                int min = config.getInt("min_damage");
-                int max = config.getInt("max_damage");
+                int min = config.getInt("min_damage_pct");
+                int max = config.getInt("max_damage_pct");
+                int roll = (int)Math.floor(Math.random()*(max-min+1)+min);
 
-                int durabilityChop = type.getMaxDurability() / (int)Math.floor(Math.random()*(max-min+1)+min);;
+                int durabilityChop = type.getMaxDurability() / 100 * roll;
 
-                ((Damageable) meta).setDamage(((Damageable) meta).getDamage() + durabilityChop);
+                if( !config.getBoolean("ignore_enchants") && item.getEnchantments().containsKey(Enchantment.DURABILITY)){
 
+                    int level = item.getEnchantmentLevel(Enchantment.DURABILITY);
+                    if(level == 10) return; // Unrbeaking X gets ignored.
+
+                    durabilityChop = durabilityChop / (level+1);
+
+                }
+
+                damageableMeta.setDamage(damageableMeta.getDamage() + durabilityChop);
                 item.setItemMeta(meta);
 
-                if(type.getMaxDurability() - ((Damageable) meta).getDamage() < 0){
-                    inv.setItem(size, new ItemStack(Material.AIR));
-                    ply.getWorld().playSound(ply.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 0.8f);
+                if(type.getMaxDurability() - damageableMeta.getDamage() < 0){
+
+                    if(config.getBoolean("dont_break_items")){
+                        damageableMeta.setDamage(type.getMaxDurability());
+                        item.setItemMeta(meta);
+                    }else{
+                        inv.setItem(size, new ItemStack(Material.AIR));
+                        ply.getWorld().playSound(ply.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 0.8f);
+                    }
+
                 }
 
             }
