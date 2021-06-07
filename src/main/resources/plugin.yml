@@ -44,3 +44,25 @@ permissions:
   betterkeepinventory.bypass.inventory.breaking:
     description: Prevents inventory items completely breaking
     default: false
+
+  betterkeepinventory.admin:
+    description: Group node for all /betterki commands
+    default: false
+    children:
+      betterkeepinventory.help: true
+      betterkeepinventory.reload: true
+
+  betterkeepinventory.help:
+    description: View the plugin info
+    default: false
+
+  betterkeepinventory.reload:
+    description: Reload the plugin config
+    default: false
+
+commands:
+  betterkeepinventory:
+    description: Better KeepInventory
+    aliases: [ betterki ]
+    permission: betterkeepinventory.help
+    usage: /betterki <command>
