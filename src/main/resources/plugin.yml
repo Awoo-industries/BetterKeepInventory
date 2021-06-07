@@ -5,6 +5,10 @@ api-version: 1.16
 prefix: betterKI
 authors: [ BeepSterr ]
 website: beeps.dev
+
+# AutoPlug support
+spigot-id: 93081
+
 permissions:
   betterkeepinventory.bypass.all:
     description: Bypasses BetterKeepInventory damage & breaking

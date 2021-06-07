@@ -33,6 +33,7 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
         config = getConfig();
 
+        config.options().header("#Config for BetterKeepInventory.\n#Read the plugin description to know what each option does: https://www.spigotmc.org/resources/betterkeepinventory.93081/");
         config.addDefault("enabled", true);
         config.addDefault("ignore_enchants", false);
         config.addDefault("dont_break_items", false);
@@ -65,5 +66,5 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     public static boolean contains(final int[] arr, final int key) {
         return Arrays.stream(arr).anyMatch(i -> i == key);
     }
-    
+
 }
