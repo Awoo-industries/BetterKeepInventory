@@ -5,3 +5,42 @@ api-version: 1.16
 prefix: betterKI
 authors: [ BeepSterr ]
 website: beeps.dev
+permissions:
+  betterkeepinventory.bypass.all:
+    description: Bypasses BetterKeepInventory damage & breaking
+    default: false
+    children:
+      betterkeepinventory.bypass.armor.damage: true
+      betterkeepinventory.bypass.armor.breaking: true
+      betterkeepinventory.bypass.inventory.damage: true
+      betterkeepinventory.bypass.inventory.breaking: true
+
+  betterkeepinventory.bypass.inventory.all:
+    description: Bypasses any inventory damage & breaking
+    default: false
+    children:
+      betterkeepinventory.bypass.inventory.damage: true
+      betterkeepinventory.bypass.inventory.breaking: true
+
+  betterkeepinventory.bypass.armor.all:
+    description: Bypasses any inventory damage & breaking
+    default: false
+    children:
+      betterkeepinventory.bypass.armor.damage: true
+      betterkeepinventory.bypass.armor.breaking: true
+
+  betterkeepinventory.bypass.armor.damage:
+    description: Prevents armor taking damage
+    default: false
+
+  betterkeepinventory.bypass.armor.breaking:
+    description: Prevents armor completely breaking
+    default: false
+
+  betterkeepinventory.bypass.inventory.damage:
+    description: Prevents inventory items taking damage
+    default: false
+
+  betterkeepinventory.bypass.inventory.breaking:
+    description: Prevents inventory items completely breaking
+    default: false

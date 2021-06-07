@@ -21,9 +21,13 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
+
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     FileConfiguration config = getConfig();
+
+    int[] armorSlots = new int[]{ 36,37,38,39 };
 
     @Override
     public void onEnable() {
@@ -52,6 +56,14 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
         Player ply = event.getEntity();
 
+        boolean noArmorDamage = ply.hasPermission("betterkeepinventory.bypass.armor.damage");
+        boolean noItemDamage = ply.hasPermission("betterkeepinventory.bypass.inventory.damage");
+        boolean noArmorBreaking = ply.hasPermission("betterkeepinventory.bypass.armor.breaking");
+        boolean noItemBreaking = ply.hasPermission("betterkeepinventory.bypass.inventory.breaking");
+
+        // bypass permission
+        if(ply.hasPermission("betterkeepinventory.bypass.all") ) return;
+
         // ignore if no keepInventory, config disabled or creative mode
         if(!event.getKeepInventory() || !config.getBoolean("enabled") || ply.getGameMode() == GameMode.CREATIVE){
             return;
@@ -61,12 +73,24 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         for (int size = 0; size<inv.getSize(); size++) {
 
             ItemStack item = inv.getItem(size);
+
+            // empty can be skipped, optimize
             if(item == null) continue;
 
             ItemMeta meta = item.getItemMeta();
+            Material type = item.getType();
+
+            // air can be skipped.
+            if(type == Material.AIR) continue;
+
+            ply.getServer().broadcastMessage( String.format("%d = %s", size, type) );
+
+            // slot permission checks
+            if(contains(armorSlots, size) && noArmorDamage) continue;
+            if(!contains(armorSlots, size) && noItemDamage) continue;
+
             if(meta instanceof Damageable){
 
-                Material type = item.getType();
                 Damageable damageableMeta = (Damageable) meta;
 
                 int min = config.getInt("min_damage_pct");
@@ -89,7 +113,11 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
                 if(type.getMaxDurability() - damageableMeta.getDamage() < 0){
 
-                    if(config.getBoolean("dont_break_items")){
+                    if(
+                            config.getBoolean("dont_break_items") ||
+                            contains(armorSlots, size) && noArmorBreaking ||
+                            !contains(armorSlots, size) && noItemBreaking
+                    ){
                         damageableMeta.setDamage(type.getMaxDurability());
                         item.setItemMeta(meta);
                     }else{
@@ -103,6 +131,10 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
         }
 
+    }
+
+    public static boolean contains(final int[] arr, final int key) {
+        return Arrays.stream(arr).anyMatch(i -> i == key);
     }
     
 }
