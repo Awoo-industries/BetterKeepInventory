@@ -33,12 +33,27 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
         config = getConfig();
 
+        // General
         config.options().header("#Config for BetterKeepInventory.\n#Read the plugin description to know what each option does: https://www.spigotmc.org/resources/betterkeepinventory.93081/");
         config.addDefault("enabled", true);
+
+        // Food
+        config.addDefault("enable_item_damage", config.getBoolean("enabled", true));
         config.addDefault("ignore_enchants", false);
         config.addDefault("dont_break_items", false);
         config.addDefault("min_damage_pct", 25);
         config.addDefault("max_damage_pct", 35);
+
+        // exp
+        config.addDefault("enable_xp_loss", false);
+        config.addDefault("xp_reset_current_level_progress", false);
+        config.addDefault("min_xp_loss_pct", 25);
+        config.addDefault("max_xp_loss_pct", 25);
+
+        // Hunger
+        config.addDefault("keep_hunger_level", true);
+        config.addDefault("keep_hunger_level_min", 4);
+
         config.options().copyDefaults(true);
         saveConfig();
 

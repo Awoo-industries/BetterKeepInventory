@@ -18,6 +18,9 @@ permissions:
       betterkeepinventory.bypass.armor.breaking: true
       betterkeepinventory.bypass.inventory.damage: true
       betterkeepinventory.bypass.inventory.breaking: true
+      betterkeepinventory.bypass.xp: true
+      betterkeepinventory.bypass.xp.level: true
+      betterkeepinventory.bypass.xp.hunger: true
 
   betterkeepinventory.bypass.inventory.all:
     description: Bypasses any inventory damage & breaking
@@ -47,6 +50,18 @@ permissions:
 
   betterkeepinventory.bypass.inventory.breaking:
     description: Prevents inventory items completely breaking
+    default: false
+
+  betterkeepinventory.bypass.xp:
+    description: Prevents xp from being drained on death
+    default: false
+
+  betterkeepinventory.bypass.xp.level:
+    description: Prevents xp levels from being drained on death
+    default: false
+
+  betterkeepinventory.bypass.hunger:
+    description: Prevents hunger from being re-applied after death
     default: false
 
   betterkeepinventory.admin:

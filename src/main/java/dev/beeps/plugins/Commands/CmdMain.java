@@ -60,9 +60,20 @@ public class CmdMain implements CommandExecutor {
         }
 
         sender.sendMessage(ChatColor.AQUA + "Enabled: " + ChatColor.GREEN + "YES");
-        sender.sendMessage(ChatColor.AQUA + "Equipment damage: " + ChatColor.YELLOW + plugin.config.getInt("min_damage_pct") + "% ~ " + plugin.config.getInt("max_damage_pct") + "%");
+        sender.sendMessage(ChatColor.AQUA + "Item Damage: " + (plugin.config.getBoolean("enable_item_damage") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
+        sender.sendMessage(ChatColor.AQUA + "Equipment damage: " + ChatColor.YELLOW + plugin.config.getDouble("min_damage_pct") + "% ~ " + plugin.config.getDouble("max_damage_pct") + "%");
         sender.sendMessage(ChatColor.AQUA + "Using Enchants: " + (plugin.config.getBoolean("ignore_enchants") ? ChatColor.RED + "IGNORING" : ChatColor.GREEN + "USING"));
         sender.sendMessage(ChatColor.AQUA + "Destroy Items: " + (!plugin.config.getBoolean("dont_break_items") ? ChatColor.RED + "CAN DESTROY" : ChatColor.GREEN + "ALWAYS KEEP 1 USE"));
+
+        sender.sendMessage(ChatColor.AQUA + "XP Loss (Levels): " + (plugin.config.getBoolean("enable_xp_loss") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
+        sender.sendMessage(ChatColor.AQUA + "XP Loss (Current Level): " + (plugin.config.getBoolean("xp_reset_current_level_progress") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
+
+        if(plugin.config.getBoolean("enable_xp_loss")){
+            sender.sendMessage(ChatColor.AQUA + "XP Loss Percent: " + ChatColor.YELLOW + plugin.config.getDouble("min_xp_loss_pct") + "% ~ " + plugin.config.getDouble("max_xp_loss_pct") + "%" );
+        }
+
+        sender.sendMessage(ChatColor.AQUA + "Keep hunger after death: " + (plugin.config.getBoolean("keep_hunger_level") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
+        sender.sendMessage(ChatColor.AQUA + "Minimum hunger after respawning: " + ChatColor.YELLOW + plugin.config.getInt("keep_hunger_level_min"));
 
     }
 
