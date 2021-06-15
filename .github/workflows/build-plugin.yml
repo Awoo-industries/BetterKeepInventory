@@ -24,8 +24,8 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
         
         
-#      - name: Publish artifact
-#        uses: actions/upload-artifact@v2
-#        with: 
-#          name: assets-for-download
-#          path: ./
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with: 
+          name: assets-for-download
+          path: /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/*.jar
