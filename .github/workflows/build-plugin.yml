@@ -28,4 +28,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with: 
           name: assets-for-download
-          path: /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/*.jar
+          path: |
+            /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/*.jar
+            !/home/runner/work/BetterKeepInventory/BetterKeepInventory/target/original-*.jar
