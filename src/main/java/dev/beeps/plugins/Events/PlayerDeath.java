@@ -54,11 +54,14 @@ public class PlayerDeath implements Listener {
         if(ply.hasPermission("betterkeepinventory.bypass.hunger")) return;
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            ply.setFoodLevel(foodLevelMap.get(ply.getUniqueId()));
-            foodLevelMap.remove(ply.getUniqueId());
 
-            if(ply.getFoodLevel() < plugin.config.getInt("keep_hunger_level_min")){
-                ply.setFoodLevel(plugin.config.getInt("keep_hunger_level_min"));
+            if(foodLevelMap.containsKey(ply.getUniqueId())){
+                ply.setFoodLevel(foodLevelMap.get(ply.getUniqueId()));
+                foodLevelMap.remove(ply.getUniqueId());
+
+                if(ply.getFoodLevel() < plugin.config.getInt("keep_hunger_level_min")){
+                    ply.setFoodLevel(plugin.config.getInt("keep_hunger_level_min"));
+                }
             }
 
         }, 20L);
