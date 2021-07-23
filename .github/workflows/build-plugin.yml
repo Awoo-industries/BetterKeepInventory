@@ -27,7 +27,7 @@ jobs:
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with: 
-          name: plugin
+          name: plugin-JDK16
           path: |
             /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/*.jar
             !/home/runner/work/BetterKeepInventory/BetterKeepInventory/target/original-*.jar
@@ -48,7 +48,7 @@ jobs:
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with: 
-          name: plugin
+          name: plugin-JDK11
           path: |
             /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/*.jar
             !/home/runner/work/BetterKeepInventory/BetterKeepInventory/target/original-*.jar
@@ -69,7 +69,7 @@ jobs:
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with: 
-          name: plugin
+          name: plugin-JDK8
           path: |
             /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/*.jar
             !/home/runner/work/BetterKeepInventory/BetterKeepInventory/target/original-*.jar
