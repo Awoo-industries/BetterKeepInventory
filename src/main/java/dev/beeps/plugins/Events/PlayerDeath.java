@@ -62,6 +62,10 @@ public class PlayerDeath implements Listener {
                 if(ply.getFoodLevel() < plugin.config.getInt("keep_hunger_level_min")){
                     ply.setFoodLevel(plugin.config.getInt("keep_hunger_level_min"));
                 }
+
+                if(ply.getFoodLevel() > plugin.config.getInt("keep_hunger_level_max")){
+                    ply.setFoodLevel(plugin.config.getInt("keep_hunger_level_max"));
+                }
             }
 
         }, 20L);

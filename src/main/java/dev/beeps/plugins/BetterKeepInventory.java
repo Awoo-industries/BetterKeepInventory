@@ -53,6 +53,7 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         // Hunger
         config.addDefault("keep_hunger_level", true);
         config.addDefault("keep_hunger_level_min", 4);
+        config.addDefault("keep_hunger_level_max", 20);
 
         config.options().copyDefaults(true);
         saveConfig();
