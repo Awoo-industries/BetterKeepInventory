@@ -6,7 +6,7 @@
 
     <groupId>dev.beeps</groupId>
     <artifactId>BetterKeepInventory</artifactId>
-    <version>1.2.1-hunger_max_pct</version>
+    <version>1.2.1</version>
     <packaging>jar</packaging>
 
     <name>BetterKeepInventory</name>
