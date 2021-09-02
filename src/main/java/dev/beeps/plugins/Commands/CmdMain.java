@@ -73,7 +73,7 @@ public class CmdMain implements CommandExecutor {
         }
 
         sender.sendMessage(ChatColor.AQUA + "Keep hunger after death: " + (plugin.config.getBoolean("keep_hunger_level") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
-        sender.sendMessage(ChatColor.AQUA + "Minimum hunger after respawning: " + ChatColor.YELLOW + plugin.config.getInt("keep_hunger_level_min"));
+        sender.sendMessage(ChatColor.AQUA + "Hunger clamped between: " + ChatColor.YELLOW + plugin.config.getInt("keep_hunger_level_min") + " - " + plugin.config.getInt("keep_hunger_level_max"));
 
     }
 
