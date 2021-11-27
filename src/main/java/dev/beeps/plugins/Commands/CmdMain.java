@@ -1,5 +1,6 @@
 package dev.beeps.plugins.Commands;
 
+import dev.beeps.plugins.BetterConfig;
 import dev.beeps.plugins.BetterKeepInventory;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -88,7 +89,7 @@ public class CmdMain implements CommandExecutor {
         }
 
         plugin.reloadConfig();
-        plugin.config = plugin.getConfig();
+        plugin.config = new BetterConfig(plugin, plugin.getConfig());
 
         sender.sendMessage(ChatColor.AQUA + "Reloaded!");
         sendPluginInfo(sender);

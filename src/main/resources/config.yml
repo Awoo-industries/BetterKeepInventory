@@ -50,6 +50,7 @@ items:
     # - GOLDEN_CHESTPLATE
     ignored_materials:
       - SHEARS
+
   inventory:
     # Sets the mode used for calculating damage dealt
     # Valid options are:

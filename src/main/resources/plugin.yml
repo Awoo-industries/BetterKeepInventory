@@ -16,6 +16,8 @@ permissions:
     children:
       betterkeepinventory.bypass.armor.damage: true
       betterkeepinventory.bypass.armor.breaking: true
+      betterkeepinventory.bypass.hotbar.damage: true
+      betterkeepinventory.bypass.hotbar.breaking: true
       betterkeepinventory.bypass.inventory.damage: true
       betterkeepinventory.bypass.inventory.breaking: true
       betterkeepinventory.bypass.xp: true
@@ -28,6 +30,13 @@ permissions:
     children:
       betterkeepinventory.bypass.inventory.damage: true
       betterkeepinventory.bypass.inventory.breaking: true
+
+  betterkeepinventory.bypass.hotbar.all:
+    description: Bypasses any hotbar damage & breaking
+    default: false
+    children:
+      betterkeepinventory.bypass.hotbar.damage: true
+      betterkeepinventory.bypass.hotbar.breaking: true
 
   betterkeepinventory.bypass.armor.all:
     description: Bypasses any inventory damage & breaking
@@ -73,7 +82,7 @@ permissions:
 
   betterkeepinventory.help:
     description: View the plugin info
-    default: false
+    default: true
 
   betterkeepinventory.reload:
     description: Reload the plugin config

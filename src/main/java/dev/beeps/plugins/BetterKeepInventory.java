@@ -6,81 +6,63 @@ package dev.beeps.plugins;
  */
 
 import dev.beeps.plugins.Commands.CmdMain;
+import dev.beeps.plugins.Events.OnPlayerDeath;
+import dev.beeps.plugins.Events.OnPlayerRespawn;
 import dev.beeps.plugins.Events.PlayerDeath;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.logging.Level;
 
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
-    public FileConfiguration config = getConfig();
+    public int[] armorSlots = new int[]{ 36,37,38,39 };
+    public int[] hotbarSlots = new int[]{ 0,1,2,3,4,5,6,7,8 };
+
+    public FileConfiguration _config = getConfig();
+    public BetterConfig config;
 
     @Override
     public void onEnable() {
 
-        initConfig();
-        initEvents();
-        initCommands();
-        initMetrics();
+        config = new BetterConfig(this, _config);
 
-    }
+        // event handlers
+        getServer().getPluginManager().registerEvents(new OnPlayerDeath(this), this);
+        getServer().getPluginManager().registerEvents(new OnPlayerRespawn(this), this);
 
-    public void initConfig(){
-
-        config = getConfig();
-
-        // General
-        config.options().header("#Config for BetterKeepInventory.\n#Read the plugin description to know what each option does: https://www.spigotmc.org/resources/betterkeepinventory.93081/");
-        config.addDefault("enabled", true);
-
-        // Food
-        config.addDefault("enable_item_damage", config.getBoolean("enabled", true));
-        config.addDefault("ignore_enchants", false);
-        config.addDefault("dont_break_items", false);
-        config.addDefault("min_damage_pct", 25);
-        config.addDefault("max_damage_pct", 35);
-
-        // exp
-        config.addDefault("enable_xp_loss", false);
-        config.addDefault("xp_reset_current_level_progress", false);
-        config.addDefault("min_xp_loss_pct", 25);
-        config.addDefault("max_xp_loss_pct", 25);
-
-        // Hunger
-        config.addDefault("keep_hunger_level", true);
-        config.addDefault("keep_hunger_level_min", 4);
-        config.addDefault("keep_hunger_level_max", 20);
-
-        config.options().copyDefaults(true);
-        saveConfig();
-
-    }
-
-    public void initEvents(){
-        getServer().getPluginManager().registerEvents(new PlayerDeath(this), this);
-    }
-
-    public void initCommands(){
+        // command handlers
         Objects.requireNonNull(this.getCommand("betterkeepinventory")).setExecutor(new CmdMain(this));
-    }
 
-    public void initMetrics(){
+        // misc
         getServer().getPluginManager().registerEvents(this, this);
         Metrics metrics = new Metrics(this, 11596);
+
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
-    }
 
+    }
 
     public static boolean contains(final int[] arr, final int key) {
         return Arrays.stream(arr).anyMatch(i -> i == key);
     }
 
+    public void log(Level level, Player cause, String message){
+
+        if(level == Level.FINE){
+            if(config.getBoolean("main.debug")){
+                return;
+            }
+        }
+
+        getLogger().log(Level.INFO, String.format("[%s] %s2", cause.getDisplayName(), message));
+
+    }
 }
