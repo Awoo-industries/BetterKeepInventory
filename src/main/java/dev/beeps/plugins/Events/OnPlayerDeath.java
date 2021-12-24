@@ -91,22 +91,19 @@ public class OnPlayerDeath  implements Listener {
             // air can be skipped.
             if(type == Material.AIR) continue;
 
-
-            ItemHandler ih;
-
             // ARMOR
-            if(BetterKeepInventory.contains(plugin.armorSlots, size)){
-                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.armor);
+            if (BetterKeepInventory.contains(plugin.armorSlots, size)) {
+                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.armor, size);
             }
 
             // HOTBAR
-            else if(BetterKeepInventory.contains(plugin.hotbarSlots, size)){
-                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.hotbar);
+            else if (BetterKeepInventory.contains(plugin.hotbarSlots, size)) {
+                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.hotbar, size);
             }
 
             // INVENTORY
-            else{
-                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.inventory);
+            else {
+                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.inventory, size);
             }
 
         }
