@@ -22,7 +22,7 @@ import java.util.logging.Level;
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     public int[] armorSlots = new int[]{ 36,37,38,39 };
-    public int[] hotbarSlots = new int[]{ 0,1,2,3,4,5,6,7,8 };
+    public int[] hotbarSlots = new int[]{ 0,1,2,3,4,5,6,7,8,40 };
 
     public FileConfiguration _config = getConfig();
     public BetterConfig config;
