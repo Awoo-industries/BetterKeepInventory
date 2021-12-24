@@ -20,16 +20,6 @@ public class CmdMain implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player) {
-            Player ply = (Player) sender;
-
-            if(!ply.hasPermission("betterkeepinventory.help")){
-                sender.sendMessage(ChatColor.RED + "Missing Permission: betterkeepinventory.reload");
-                return true;
-            }
-
-        }
-
         if(args.length == 0){
             return sendHelp(sender, command, label, args);
         }
@@ -37,27 +27,34 @@ public class CmdMain implements CommandExecutor {
         if(args[0].equals("reload")){
             return reload(sender, command, label, args);
         }else{
-            return sendHelp(sender, command, label, args);
+            sender.sendMessage(ChatColor.RED + "Invalid subcommand");
         }
+
+        return true;
 
     }
 
     private boolean sendHelp(CommandSender sender, Command command, String label, String[] args){
         sendPluginInfo(sender);
+
         sender.sendMessage(ChatColor.GRAY + "");
-        sender.sendMessage(ChatColor.BLUE + "/betterki reload");
+        sender.sendMessage(ChatColor.BLUE + "/bki info");
+        sender.sendMessage(ChatColor.AQUA + "Gets the current settings for BetterKeepInventory");
+
+        sender.sendMessage(ChatColor.GRAY + "");
+        sender.sendMessage(ChatColor.BLUE + "/bki reload");
         sender.sendMessage(ChatColor.AQUA + "Reloads the plugin");
         return true;
     }
 
-    private void sendPluginInfo(CommandSender sender){
+    private boolean sendPluginInfo(CommandSender sender){
         sender.sendMessage(ChatColor.GRAY + "=================================================");
         sender.sendMessage(ChatColor.AQUA + plugin.getDescription().getName() + " " + ChatColor.YELLOW + ChatColor.ITALIC + " (Version " + plugin.getDescription().getVersion() + ")");
         sender.sendMessage(ChatColor.GRAY + "");
 
-        if(!plugin.config.getBoolean("enabled")){
+        if(!plugin.config.getBoolean("main.enabled")){
             sender.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Plugin is disabled in config !!");
-            return;
+            return true;
         }
 
         sender.sendMessage(ChatColor.AQUA + "Enabled: " + ChatColor.GREEN + "YES");
@@ -76,6 +73,7 @@ public class CmdMain implements CommandExecutor {
         sender.sendMessage(ChatColor.AQUA + "Keep hunger after death: " + (plugin.config.getBoolean("keep_hunger_level") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
         sender.sendMessage(ChatColor.AQUA + "Hunger clamped between: " + ChatColor.YELLOW + plugin.config.getInt("keep_hunger_level_min") + " - " + plugin.config.getInt("keep_hunger_level_max"));
 
+        return true;
     }
 
     private boolean reload(CommandSender sender, Command command, String label, String[] args){
@@ -83,7 +81,7 @@ public class CmdMain implements CommandExecutor {
         if (sender instanceof Player) {
             Player ply = (Player) sender;
             if(!ply.hasPermission("betterkeepinventory.reload")){
-                sender.sendMessage(ChatColor.RED + "Missing Permission: betterkeepinventory.reload");
+                sender.sendMessage(ChatColor.RED + "Missing permission.");
                 return true;
             }
         }
