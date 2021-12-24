@@ -57,12 +57,12 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     public void log(Level level, Player cause, String message){
 
         if(level == Level.FINE){
-            if(config.getBoolean("main.debug")){
+            if(!config.getBoolean("main.debug")){
                 return;
             }
         }
 
-        getLogger().log(Level.INFO, String.format("[%s] %s2", cause.getDisplayName(), message));
+        getLogger().log(Level.INFO, String.format("[%s] %s", cause.getDisplayName(), message));
 
     }
 }
