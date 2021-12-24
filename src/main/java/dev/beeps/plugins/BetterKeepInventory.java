@@ -15,8 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Level;
 
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
@@ -26,6 +25,12 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     public FileConfiguration _config = getConfig();
     public BetterConfig config;
+
+    public Random randomizer = new Random();
+
+    // Cache maps
+    public Map<UUID, Integer> hungerMap = new HashMap<UUID, Integer>();
+    public Map<UUID, Integer> potionMap = new HashMap<UUID, Integer>();
 
     @Override
     public void onEnable() {

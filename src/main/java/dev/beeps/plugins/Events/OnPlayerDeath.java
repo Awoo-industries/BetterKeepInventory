@@ -26,9 +26,6 @@ public class OnPlayerDeath  implements Listener {
     BetterKeepInventory plugin;
     BetterConfig config;
 
-    // Cache maps
-    Map<UUID, Integer> hungerMap = new HashMap<UUID, Integer>();
-    Map<UUID, Integer> potionMap = new HashMap<UUID, Integer>();
 
     public OnPlayerDeath(BetterKeepInventory main){
         plugin = main;
@@ -65,7 +62,8 @@ public class OnPlayerDeath  implements Listener {
             plugin.log(Level.FINE, ply, "PlayerHasDied->EventIngored:player_is_creative");
         }
 
-        hungerMap.put(ply.getUniqueId(), ply.getFoodLevel());
+        // store current hunger so we can reapply on respawn.
+        plugin.hungerMap.put(ply.getUniqueId(), ply.getFoodLevel());
 
         handleItems(ply, event);
         handleExperience(ply, event);
