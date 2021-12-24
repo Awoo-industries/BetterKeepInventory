@@ -75,7 +75,7 @@ permissions:
 
   betterkeepinventory.admin:
     description: Group node for all /betterki commands
-    default: false
+    default: op
     children:
       betterkeepinventory.help: true
       betterkeepinventory.reload: true
@@ -86,11 +86,10 @@ permissions:
 
   betterkeepinventory.reload:
     description: Reload the plugin config
-    default: false
+    default: op
 
 commands:
   betterkeepinventory:
     description: Better KeepInventory
-    aliases: [ betterki ]
-    permission: betterkeepinventory.help
+    aliases: [ betterki, bki ]
     usage: /betterki <command>
