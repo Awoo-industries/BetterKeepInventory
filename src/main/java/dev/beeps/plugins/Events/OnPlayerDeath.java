@@ -110,5 +110,27 @@ public class OnPlayerDeath  implements Listener {
 
     public void handleExperience(Player ply, Event evt){
 
+        double min = config.getDouble("exp.levels.min", 0);
+        double max = config.getDouble("exp.levels.max", 0);
+
+        switch(plugin.config.getExpMode("exp.levels.mode")){
+            case NONE:
+                break;
+            case ALL:
+                ply.setLevel(0);
+                break;
+            case SIMPLE:
+                ply.setLevel( ply.getLevel() - ((int) (min + (max - min) * plugin.randomizer.nextDouble())));
+                break;
+            case PERCENTAGE:
+                double roll = Math.floor(Math.random()*(max-min+1)+min);
+                ply.setLevel( ply.getLevel() - ((int)(((double)ply.getLevel()/100) * roll)));
+                break;
+        }
+
+        if(plugin.config.getBoolean("exp.reset_level")){
+            ply.setExp(0f);
+        }
+
     }
 }
