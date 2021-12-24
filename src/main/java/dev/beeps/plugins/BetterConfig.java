@@ -20,7 +20,14 @@ public class BetterConfig {
 
     public enum ExpMode {
         NONE,
-        KEEP
+        ALL,
+        SIMPLE,
+        PERCENTAGE
+    }
+
+    public enum HungerMode {
+        NONE,
+        KEEP,
     }
 
     public BetterConfig(BetterKeepInventory _plugin, FileConfiguration _config){
@@ -106,6 +113,16 @@ public class BetterConfig {
     public ItemMode getItemMode(String path){
         String value = this.getString(path, ItemMode.NONE.toString());
         return ItemMode.valueOf(value);
+    }
+
+    public ExpMode getExpMode(String path){
+        String value = this.getString(path, ExpMode.NONE.toString());
+        return ExpMode.valueOf(value);
+    }
+
+    public HungerMode getHungerMode(String path){
+        String value = this.getString(path, HungerMode.NONE.toString());
+        return HungerMode.valueOf(value);
     }
 
 }
