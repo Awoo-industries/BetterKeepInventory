@@ -19,10 +19,6 @@ main:
 
 items:
 
-  all:
-    # should we look for breakable items in Shulker Boxes (May cause lag)?
-    deep_search: false
-
   hotbar:
     # Sets the mode used for calculating damage dealt
     # Valid options are:
@@ -45,11 +41,16 @@ items:
     lore: "Unbreakable"
 
     # Materials in this list will be ignored
+    # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
     # Example:
     # - GOLDEN_HELMET
     # - GOLDEN_CHESTPLATE
     ignored_materials:
       - SHEARS
+      - FISHING_ROD
+      - CARROT_ON_A_STICK
+      - FLINT_AND_STEEL
+      - WARPED_FUNGUS_ON_A_STICK
 
   inventory:
     # Sets the mode used for calculating damage dealt
@@ -73,11 +74,16 @@ items:
     lore: "Unbreakable"
 
     # Materials in this list will be ignored
+    # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
     # Example:
     # - GOLDEN_HELMET
     # - GOLDEN_CHESTPLATE
     ignored_materials:
       - SHEARS
+      - FISHING_ROD
+      - CARROT_ON_A_STICK
+      - FLINT_AND_STEEL
+      - WARPED_FUNGUS_ON_A_STICK
 
   armor:
     # Sets the mode used for calculating damage dealt
@@ -101,11 +107,12 @@ items:
     lore: "Unbreakable"
 
     # Materials in this list will be ignored
+    # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
     # Example:
     # - GOLDEN_HELMET
     # - GOLDEN_CHESTPLATE
     ignored_materials:
-      - SHEARS
+      - ELYTRA
 exp:
 
   levels:
@@ -128,14 +135,15 @@ hunger:
   # Valid options are:
   # "NONE"          Use vanilla behavoir of getting full hunger on death
   # "KEEP"          Keep current hunger level, but clamp value between min and max
-  mode: "NONE"
-  min: 6  # 6 = 3 Drumsticks  (can't sprint)
+  mode: "KEEP"
+  min: 8  # 6 = 3 Drumsticks  (can't sprint)
   max: 20  # 20 = 10 Drumsticks (max)
+  extra_removed_on_death: 1 # Extra hunger lost for dying (Will be applied BEFORE clamping)
 
 
 potions:
 
-  # These effects will be kept on death
+  # These potion effects will be kept on death
   kept_effects:
     - ABSORPTION
     - BAD_OMEN
@@ -158,11 +166,12 @@ potions:
 
   # Max length a effect will have when respawned
   # (if it has 2 minutes and this is set to 30, you will respawn with 30 seconds of the effect)
+  # set to "false" to disable this.
   max_duration: 30
 
   # Levels to reduce the effect by
   # If this is set to 2 Speed IV will become Speed II
-  reduce_potency: 30
+  reduce_potency: 1
 
   # Should the reduce & duration rule apply to negative effects?
   reduce_negative: false
