@@ -35,11 +35,6 @@ items:
     # Should we always leave at least 1 use left on items?
     dont_break: true
 
-    # Items containing given text will be ignored:
-    # (set to "NONE" to not use this feature
-    name: "NONE"
-    lore: "Unbreakable"
-
     # Materials in this list will be ignored
     # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
     # Example:
@@ -68,11 +63,6 @@ items:
     # Should we always leave at least 1 use left on items?
     dont_break: true
 
-    # Items containing given text will be ignored:
-    # (set to "NONE" to not use this feature
-    name: "NONE"
-    lore: "Unbreakable"
-
     # Materials in this list will be ignored
     # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
     # Example:
@@ -100,11 +90,6 @@ items:
 
     # Should we always leave at least 1 use left on items?
     dont_break: true
-
-    # Items containing given text will be ignored:
-    # (set to "NONE" to not use this feature
-    name: "NONE"
-    lore: "Unbreakable"
 
     # Materials in this list will be ignored
     # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
@@ -160,7 +145,7 @@ potions:
     - REGENERATION
     - SLOW_FALLING
     - WATER_BREATHING
-    - WEAKNESS
+    - WEAKNESSthe
     - UNLUCK
     - SLOW
 
@@ -172,9 +157,6 @@ potions:
   # Levels to reduce the effect by
   # If this is set to 2 Speed IV will become Speed II
   reduce_potency: 1
-
-  # Should the reduce & duration rule apply to negative effects?
-  reduce_negative: false
 
 
 # Requires Vault
