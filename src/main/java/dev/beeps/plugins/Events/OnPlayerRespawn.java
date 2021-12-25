@@ -19,6 +19,12 @@ public class OnPlayerRespawn implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
 
         Player ply = event.getPlayer();
+        doHunger(event, ply);
+        doPotions(event, ply);
+
+    }
+
+    private void doHunger(PlayerRespawnEvent evt, Player ply){
         if(ply.hasPermission("betterkeepinventory.bypass.hunger")) return;
 
         switch(plugin.config.getHungerMode("hunger.mode")){
@@ -45,6 +51,18 @@ public class OnPlayerRespawn implements Listener {
 
                 break;
         }
+    }
+
+    private void doPotions(PlayerRespawnEvent evt, Player ply){
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+
+            if(plugin.potionMap.containsKey(ply.getUniqueId())){
+                ply.addPotionEffects(plugin.potionMap.get(ply.getUniqueId()));
+                plugin.potionMap.remove(ply.getUniqueId());
+            }
+
+        }, 20L);
 
     }
 }

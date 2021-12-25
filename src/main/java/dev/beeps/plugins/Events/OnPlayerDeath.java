@@ -3,6 +3,7 @@ package dev.beeps.plugins.Events;
 import dev.beeps.plugins.BetterConfig;
 import dev.beeps.plugins.BetterKeepInventory;
 import dev.beeps.plugins.Events.Types.ItemHandler;
+import dev.beeps.plugins.Events.Types.potionHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ public class OnPlayerDeath  implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
 
         Player ply = event.getEntity();
-        plugin.log(Level.FINE, ply, "PlayerHasDied->Triggered");
+        plugin.log(Level.FINE, ply, "############## PlayerHasDied ##############");
 
 
         // plugin enabled
@@ -65,8 +66,12 @@ public class OnPlayerDeath  implements Listener {
         // store current hunger so we can reapply on respawn.
         plugin.hungerMap.put(ply.getUniqueId(), ply.getFoodLevel());
 
+        plugin.log(Level.FINE, ply, "###### HandleItems ######");
         handleItems(ply, event);
+        plugin.log(Level.FINE, ply, "###### HandleExp ######");
         handleExperience(ply, event);
+        plugin.log(Level.FINE, ply, "###### HandleEffects (Death) ######");
+        new potionHandler(plugin, ply);
 
 
     }

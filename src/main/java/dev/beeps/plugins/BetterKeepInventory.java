@@ -8,12 +8,12 @@ package dev.beeps.plugins;
 import dev.beeps.plugins.Commands.CmdMain;
 import dev.beeps.plugins.Events.OnPlayerDeath;
 import dev.beeps.plugins.Events.OnPlayerRespawn;
-import dev.beeps.plugins.Events.PlayerDeath;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -30,7 +30,7 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     // Cache maps
     public Map<UUID, Integer> hungerMap = new HashMap<UUID, Integer>();
-    public Map<UUID, Integer> potionMap = new HashMap<UUID, Integer>();
+    public Map<UUID, ArrayList<PotionEffect>> potionMap = new HashMap<UUID, ArrayList<org.bukkit.potion.PotionEffect>>();
 
     @Override
     public void onEnable() {
@@ -68,6 +68,18 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         }
 
         getLogger().log(Level.INFO, String.format("[%s] %s", cause.getDisplayName(), message));
+
+    }
+
+    public void log(Level level, String source, String message){
+
+        if(level == Level.FINE){
+            if(!config.getBoolean("main.debug")){
+                return;
+            }
+        }
+
+        getLogger().log(Level.INFO, String.format("[%s] %s", source, message));
 
     }
 }
