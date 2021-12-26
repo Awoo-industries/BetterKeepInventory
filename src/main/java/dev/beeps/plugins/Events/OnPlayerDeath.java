@@ -125,11 +125,11 @@ public class OnPlayerDeath  implements Listener {
                 ply.setLevel(0);
                 break;
             case SIMPLE:
-                ply.setLevel( ply.getLevel() - ((int) (min + (max - min) * plugin.randomizer.nextDouble())));
+                ply.setLevel( Math.max(ply.getLevel() - ((int) (min + (max - min) * plugin.randomizer.nextDouble())), 0));
                 break;
             case PERCENTAGE:
                 double roll = Math.floor(Math.random()*(max-min+1)+min);
-                ply.setLevel( ply.getLevel() - ((int)(((double)ply.getLevel()/100) * roll)));
+                ply.setLevel( Math.max(ply.getLevel() - ((int)(((double)ply.getLevel()/100) * roll)), 0));
                 break;
         }
 
