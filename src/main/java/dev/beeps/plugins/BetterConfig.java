@@ -100,6 +100,7 @@ public class BetterConfig {
             }
 
             plugin.saveDefaultConfig();
+            plugin.getConfig().options().copyDefaults();
             plugin.saveConfig();
             plugin.log(Level.INFO, "ConfigMigrator", "Saved new config to 'config.yml'");
 
