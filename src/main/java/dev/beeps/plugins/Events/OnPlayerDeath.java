@@ -47,7 +47,7 @@ public class OnPlayerDeath  implements Listener {
         }
 
         // bypass permission
-        if(ply.hasPermission("betterkeepinventory.bypass.all") ){
+        if(ply.hasPermission("betterkeepinventory.bypass") ){
             plugin.log(Level.FINE, ply, "PlayerHasDied->EventIngored:bypass_all_perm");
             return;
         }
