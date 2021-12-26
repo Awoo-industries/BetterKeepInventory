@@ -9,6 +9,7 @@ import dev.beeps.plugins.Commands.CmdMain;
 import dev.beeps.plugins.Events.OnPlayerDeath;
 import dev.beeps.plugins.Events.OnPlayerRespawn;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -82,4 +83,9 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         getLogger().log(Level.INFO, String.format("[%s] %s", source, message));
 
     }
+
+    public boolean checkDependency(String dep){
+        return Bukkit.getServer().getPluginManager().getPlugin(dep) != null;
+    }
+
 }

@@ -2,8 +2,10 @@ package dev.beeps.plugins.Events;
 
 import dev.beeps.plugins.BetterConfig;
 import dev.beeps.plugins.BetterKeepInventory;
+import dev.beeps.plugins.Depends.Vault;
 import dev.beeps.plugins.Events.Types.ItemHandler;
 import dev.beeps.plugins.Events.Types.potionHandler;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -73,6 +75,9 @@ public class OnPlayerDeath  implements Listener {
         plugin.log(Level.FINE, ply, "###### HandleEffects (Death) ######");
         new potionHandler(plugin, ply);
 
+        plugin.log(Level.FINE, ply, "###### Economy ######");
+        handleEcon(ply, event);
+
 
     }
 
@@ -137,5 +142,26 @@ public class OnPlayerDeath  implements Listener {
             ply.setExp(0f);
         }
 
+    }
+
+    public void handleEcon(Player ply, Event evt){
+
+        if(plugin.checkDependency("Vault")){
+
+            if(plugin.config.getDouble("eco.amount") > 0){
+                Vault v = new Vault(plugin);
+                boolean r = v.takeMoney(ply, plugin.config.getDouble("eco.amount"));
+                if(r){
+                    ply.sendMessage(ChatColor.RED + "You lost $" + plugin.config.getDouble("eco.amount"));
+                }
+            }
+
+        }else{
+
+            if(plugin.config.getDouble("eco.amount") > 0){
+                plugin.log(Level.INFO, ply, "Tried to take money from the player but Vault was not detected, Or no economy plugin is installed!");
+            }
+
+        }
     }
 }
