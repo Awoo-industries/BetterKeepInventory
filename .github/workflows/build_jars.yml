@@ -10,7 +10,7 @@ on:
 
 jobs:
   Modern:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
             !/home/runner/work/BetterKeepInventory/BetterKeepInventory/target/original-*.jar
 
   Legacy:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
