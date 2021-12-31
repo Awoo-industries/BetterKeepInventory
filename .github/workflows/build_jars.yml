@@ -3,11 +3,9 @@
 
 name: Create Test Build
 
-on:
-  push:
-    branches: [ master ]
-
-  workflow_dispatch:
+on: 
+  - push
+  - workflow_dispatch
 
 
 jobs:
