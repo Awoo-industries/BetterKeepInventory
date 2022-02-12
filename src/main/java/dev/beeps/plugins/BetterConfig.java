@@ -155,7 +155,7 @@ public class BetterConfig {
             config.set("keep_hunger_level_min", null);
             config.set("keep_hunger_level_max", null);
 
-            config.options().header("Config was migrated, Please refer to https://beeps.dev/better-keep-inventory/betterkeepinventory-13 to learn more");
+            config.options().header("Config was migrated, Please refer to https://beeps.notion.site/BetterKeepInventory-1-3-d84a385719e24060a4aff65baa3d9443 to learn more");
 
             plugin.log(Level.INFO, "ConfigMigrator", "Removed old keys from config");
 

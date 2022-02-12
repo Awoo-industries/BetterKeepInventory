@@ -25,12 +25,22 @@ kits:
     delay: 0
     items:
       - woodenpickaxe 1
-      - stonepickaxe 1
-      - ironpickaxe 1
+      - stonesword 1
+      - ironaxe 1
       - goldpickaxe 1
       - diamondpickaxe 1
-      - netheritepickaxe 1
+      - netheritehoe 1
       - shears 1
       - cookedbeef 64
       - cobblestone 64
-      - diamondhelmet 2
+      - woodenpickaxe 1
+      - stonesword 1
+      - ironaxe 1
+      - goldpickaxe 1
+      - diamondpickaxe 1
+      - netheritehoe 1
+      - shears 1
+      - cookedbeef 64
+      - cobblestone 64
+      - diamondhelmet 1
+      - elytra 1

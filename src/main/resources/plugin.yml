@@ -49,7 +49,7 @@ permissions:
     description: Don't reapply potions when dying
     default: false
 
-  betterkeepinventory.bypass.econ:
+  betterkeepinventory.bypass.eco:
     description: Don't lose money when dying
     default: false
 

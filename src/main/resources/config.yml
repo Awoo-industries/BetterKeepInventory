@@ -11,6 +11,7 @@ main:
   enabled: true
 
   # When enabled will spam the console with debugging data.
+  # Should only be enabled if asked by the developer
   debug: false
 
   # Used internally to determine if migrations need to happen
@@ -129,6 +130,7 @@ hunger:
 potions:
 
   # These potion effects will be kept on death
+  # If you want to disable potion keeping, Make this list empty.
   kept_effects:
     - ABSORPTION
     - BAD_OMEN
@@ -151,7 +153,7 @@ potions:
 
   # Max length a effect will have when respawned
   # (if it has 2 minutes and this is set to 30, you will respawn with 30 seconds of the effect)
-  # set to "false" to disable this.
+  # set to "false" to disable this, and keep orginal effect length
   max_duration: 30
 
   # Levels to reduce the effect by

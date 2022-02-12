@@ -65,13 +65,21 @@ public class OnPlayerDeath  implements Listener {
 
         plugin.log(Level.FINE, ply, "###### HandleItems ######");
         handleItems(ply, event);
+
         plugin.log(Level.FINE, ply, "###### HandleExp ######");
-        handleExperience(ply, event);
+        if(!ply.hasPermission("betterkeepinventory.bypass.exp") ) {
+            handleExperience(ply, event);
+        }
+
         plugin.log(Level.FINE, ply, "###### HandleEffects (Death) ######");
-        new potionHandler(plugin, ply);
+        if(!ply.hasPermission("betterkeepinventory.bypass.potions") ) {
+            new potionHandler(plugin, ply);
+        }
 
         plugin.log(Level.FINE, ply, "###### Economy ######");
-        handleEcon(ply, event);
+        if(!ply.hasPermission("betterkeepinventory.bypass.eco") ) {
+            handleEcon(ply, event);
+        }
 
 
     }
@@ -96,17 +104,23 @@ public class OnPlayerDeath  implements Listener {
 
             // ARMOR
             if (BetterKeepInventory.contains(plugin.armorSlots, size)) {
-                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.armor, size);
+                if(!ply.hasPermission("betterkeepinventory.bypass.armor") ) {
+                    new ItemHandler(plugin, ply, item, ItemHandler.SlotType.armor, size);
+                }
             }
 
             // HOTBAR
             else if (BetterKeepInventory.contains(plugin.hotbarSlots, size)) {
-                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.hotbar, size);
+                if(!ply.hasPermission("betterkeepinventory.bypass.hotbar") ) {
+                    new ItemHandler(plugin, ply, item, ItemHandler.SlotType.hotbar, size);
+                }
             }
 
             // INVENTORY
             else {
-                new ItemHandler(plugin, ply, item, ItemHandler.SlotType.inventory, size);
+                if(!ply.hasPermission("betterkeepinventory.bypass.inventory") ) {
+                    new ItemHandler(plugin, ply, item, ItemHandler.SlotType.inventory, size);
+                }
             }
 
         }

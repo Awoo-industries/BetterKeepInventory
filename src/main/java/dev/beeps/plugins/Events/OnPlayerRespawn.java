@@ -54,15 +54,16 @@ public class OnPlayerRespawn implements Listener {
     }
 
     private void doPotions(PlayerRespawnEvent evt, Player ply){
+        if(!ply.hasPermission("betterkeepinventory.bypass.potions") ) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if(plugin.potionMap.containsKey(ply.getUniqueId())){
+                    ply.addPotionEffects(plugin.potionMap.get(ply.getUniqueId()));
+                    plugin.potionMap.remove(ply.getUniqueId());
+                }
 
-            if(plugin.potionMap.containsKey(ply.getUniqueId())){
-                ply.addPotionEffects(plugin.potionMap.get(ply.getUniqueId()));
-                plugin.potionMap.remove(ply.getUniqueId());
-            }
-
-        }, 20L);
+            }, 20L);
+        }
 
     }
 }

@@ -20,6 +20,9 @@ public class potionHandler {
         int max_duration = plugin.config.getInt("potions.max_duration") * 20;
         int duration_penalty = plugin.config.getInt("potions.duration_penalty") * 20;
 
+
+        boolean change_duration = plugin.config.getBoolean("potions.max_duration", true);
+
         // get effect stuff
         List<PotionEffectType> kept_effects = plugin.config.getEffectList("potions.kept_effects");
         Collection<PotionEffect> ply_effects = ply.getActivePotionEffects();
@@ -31,9 +34,12 @@ public class potionHandler {
         while(ply_effect_iterator.hasNext()){
             PotionEffect cur = ply_effect_iterator.next();
 
-            // calculate new effect parameters
-            int duration = Math.min(cur.getDuration() - duration_penalty, max_duration);
-            int amp = cur.getAmplifier() - reduce_potency;
+            int duration = cur.getDuration() - duration_penalty;
+            if(change_duration){
+                duration = Math.min(cur.getDuration() - duration_penalty, max_duration);
+            }
+
+            int amp = Math.max(cur.getAmplifier() - reduce_potency, 0);
 
             // if kept
             if(kept_effects.contains(cur.getType())){
