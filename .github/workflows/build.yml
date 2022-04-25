@@ -38,10 +38,10 @@ jobs:
           path: |
             /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/BetterKeepInventory-*.jar
 
-      - name: Publish build to Discord
-        uses: appleboy/discord-action@master
+      - name: Discord Webhook Action
+        uses: tsickert/discord-webhook@v4.0.0
         with:
-          webhook_id: ${{ secrets.DISCORD_BUILDS_ID }}
-          webhook_token: ${{ secrets.DISCORD_BUILDS_TOKEN }}
-          message: "[${{ github.sha }}](https://github.com/beepsdev/BetterKeepInventory/commit/${{ github.sha }}) ${{github.event.head_commit.message}}"
-          file: ./target/BetterKeepInventory-*.jar
+          username: "BetterKeepInventory"
+          webhook-url: ${{ secrets.DISCORD_BUILD_WEBHOOK }}
+          content: "[${{ github.sha }}](https://github.com/beepsdev/BetterKeepInventory/commit/${{ github.sha }}) ${{github.event.head_commit.message}}"
+          filename: ./target/BetterKeepInventory-*.jar
