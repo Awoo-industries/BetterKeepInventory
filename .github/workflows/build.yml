@@ -29,19 +29,16 @@ jobs:
         run: mvn --batch-mode --update-snapshots verify
 
       - name: Rename File
-        run: mvn --batch-mode --update-snapshots verify
+        run: mv ./target/BetterKeepInventory-*.jar ./target/build.jar
+
+      - name: Post build to discord
+        run: curl \
+  -F 'payload_json={"username": "BetterKeepInventory", "content": "[${{ github.sha }}](https://github.com/beepsdev/BetterKeepInventory/commit/${{ github.sha }}) ${{github.event.head_commit.message}}"}' \
+  -F "build.jar=@./target/build.jpg" \
+  ${{ secrets.DISCORD_BUILD_WEBHOOK }}
 
       - name: Publish artifact
         uses: actions/upload-artifact@v2
         with:
-          name: plugin-JDK16
-          path: |
-            /home/runner/work/BetterKeepInventory/BetterKeepInventory/target/BetterKeepInventory-*.jar
-
-      - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@v4.0.0
-        with:
-          username: "BetterKeepInventory"
-          webhook-url: ${{ secrets.DISCORD_BUILD_WEBHOOK }}
-          content: "[${{ github.sha }}](https://github.com/beepsdev/BetterKeepInventory/commit/${{ github.sha }}) ${{github.event.head_commit.message}}"
-          filename: ./target/BetterKeepInventory-*.jar
+          name: build
+          path: ./target/build.jar
