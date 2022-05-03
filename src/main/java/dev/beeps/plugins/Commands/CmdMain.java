@@ -1,12 +1,16 @@
 package dev.beeps.plugins.Commands;
 
+import dev.beeps.plugins.BetterConfig;
 import dev.beeps.plugins.BetterKeepInventory;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public class CmdMain implements CommandExecutor {
 
@@ -19,62 +23,123 @@ public class CmdMain implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player) {
-            Player ply = (Player) sender;
-
-            if(!ply.hasPermission("betterkeepinventory.help")){
-                sender.sendMessage(ChatColor.RED + "Missing Permission: betterkeepinventory.reload");
-                return true;
-            }
-
-        }
-
         if(args.length == 0){
             return sendHelp(sender, command, label, args);
         }
 
-        if(args[0].equals("reload")){
-            return reload(sender, command, label, args);
-        }else{
-            return sendHelp(sender, command, label, args);
+        switch(args[0]){
+
+            case "reload":
+                return reload(sender, command, label, args);
+
+            case "info":
+                return sendPluginInfo(sender);
+
+            default:
+                sender.sendMessage(ChatColor.RED + "Invalid subcommand");
+
+
         }
+
+        return true;
 
     }
 
     private boolean sendHelp(CommandSender sender, Command command, String label, String[] args){
-        sendPluginInfo(sender);
-        sender.sendMessage(ChatColor.GRAY + "");
-        sender.sendMessage(ChatColor.BLUE + "/betterki reload");
-        sender.sendMessage(ChatColor.AQUA + "Reloads the plugin");
-        return true;
-    }
 
-    private void sendPluginInfo(CommandSender sender){
         sender.sendMessage(ChatColor.GRAY + "=================================================");
         sender.sendMessage(ChatColor.AQUA + plugin.getDescription().getName() + " " + ChatColor.YELLOW + ChatColor.ITALIC + " (Version " + plugin.getDescription().getVersion() + ")");
         sender.sendMessage(ChatColor.GRAY + "");
 
-        if(!plugin.config.getBoolean("enabled")){
-            sender.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Plugin is disabled in config !!");
-            return;
+        sender.sendMessage(ChatColor.GRAY + "");
+        sender.sendMessage(ChatColor.BLUE + "/bki info");
+        sender.sendMessage(ChatColor.AQUA + "Gets the current settings for BetterKeepInventory");
+
+        sender.sendMessage(ChatColor.GRAY + "");
+        sender.sendMessage(ChatColor.BLUE + "/bki reload");
+        sender.sendMessage(ChatColor.AQUA + "Reloads the plugin");
+        return true;
+    }
+
+    private boolean sendPluginInfo(CommandSender sender){
+        sender.sendMessage(ChatColor.GRAY + "=================================================");
+        sender.sendMessage(ChatColor.AQUA + plugin.getDescription().getName() + " " + ChatColor.YELLOW + ChatColor.ITALIC + " (Version " + plugin.getDescription().getVersion() + ")");
+        sender.sendMessage(ChatColor.GRAY + "");
+
+        if(!plugin.config.getBoolean("main.enabled")){
+            sender.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Plugin is disabled in the main section!");
+            return true;
         }
 
-        sender.sendMessage(ChatColor.AQUA + "Enabled: " + ChatColor.GREEN + "YES");
-        sender.sendMessage(ChatColor.AQUA + "Item Damage: " + (plugin.config.getBoolean("enable_item_damage") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
-        sender.sendMessage(ChatColor.AQUA + "Equipment damage: " + ChatColor.YELLOW + plugin.config.getDouble("min_damage_pct") + "% ~ " + plugin.config.getDouble("max_damage_pct") + "%");
-        sender.sendMessage(ChatColor.AQUA + "Using Enchants: " + (plugin.config.getBoolean("ignore_enchants") ? ChatColor.RED + "IGNORING" : ChatColor.GREEN + "USING"));
-        sender.sendMessage(ChatColor.AQUA + "Destroy Items: " + (!plugin.config.getBoolean("dont_break_items") ? ChatColor.RED + "CAN DESTROY" : ChatColor.GREEN + "ALWAYS KEEP 1 USE"));
+        //hotbar
 
-        sender.sendMessage(ChatColor.AQUA + "XP Loss (Levels): " + (plugin.config.getBoolean("enable_xp_loss") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
-        sender.sendMessage(ChatColor.AQUA + "XP Loss (Current Level): " + (plugin.config.getBoolean("xp_reset_current_level_progress") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
+        sender.sendMessage(ChatColor.GRAY + "===== Items");
 
-        if(plugin.config.getBoolean("enable_xp_loss")){
-            sender.sendMessage(ChatColor.AQUA + "XP Loss Percent: " + ChatColor.YELLOW + plugin.config.getDouble("min_xp_loss_pct") + "% ~ " + plugin.config.getDouble("max_xp_loss_pct") + "%" );
+        sender.sendMessage( "Hotbar: " +
+                (Objects.equals(plugin.config.getString("items.hotbar.mode"), "NONE") ? ChatColor.YELLOW + "VANILLA" : ChatColor.GREEN + plugin.config.getString("items.hotbar.mode") )
+                        + ChatColor.GRAY + " | "
+                        + ChatColor.GRAY + "("+ plugin.config.getDouble("items.hotbar.min") + " ~ "+ plugin.config.getDouble("items.hotbar.max")  + ")"
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getBoolean("items.hotbar.use_enchantments") ? ChatColor.GREEN + " ✔ Enchantments" :  ChatColor.RED + " ✖ Enchantments" )
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getBoolean("items.hotbar.dont_break") ? ChatColor.GREEN + " ✔ Unbreaking" :  ChatColor.RED + " ✖ Unbreaking" )
+        );
+
+        //inventory
+        sender.sendMessage( "Inventory: " +
+                (Objects.equals(plugin.config.getString("items.inventory.mode"), "NONE") ? ChatColor.YELLOW + "VANILLA" : ChatColor.GREEN + plugin.config.getString("items.inventory.mode") )
+                        + ChatColor.GRAY + " | "
+                        + ChatColor.GRAY + "("+ plugin.config.getDouble("items.inventory.min") + " ~ "+ plugin.config.getDouble("items.inventory.max")  + ")"
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getBoolean("items.inventory.use_enchantments") ? ChatColor.GREEN + " ✔ Enchantments" :  ChatColor.RED + " ✖ Enchantments" )
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getBoolean("items.inventory.dont_break") ? ChatColor.GREEN + " ✔ Unbreaking" :  ChatColor.RED + " ✖ Unbreaking" )
+        );
+
+        //armor
+        sender.sendMessage( "Armor: " +
+                (Objects.equals(plugin.config.getString("items.armor.mode"), "NONE") ? ChatColor.YELLOW + "VANILLA" : ChatColor.GREEN + plugin.config.getString("items.armor.mode") )
+                        + ChatColor.GRAY + " | "
+                        + ChatColor.GRAY + "("+ plugin.config.getDouble("items.armor.min") + " ~ "+ plugin.config.getDouble("items.armor.max")  + ")"
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getBoolean("items.armor.use_enchantments") ? ChatColor.GREEN + " ✔ Enchantments" :  ChatColor.RED + " ✖ Enchantments" )
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getBoolean("items.armor.dont_break") ? ChatColor.GREEN + " ✔ Unbreaking" :  ChatColor.RED + " ✖ Unbreaking" )
+        );
+
+        sender.sendMessage(ChatColor.GRAY + "===== Experience");
+        sender.sendMessage(
+                (Objects.equals(plugin.config.getString("exp.levels.mode"), "NONE") ? ChatColor.YELLOW + "VANILLA" : ChatColor.GREEN + plugin.config.getString("exp.levels.mode") )
+                        + ChatColor.GRAY + " | "
+                        + ChatColor.GRAY + "("+ plugin.config.getDouble("exp.levels.min") + " ~ "+ plugin.config.getDouble("exp.levels.max")  + ")"
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getBoolean("exp.reset_level") ? ChatColor.GREEN + " ✔ Level Reset" :  ChatColor.RED + " ✖ Level Reset" ));
+
+        sender.sendMessage(ChatColor.GRAY + "===== Hunger");
+        sender.sendMessage(
+                (Objects.equals(plugin.config.getString("hunger.mode"), "NONE") ? ChatColor.YELLOW + "VANILLA" : ChatColor.GREEN + plugin.config.getString("hunger.mode") )
+                        + ChatColor.GRAY + " | "
+                        + ChatColor.GRAY + " clamped between ("+ plugin.config.getDouble("hunger.min") + " ~ "+ plugin.config.getDouble("hunger.max")  + ")");
+
+        sender.sendMessage(ChatColor.GRAY + "===== Potions");
+        sender.sendMessage(
+                (plugin.config.getInt("potions.reduce_potency") <= 0 ? ChatColor.GREEN + " ✔ Potency Kept" :  ChatColor.RED + " ✖ Potency reduced by " + plugin.config.getInt("potions.reduce_potency") )
+                        + ChatColor.GRAY + " | "
+                        + (plugin.config.getInt("potions.duration_penalty") <= 0 ? ChatColor.GREEN + " ✔ Duration Kept" :  ChatColor.RED + " ✖ Duration reduced by " + plugin.config.getInt("potions.duration_penalty") + "sec." )
+        );
+
+        List<PotionEffectType> effectlist =  plugin.config.getEffectList("potions.kept_effects");
+
+        StringJoiner listOfEffects = new StringJoiner(", ");
+        for (PotionEffectType potionEffectType : effectlist) {
+            if(potionEffectType != null){
+                listOfEffects.add(potionEffectType.getName());
+            }
         }
 
-        sender.sendMessage(ChatColor.AQUA + "Keep hunger after death: " + (plugin.config.getBoolean("keep_hunger_level") ? ChatColor.RED + "ENABLED" : ChatColor.GREEN + "DISABLED"));
-        sender.sendMessage(ChatColor.AQUA + "Hunger clamped between: " + ChatColor.YELLOW + plugin.config.getInt("keep_hunger_level_min") + " - " + plugin.config.getInt("keep_hunger_level_max"));
+        sender.sendMessage(ChatColor.AQUA + "Kept Effects: " + ChatColor.GREEN + listOfEffects);
 
+        return true;
     }
 
     private boolean reload(CommandSender sender, Command command, String label, String[] args){
@@ -82,13 +147,13 @@ public class CmdMain implements CommandExecutor {
         if (sender instanceof Player) {
             Player ply = (Player) sender;
             if(!ply.hasPermission("betterkeepinventory.reload")){
-                sender.sendMessage(ChatColor.RED + "Missing Permission: betterkeepinventory.reload");
+                sender.sendMessage(ChatColor.RED + "Missing permission.");
                 return true;
             }
         }
 
         plugin.reloadConfig();
-        plugin.config = plugin.getConfig();
+        plugin.config = new BetterConfig(plugin, plugin.getConfig());
 
         sender.sendMessage(ChatColor.AQUA + "Reloaded!");
         sendPluginInfo(sender);
