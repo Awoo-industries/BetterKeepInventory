@@ -34,6 +34,7 @@ jobs:
       - name: Discord Webhook Action
         uses: tsickert/discord-webhook@v4.0.0
         with:
+          username: "BetterKeepInventory"
           webhook-url: ${{ secrets.DISCORD_BUILD_WEBHOOK }}
           embed-title: ${{github.sha}}
           embed-description: ${{github.event.head_commit.message}}
