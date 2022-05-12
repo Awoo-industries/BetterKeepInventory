@@ -37,7 +37,7 @@ public class OnPlayerDeath  implements Listener {
         Player ply = event.getEntity();
         World world = ply.getWorld();
         plugin.log(Level.FINE, ply, "############## PlayerHasDied ##############");
-
+        plugin.log(Level.FINE, ply, "Grace->getGrace:" + plugin.graceMap.get(ply.getUniqueId()));
 
         // plugin enabled
         if(!config.getBoolean("main.enabled", false)){
@@ -48,6 +48,12 @@ public class OnPlayerDeath  implements Listener {
         // disabled world
         if(config.GetOverrideForMode("ALL", ply)){
             plugin.log(Level.FINE, ply, "PlayerHasDied->EventIngored:plugin_disabled_world");
+            return;
+        }
+
+        // grace check
+        if(plugin.graceMap.containsKey(ply.getUniqueId())){
+            plugin.log(Level.FINE, ply, "PlayerHasDied->EventIngored:grace");
             return;
         }
 
@@ -87,6 +93,13 @@ public class OnPlayerDeath  implements Listener {
         plugin.log(Level.FINE, ply, "###### Economy ######");
         if(!ply.hasPermission("betterkeepinventory.bypass.eco") || config.GetOverrideForMode("ECO", ply) ) {
             handleEcon(ply, event);
+        }
+
+        if(config.getBoolean("main.grace", true)){
+            plugin.log(Level.FINE, ply, "Grace->setPlayerGrace:" + config.getInt("main.grace"));
+            plugin.graceMap.put(ply.getUniqueId(), config.getInt("main.grace"));
+        }else{
+            plugin.log(Level.FINE, ply, "Grace->IsDisabled");
         }
 
 

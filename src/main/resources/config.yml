@@ -18,6 +18,10 @@ main:
   # You should __NEVER__ have to change this. (And you might break it if you do)
   config_version: 3
 
+  # Allows users to have a "grace period" after dying where they wont be affected by the plugin
+  # in seconds (300 = 5 minutes) set to 0 to disable
+  grace: 0
+
 items:
 
   hotbar:

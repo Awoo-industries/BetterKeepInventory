@@ -32,6 +32,7 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     // Cache maps
     public Map<UUID, Integer> hungerMap = new HashMap<UUID, Integer>();
     public Map<UUID, ArrayList<PotionEffect>> potionMap = new HashMap<UUID, ArrayList<org.bukkit.potion.PotionEffect>>();
+    public Map<UUID, Integer> graceMap = new HashMap<UUID, Integer>();
 
     @Override
     public void onEnable() {
@@ -48,6 +49,9 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         // misc
         getServer().getPluginManager().registerEvents(this, this);
         Metrics metrics = new Metrics(this, 11596);
+
+        // loops
+        startGraceCheck();
 
     }
 
@@ -88,4 +92,22 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         return Bukkit.getServer().getPluginManager().getPlugin(dep) != null;
     }
 
+    public void startGraceCheck()
+    {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                Iterator<Map.Entry<UUID, Integer>> it = graceMap.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<UUID, Integer> i = it.next();
+                    int newval = i.getValue() - 1;
+                    if(newval <= 0){
+                        it.remove();
+                    }else{
+                        graceMap.put(i.getKey(), newval);
+                    }
+                }
+            }
+        }, 0L, 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+    }
 }
