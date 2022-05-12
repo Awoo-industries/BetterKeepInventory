@@ -16,7 +16,7 @@ main:
 
   # Used internally to determine if migrations need to happen
   # You should __NEVER__ have to change this. (And you might break it if you do)
-  config_version: 2
+  config_version: 3
 
 items:
 
@@ -166,3 +166,50 @@ eco:
 
   # Amount of money lost on death
   amount: 0
+
+
+overrides:
+
+  # Overrides allow you to disable specific punishments based on conditions like world.
+  #
+
+  worlds:
+
+    # You can use ALL to disable everything, or NONE to disable nothing. ITEMS also works to combine HOTBAR, INVENTORY and ARMOR
+    world_no_pvp:
+      # This example disables item & hunger damage in the world "world_no_pvp" if the death was caused by pvp
+      pvp:
+        - ITEMS
+
+    # This exmple completely disables the plugin in "world_disabled"
+    world_disabled:
+      - ALL
+
+    # This exmple disables exp loss in "world_disabled"
+    world_no_exp_loss:
+      - EXP
+      - EXP_LEVEL
+
+
+  # https://www.spigotmc.org/resources/towny-advanced.72694/
+  towny:
+
+    enabled: false
+
+    towns:
+
+      # Disable economy loss when a player dies in any town
+      any_town:
+        - ECO
+
+      # Disables everything if player dies in town they are a member of
+      player_town: "ALL"
+
+      # You can also specify a town name to use
+      specific_town_name:
+        - ECO
+      'North Appletown':
+        - ITEMS
+        - HUNGER
+
+

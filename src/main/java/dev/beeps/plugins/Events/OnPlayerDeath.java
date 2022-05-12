@@ -8,6 +8,7 @@ import dev.beeps.plugins.Events.Types.potionHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -34,12 +35,19 @@ public class OnPlayerDeath  implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
 
         Player ply = event.getEntity();
+        World world = ply.getWorld();
         plugin.log(Level.FINE, ply, "############## PlayerHasDied ##############");
 
 
         // plugin enabled
         if(!config.getBoolean("main.enabled", false)){
             plugin.log(Level.FINE, ply, "PlayerHasDied->EventIngored:plugin_disabled");
+            return;
+        }
+
+        // disabled world
+        if(config.GetOverrideForMode("ALL", ply)){
+            plugin.log(Level.FINE, ply, "PlayerHasDied->EventIngored:plugin_disabled_world");
             return;
         }
 
@@ -89,6 +97,12 @@ public class OnPlayerDeath  implements Listener {
         Inventory inv = ply.getInventory();
         InventoryType invType = InventoryType.PLAYER;
 
+        // disabled world
+        if(config.GetOverrideForMode("ITEMS", ply)){
+            plugin.log(Level.FINE, ply, "PlayerHasDied->SkippedItems:override_world:ITEMS");
+            return;
+        }
+
         for (int size = 0; size<inv.getSize(); size++) {
 
             ItemStack item = inv.getItem(size);
@@ -105,21 +119,27 @@ public class OnPlayerDeath  implements Listener {
             // ARMOR
             if (BetterKeepInventory.contains(plugin.armorSlots, size)) {
                 if(!ply.hasPermission("betterkeepinventory.bypass.armor") ) {
-                    new ItemHandler(plugin, ply, item, ItemHandler.SlotType.armor, size);
+                    if(!config.GetOverrideForMode("ARMOR", ply)){
+                        new ItemHandler(plugin, ply, item, ItemHandler.SlotType.armor, size);
+                    }
                 }
             }
 
             // HOTBAR
             else if (BetterKeepInventory.contains(plugin.hotbarSlots, size)) {
                 if(!ply.hasPermission("betterkeepinventory.bypass.hotbar") ) {
-                    new ItemHandler(plugin, ply, item, ItemHandler.SlotType.hotbar, size);
+                    if(!config.GetOverrideForMode("HOTBAR", ply)){
+                        new ItemHandler(plugin, ply, item, ItemHandler.SlotType.hotbar, size);
+                    }
                 }
             }
 
             // INVENTORY
             else {
                 if(!ply.hasPermission("betterkeepinventory.bypass.inventory") ) {
-                    new ItemHandler(plugin, ply, item, ItemHandler.SlotType.inventory, size);
+                    if(!config.GetOverrideForMode("INVENTORY", ply)){
+                        new ItemHandler(plugin, ply, item, ItemHandler.SlotType.inventory, size);
+                    }
                 }
             }
 
