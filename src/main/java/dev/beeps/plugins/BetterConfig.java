@@ -193,7 +193,7 @@ public class BetterConfig {
         };
 
         config.set("main.config_version", 3);
-        config.set("main.grace", false);
+        config.set("main.grace", false); // include grace
 
         // Worlds
         String[] pvp_disabled = {"ITEMS"};
@@ -206,14 +206,21 @@ public class BetterConfig {
         config.set("overrides.worlds.world_no_exp_loss", no_exp_loss);
 
         // Towny
-        String[] any_town = {"ECO"};
-        String[] appletown = {"ITEMS", "HUNGER"};
-        config.set("overrides.towny.enabled", false);
-        config.set("overrides.towny.towns.any_town", any_town);
-        config.set("overrides.towny.towns.player_town", all_disabled);
+        String[] wild = {"NONE"};
+        String[] any = {"ECO"};
+        String[] player = {"ITEMS"};
+        String[] custom = {"ITEMS", "HUNGER"};
 
-        config.set("overrides.towny.towns.specific_town_name", any_town);
-        config.set("overrides.towny.towns.North Appletown", appletown);
+        config.set("overrides.towny.enabled", false);
+
+        config.set("overrides.towny.towns.wilderness", wild);
+        config.set("overrides.towny.towns.any_town", any);
+        config.set("overrides.towny.towns.player_town", player);
+        config.set("overrides.towny.towns.North Appletown", custom);
+
+        config.set("overrides.towny.nations.any_nation", any);
+        config.set("overrides.towny.nations.player_nation", player);
+        config.set("overrides.towny.nations.The Empire", custom);
 
         plugin.saveConfig();
         plugin.log(Level.INFO, "ConfigMigrator", "Saved new config");
@@ -304,6 +311,9 @@ public class BetterConfig {
     public List<String> getDisabledModesInTown(String town_name){
         return this.config.getStringList("overrides.towny.towns." + town_name);
     }
+    public List<String> getDisabledModesInNation(String town_name){
+        return this.config.getStringList("overrides.towny.nations." + town_name);
+    }
 
     public boolean GetOverrideForMode(String mode, Player ply){
 
@@ -320,19 +330,48 @@ public class BetterConfig {
             Towny tl = new Towny(ply.getLocation());
             Towny tp = new Towny(ply);
 
-            if(
-                    getDisabledModesInTown("player_town").contains(mode)
-                    && Objects.equals(tl.getTownName(), tp.getTownName()) // Test to make sure current location is player town
-            ){
+            // Town of player
+            if(getDisabledModesInTown("player_town").contains(mode) && Objects.equals(tl.getTownName(), tp.getTownName())){
                 plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:player_town");
                 return true;
             }
 
             // Town at location of death
             if(getDisabledModesInTown(tl.getTownName()).contains(mode)){
-                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:" + tl.getTownName());
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:town:" + tl.getTownName());
                 return true;
             }
+
+            // Nation at location of death
+            if(getDisabledModesInTown("any_town").contains(mode) && tl.getTownName() != null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:town:any_town");
+                return true;
+            }
+
+            // Nation of player
+            if(getDisabledModesInNation("player_nation").contains(mode) && Objects.equals(tl.getNationName(), tp.getNationName()) && tl.getNation() != null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:nation:player_nation");
+                return true;
+            }
+
+            // Nation at location of death
+            if(getDisabledModesInNation(tl.getNationName()).contains(mode)){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:nation:" + tl.getNationName());
+                return true;
+            }
+
+            // Nation at location of death
+            if(getDisabledModesInNation("any_nation").contains(mode) && tl.getNationName() != null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:nation:any_nation");
+                return true;
+            }
+
+            // Wilderness
+            if(getDisabledModesInTown("wilderness").contains(mode) && tl.getTownName() == null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:wilderness");
+                return true;
+            }
+
         }
 
         plugin.log(Level.FINE, ply, "GetOverrideForMode->None");
