@@ -5,8 +5,7 @@ name: Create Test Build
 
 on:
   schedule:
-    - cron:  '0 */4 * * *'
-  - workflow_dispatch
+    - cron: '0 */4 * * *'
 
 jobs:
 
