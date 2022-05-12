@@ -1,15 +1,17 @@
 package dev.beeps.plugins;
 
-import org.apache.commons.lang.NotImplementedException;
+import dev.beeps.plugins.Depends.Towny;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.potion.PotionEffect;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class BetterConfig {
@@ -48,9 +50,26 @@ public class BetterConfig {
             case 1:
                 migrateToConfigClass();
                 break;
+            case 2:
+                migrateTo1p4();
+                break;
 
         }
 
+    }
+
+    public boolean moveConfigToOld(File file){
+
+        // rename config to old config, just incase
+        boolean rDone = file.renameTo(new File(plugin.getDataFolder() + File.separator + "config.old.yml"));
+        if(!rDone){
+            plugin.log(Level.INFO, "ConfigMigrator", "Moving old config file failed, Disabling plugin!");
+            plugin.getPluginLoader().disablePlugin(plugin);
+            return false;
+        }else{
+            plugin.log(Level.INFO, "ConfigMigrator", "Moved old config file to 'config.old.yml'");
+            return true;
+        }
     }
 
     public void resetConfig() {
@@ -89,15 +108,9 @@ public class BetterConfig {
             int keep_hunger_level_min = config.getInt("keep_hunger_level_min");
             int keep_hunger_level_max = config.getInt("keep_hunger_level_max");
 
-            // rename config to old config, just incase
-            boolean rDone = file.renameTo(new File(plugin.getDataFolder() + File.separator + "config.old.yml"));
-            if(!rDone){
-                plugin.log(Level.INFO, "ConfigMigrator", "Moving old config file failed, Disabling plugin!");
-                plugin.getPluginLoader().disablePlugin(plugin);
+            if(!moveConfigToOld(file)){
                 return;
-            }else{
-                plugin.log(Level.INFO, "ConfigMigrator", "Moved old config file to 'config.old.yml'");
-            }
+            };
 
             plugin.saveDefaultConfig();
             plugin.getConfig().options().copyDefaults();
@@ -167,6 +180,51 @@ public class BetterConfig {
             resetConfig();
             plugin.log(Level.INFO, "ConfigMigrator", "Could not find a config to migrate, Generating new one");
         }
+
+    }
+
+    public void migrateTo1p4(){
+
+        plugin.log(Level.INFO, "ConfigMigrator", "Migrating to config format 3");
+        File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
+
+        if(!moveConfigToOld(file)){
+            return;
+        };
+
+        config.set("main.config_version", 3);
+        config.set("main.grace", false); // include grace
+
+        // Worlds
+        String[] pvp_disabled = {"ITEMS"};
+        config.set("overrides.worlds.world_no_pvp.pvp", pvp_disabled);
+
+        String[] all_disabled = {"ALL"};
+        config.set("overrides.worlds.world_disabled", all_disabled);
+
+        String[] no_exp_loss = {"EXP", "EXP_LEVEL"};
+        config.set("overrides.worlds.world_no_exp_loss", no_exp_loss);
+
+        // Towny
+        String[] wild = {"NONE"};
+        String[] any = {"ECO"};
+        String[] player = {"ITEMS"};
+        String[] custom = {"ITEMS", "HUNGER"};
+
+        config.set("overrides.towny.enabled", false);
+
+        config.set("overrides.towny.towns.wilderness", wild);
+        config.set("overrides.towny.towns.any_town", any);
+        config.set("overrides.towny.towns.player_town", player);
+        config.set("overrides.towny.towns.North Appletown", custom);
+
+        config.set("overrides.towny.nations.any_nation", any);
+        config.set("overrides.towny.nations.player_nation", player);
+        config.set("overrides.towny.nations.The Empire", custom);
+
+        plugin.saveConfig();
+        plugin.log(Level.INFO, "ConfigMigrator", "Saved new config");
+        plugin.log(Level.INFO, "ConfigMigrator", "Completed migration to format 3");
 
     }
 
@@ -245,6 +303,80 @@ public class BetterConfig {
     public HungerMode getHungerMode(String path){
         String value = this.getString(path, HungerMode.NONE.toString());
         return HungerMode.valueOf(value);
+    }
+
+    public List<String> getDisabledModesInWorld(String world){
+        return this.config.getStringList("overrides.worlds." + world);
+    }
+    public List<String> getDisabledModesInTown(String town_name){
+        return this.config.getStringList("overrides.towny.towns." + town_name);
+    }
+    public List<String> getDisabledModesInNation(String town_name){
+        return this.config.getStringList("overrides.towny.nations." + town_name);
+    }
+
+    public boolean GetOverrideForMode(String mode, Player ply){
+
+        World world = ply.getWorld();
+        Location loc = ply.getLocation();
+
+        if(getDisabledModesInWorld(world.getName()).contains(mode)){
+            plugin.log(Level.FINE, ply, "GetOverrideForMode->World:" + world.getName());
+            return true;
+        }
+
+        if(config.getBoolean("overrides.towny.enabled")){
+
+            Towny tl = new Towny(ply.getLocation());
+            Towny tp = new Towny(ply);
+
+            // Town of player
+            if(getDisabledModesInTown("player_town").contains(mode) && Objects.equals(tl.getTownName(), tp.getTownName())){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:player_town");
+                return true;
+            }
+
+            // Town at location of death
+            if(getDisabledModesInTown(tl.getTownName()).contains(mode)){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:town:" + tl.getTownName());
+                return true;
+            }
+
+            // Nation at location of death
+            if(getDisabledModesInTown("any_town").contains(mode) && tl.getTownName() != null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:town:any_town");
+                return true;
+            }
+
+            // Nation of player
+            if(getDisabledModesInNation("player_nation").contains(mode) && Objects.equals(tl.getNationName(), tp.getNationName()) && tl.getNation() != null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:nation:player_nation");
+                return true;
+            }
+
+            // Nation at location of death
+            if(getDisabledModesInNation(tl.getNationName()).contains(mode)){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:nation:" + tl.getNationName());
+                return true;
+            }
+
+            // Nation at location of death
+            if(getDisabledModesInNation("any_nation").contains(mode) && tl.getNationName() != null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:nation:any_nation");
+                return true;
+            }
+
+            // Wilderness
+            if(getDisabledModesInTown("wilderness").contains(mode) && tl.getTownName() == null){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:wilderness");
+                return true;
+            }
+
+        }
+
+        plugin.log(Level.FINE, ply, "GetOverrideForMode->None");
+        return false;
+
     }
 
 }
