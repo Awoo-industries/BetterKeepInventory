@@ -80,12 +80,12 @@ public class OnPlayerDeath  implements Listener {
         }
 
         plugin.log(Level.FINE, ply, "###### HandleEffects (Death) ######");
-        if(!ply.hasPermission("betterkeepinventory.bypass.potions") ) {
+        if(!ply.hasPermission("betterkeepinventory.bypass.potions") || config.GetOverrideForMode("POTIONS", ply) ) {
             new potionHandler(plugin, ply);
         }
 
         plugin.log(Level.FINE, ply, "###### Economy ######");
-        if(!ply.hasPermission("betterkeepinventory.bypass.eco") ) {
+        if(!ply.hasPermission("betterkeepinventory.bypass.eco") || config.GetOverrideForMode("ECO", ply) ) {
             handleEcon(ply, event);
         }
 
@@ -149,26 +149,30 @@ public class OnPlayerDeath  implements Listener {
 
     public void handleExperience(Player ply, Event evt){
 
-        double min = config.getDouble("exp.levels.min", 0);
-        double max = config.getDouble("exp.levels.max", 0);
 
-        switch(plugin.config.getExpMode("exp.levels.mode")){
-            case NONE:
-                break;
-            case ALL:
-                ply.setLevel(0);
-                break;
-            case SIMPLE:
-                int result = Math.max(ply.getLevel() - ((int) (min + (max - min) * plugin.randomizer.nextDouble())), 0);
-                ply.setLevel(result);
-                break;
-            case PERCENTAGE:
-                double roll = Math.floor(Math.random()*(max-min+1)+min);
-                ply.setLevel( Math.max(ply.getLevel() - ((int)(((double)ply.getLevel()/100) * roll)), 0));
-                break;
+        if(!config.GetOverrideForMode("EXP", ply)){
+
+            double min = config.getDouble("exp.levels.min", 0);
+            double max = config.getDouble("exp.levels.max", 0);
+
+            switch(plugin.config.getExpMode("exp.levels.mode")){
+                case NONE:
+                    break;
+                case ALL:
+                    ply.setLevel(0);
+                    break;
+                case SIMPLE:
+                    int result = Math.max(ply.getLevel() - ((int) (min + (max - min) * plugin.randomizer.nextDouble())), 0);
+                    ply.setLevel(result);
+                    break;
+                case PERCENTAGE:
+                    double roll = Math.floor(Math.random()*(max-min+1)+min);
+                    ply.setLevel( Math.max(ply.getLevel() - ((int)(((double)ply.getLevel()/100) * roll)), 0));
+                    break;
+            }
         }
 
-        if(plugin.config.getBoolean("exp.reset_level")){
+        if(plugin.config.getBoolean("exp.reset_level") && !config.GetOverrideForMode("EXP_LEVEL", ply)){
             ply.setExp(0f);
         }
 
