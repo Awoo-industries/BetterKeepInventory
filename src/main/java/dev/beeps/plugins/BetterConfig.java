@@ -193,6 +193,7 @@ public class BetterConfig {
         };
 
         config.set("main.config_version", 3);
+        config.set("main.grace", false);
 
         // Worlds
         String[] pvp_disabled = {"ITEMS"};
