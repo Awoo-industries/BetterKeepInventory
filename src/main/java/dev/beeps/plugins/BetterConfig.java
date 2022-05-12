@@ -11,6 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class BetterConfig {
@@ -309,21 +310,31 @@ public class BetterConfig {
         Location loc = ply.getLocation();
 
         if(getDisabledModesInWorld(world.getName()).contains(mode)){
+            plugin.log(Level.FINE, ply, "GetOverrideForMode->World:" + world.getName());
             return true;
         }
 
         if(config.getBoolean("overrides.towny.enabled")){
 
-            if(getDisabledModesInTown("own_town").contains(mode)){
+            Towny tl = new Towny(ply.getLocation());
+            Towny tp = new Towny(ply);
+
+            if(
+                    getDisabledModesInTown("player_town").contains(mode)
+                    && Objects.equals(tl.getTownName(), tp.getTownName()) // Test to make sure current location is player town
+            ){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:player_town");
                 return true;
             }
 
-            Towny t = new Towny(ply.getLocation());
-            if(getDisabledModesInTown(t.getTownName()).contains(mode)){
+            // Town at location of death
+            if(getDisabledModesInTown(tl.getTownName()).contains(mode)){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->Towny:" + tl.getTownName());
                 return true;
             }
         }
 
+        plugin.log(Level.FINE, ply, "GetOverrideForMode->None");
         return false;
 
     }
