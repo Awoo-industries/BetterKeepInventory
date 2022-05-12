@@ -88,6 +88,15 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     }
 
+    public void log(Level level, String message) {
+        if(level == Level.FINE){
+            if(!config.getBoolean("main.debug")){
+                return;
+            }
+        }
+        getLogger().log(Level.INFO, String.format("[%s] %s", "Unknown Player", message));
+    }
+
     public boolean checkDependency(String dep){
         return Bukkit.getServer().getPluginManager().getPlugin(dep) != null;
     }

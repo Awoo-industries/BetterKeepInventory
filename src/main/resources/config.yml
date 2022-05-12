@@ -180,12 +180,14 @@ overrides:
   worlds:
 
     # You can use ALL to disable everything, or NONE to disable nothing. ITEMS also works to combine HOTBAR, INVENTORY and ARMOR
+    # You can use damage types to customize the death types to punish https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
     world_no_pvp:
       # This example disables item & hunger damage in the world "world_no_pvp" if the death was caused by pvp
-      pvp:
+      PVP:     # A Custom "PVP" damage type also exists.
         - ITEMS
 
     # This exmple completely disables the plugin in "world_disabled"
+    # Not specifying a damage type always applies it (in that world).
     world_disabled:
       - ALL
 

@@ -6,11 +6,14 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -306,13 +309,16 @@ public class BetterConfig {
     }
 
     public List<String> getDisabledModesInWorld(String world){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.worlds." + world);
         return this.config.getStringList("overrides.worlds." + world);
     }
     public List<String> getDisabledModesInTown(String town_name){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.towny.towns." + town_name);
         return this.config.getStringList("overrides.towny.towns." + town_name);
     }
-    public List<String> getDisabledModesInNation(String town_name){
-        return this.config.getStringList("overrides.towny.nations." + town_name);
+    public List<String> getDisabledModesInNation(String nation_name){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.towny.nations." + nation_name);
+        return this.config.getStringList("overrides.towny.nations." + nation_name);
     }
 
     public boolean GetOverrideForMode(String mode, Player ply){
@@ -323,6 +329,30 @@ public class BetterConfig {
         if(getDisabledModesInWorld(world.getName()).contains(mode)){
             plugin.log(Level.FINE, ply, "GetOverrideForMode->World:" + world.getName());
             return true;
+        }
+
+        EntityDamageEvent dmg_event = ply.getLastDamageCause();
+        if(dmg_event != null){
+
+            String event = String.valueOf(dmg_event.getCause());
+
+            if(dmg_event instanceof EntityDamageByEntityEvent){
+                EntityDamageByEntityEvent edmg_event = (EntityDamageByEntityEvent) dmg_event;
+                if(edmg_event.getDamager() instanceof Player){
+                    event = "PVP";
+                }
+            }
+
+            plugin.log(Level.FINE, ply, "TestOverride->World:damage_type:" + event);
+
+            if(getDisabledModesInWorld(world.getName() + '.' + event).contains(mode)){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->World:damage_type:" + event);
+                return true;
+            }
+            if(getDisabledModesInWorld(world.getName() + ".ANY").contains(mode)){
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->World:damage_type:ANY");
+                return true;
+            }
         }
 
         if(config.getBoolean("overrides.towny.enabled")){
