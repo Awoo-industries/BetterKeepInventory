@@ -13,10 +13,7 @@ jobs:
 
   build-jars:
 
-    needs: check_date
-    if: ${{ needs.check_date.outputs.should_run != 'false' }}
     runs-on: self-hosted
-
     steps:
       - uses: actions/checkout@v2
 
