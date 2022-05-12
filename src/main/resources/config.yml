@@ -195,20 +195,30 @@ overrides:
   towny:
 
     enabled: false
-
     towns:
-
       # Disable economy loss when a player dies in any town
       any_town:
         - ECO
-
       # Disables everything if player dies in town they are a member of
-      player_town: "ALL"
-
+      player_town:
+        - ALL
       # You can also specify a town name to use
       specific_town_name:
         - ECO
       'North Appletown':
+        - ITEMS
+        - HUNGER
+    nation:
+      # Disable economy loss when a player dies in any town
+      any_nation:
+        - ECO
+      # Disables everything if player dies in town they are a member of
+      player_nation:
+        - ALL
+      # You can also specify a town name to use
+      specific_nation_name:
+        - ECO
+      'The Empire':
         - ITEMS
         - HUNGER
 
