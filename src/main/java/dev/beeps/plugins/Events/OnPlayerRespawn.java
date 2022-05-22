@@ -25,7 +25,9 @@ public class OnPlayerRespawn implements Listener {
     }
 
     private void doHunger(PlayerRespawnEvent evt, Player ply){
+
         if(ply.hasPermission("betterkeepinventory.bypass.hunger")) return;
+        if(plugin.config.GetOverrideForMode("HUNGER", ply)) return;
 
         switch(plugin.config.getHungerMode("hunger.mode")){
             case NONE:
@@ -54,6 +56,9 @@ public class OnPlayerRespawn implements Listener {
     }
 
     private void doPotions(PlayerRespawnEvent evt, Player ply){
+
+        if(plugin.config.GetOverrideForMode("POTIONS", ply)) return;
+
         if(!ply.hasPermission("betterkeepinventory.bypass.potions") ) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
 
