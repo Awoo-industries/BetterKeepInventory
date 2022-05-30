@@ -361,7 +361,7 @@ public class BetterConfig {
             }
         }
 
-        if(config.getBoolean("overrides.towny.enabled")){
+        if(config.getBoolean("overrides.towny.enabled") && plugin.checkDependency("Towny")){
 
             Towny tl = new Towny(ply.getLocation());
             Towny tp = new Towny(ply);
