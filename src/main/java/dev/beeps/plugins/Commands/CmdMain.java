@@ -152,11 +152,8 @@ public class CmdMain implements CommandExecutor {
             }
         }
 
-        plugin.reloadConfig();
-        plugin.config = new BetterConfig(plugin, plugin.getConfig());
-
+        plugin.config.reload();
         sender.sendMessage(ChatColor.AQUA + "Reloaded!");
-        sendPluginInfo(sender);
 
 
         return true;

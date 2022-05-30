@@ -61,6 +61,12 @@ public class BetterConfig {
 
     }
 
+    public BetterConfig reload(){
+        plugin.reloadConfig();
+        this.config = plugin.getConfig();
+        return this;
+    }
+
     public boolean moveConfigToOld(File file){
 
         // rename config to old config, just incase

@@ -1,8 +1,10 @@
 #
 #   BetterKeepInventory By BeepSterr
-#   Version 1.3
+#   Version 1.4
 #
-#   https://www.spigotmc.org/resources/betterkeepinventory.93081/
+#   SpigotMC:         https://www.spigotmc.org/resources/betterkeepinventory.93081/
+#   Documentation:    https://beeps.notion.site/Better-Keep-Inventory-f5d49a15a8174ce598bbb876d3003e46
+#   GitHub:           https://github.com/beepsdev/BetterKeepInventory
 #
 
 main:
@@ -182,9 +184,10 @@ overrides:
     # You can use ALL to disable everything, or NONE to disable nothing. ITEMS also works to combine HOTBAR, INVENTORY and ARMOR
     # You can use damage types to customize the death types to punish https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
     world_no_pvp:
-      # This example disables item & hunger damage in the world "world_no_pvp" if the death was caused by pvp
-      PVP:     # A Custom "PVP" damage type also exists.
-        - ITEMS
+      damage_types:
+        # This example disables item & hunger damage in the world "world_no_pvp" if the death was caused by pvp
+        PVP:     # A Custom "PVP" damage type also exists.
+          - ITEMS
 
     # This exmple completely disables the plugin in "world_disabled"
     # Not specifying a damage type always applies it (in that world).
