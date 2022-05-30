@@ -351,11 +351,11 @@ public class BetterConfig {
 
             plugin.log(Level.FINE, ply, "TestOverride->World:damage_type:" + event);
 
-            if(getDisabledModesInWorld(world.getName() + '.' + event).contains(mode)){
+            if(getDisabledModesInWorld(world.getName() + ".damage_types." + event).contains(mode)){
                 plugin.log(Level.FINE, ply, "GetOverrideForMode->World:damage_type:" + event);
                 return true;
             }
-            if(getDisabledModesInWorld(world.getName() + ".ANY").contains(mode)){
+            if(getDisabledModesInWorld(world.getName() + ".damage_types.ANY").contains(mode)){
                 plugin.log(Level.FINE, ply, "GetOverrideForMode->World:damage_type:ANY");
                 return true;
             }
