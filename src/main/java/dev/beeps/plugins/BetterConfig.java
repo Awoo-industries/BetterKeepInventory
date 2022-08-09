@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 public class BetterConfig {
 
@@ -316,7 +317,15 @@ public class BetterConfig {
 
     public List<String> getDisabledModesInWorld(String world){
         plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.worlds." + world);
-        return this.config.getStringList("overrides.worlds." + world);
+        List<String> worldlist = this.config.getStringList("overrides.worlds." + world);
+        List<String> anylist = this.config.getStringList("overrides.worlds.all");
+        return Stream.concat(worldlist.stream(), anylist.stream()).toList();
+    }
+    public List<String> getDisabledModesInWorldByDamageType(String world, String damageType){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.worlds." + world);
+        List<String> worldlist = this.config.getStringList("overrides.worlds." + world + ".damage_types." + damageType);
+        List<String> anylist = this.config.getStringList("overrides.worlds.all.damage_types." + damageType);
+        return Stream.concat(worldlist.stream(), anylist.stream()).toList();
     }
     public List<String> getDisabledModesInTown(String town_name){
         plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.towny.towns." + town_name);
@@ -329,8 +338,9 @@ public class BetterConfig {
 
     public boolean GetOverrideForMode(String mode, Player ply){
 
+        plugin.log(Level.FINE, ply, "GetOverrideForMode->Mode:" + mode);
+
         World world = ply.getWorld();
-        Location loc = ply.getLocation();
 
         if(getDisabledModesInWorld(world.getName()).contains(mode)){
             plugin.log(Level.FINE, ply, "GetOverrideForMode->World:" + world.getName());
@@ -351,11 +361,11 @@ public class BetterConfig {
 
             plugin.log(Level.FINE, ply, "TestOverride->World:damage_type:" + event);
 
-            if(getDisabledModesInWorld(world.getName() + ".damage_types." + event).contains(mode)){
+            if(getDisabledModesInWorldByDamageType(world.getName(), event).contains(mode)){
                 plugin.log(Level.FINE, ply, "GetOverrideForMode->World:damage_type:" + event);
                 return true;
             }
-            if(getDisabledModesInWorld(world.getName() + ".damage_types.ANY").contains(mode)){
+            if(getDisabledModesInWorldByDamageType(world.getName(), "ANY").contains(mode)){
                 plugin.log(Level.FINE, ply, "GetOverrideForMode->World:damage_type:ANY");
                 return true;
             }

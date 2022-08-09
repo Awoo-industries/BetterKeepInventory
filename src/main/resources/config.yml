@@ -113,7 +113,6 @@ exp:
     # "NONE"          Do not lose levels on death.
     # "ALL"           Lose all levels
     # "SIMPLE"        Lose a set amount of levels between min and max (min and max are numbers)
-
     # "PERCENTAGE"    Lose a percentage of levels between min and max (min and max are percentages)
     mode: "NONE"
     min: 0

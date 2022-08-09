@@ -1,12 +1,12 @@
 name: BetterKeepInventory
 version: ${project.version}
 main: dev.beeps.plugins.BetterKeepInventory
-api-version: 1.16
+api-version: 1.17
 prefix: BetterKeepInventory
 authors: [ BeepSterr ]
 website: beeps.dev
 
-softdepend: [Vault,Towny]
+softdepend: [Vault,Towny,Essentials]
 
 # AutoPlug support
 spigot-id: 93081

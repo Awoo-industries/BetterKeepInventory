@@ -65,6 +65,14 @@ public class OnPlayerDeath  implements Listener {
 
         // ignore if no keepInventory
         if(!event.getKeepInventory()){
+
+            if(plugin.checkDependency("essentials") && !ply.hasPermission("essentials.keepinv")){
+                plugin.log(Level.FINE, ply, "PlayerHasDied->EssentialsKeepInv:ON");
+            }else{
+                plugin.log(Level.FINE, ply, "PlayerHasDied->EventIgnored->keep_inventory_disabled_world (Essentials.keepinv) not present!");
+                return;
+            }
+
             plugin.log(Level.FINE, ply, "PlayerHasDied->EventIngored:keep_inventory_disabled_world");
             return;
         }
@@ -86,12 +94,12 @@ public class OnPlayerDeath  implements Listener {
         }
 
         plugin.log(Level.FINE, ply, "###### HandleEffects (Death) ######");
-        if(!ply.hasPermission("betterkeepinventory.bypass.potions") || config.GetOverrideForMode("POTIONS", ply) ) {
+        if(!ply.hasPermission("betterkeepinventory.bypass.potions") && !config.GetOverrideForMode("POTIONS", ply) ) {
             new potionHandler(plugin, ply);
         }
 
         plugin.log(Level.FINE, ply, "###### Economy ######");
-        if(!ply.hasPermission("betterkeepinventory.bypass.eco") || config.GetOverrideForMode("ECO", ply) ) {
+        if(!ply.hasPermission("betterkeepinventory.bypass.eco") && !config.GetOverrideForMode("ECO", ply) ) {
             handleEcon(ply, event);
         }
 
