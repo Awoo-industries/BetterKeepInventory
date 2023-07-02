@@ -106,8 +106,11 @@ public class ItemHandler {
                 }else{
                     plugin.log(Level.FINE, ply, "Item was destroyed.");
 
-                    ply.getInventory().setItem(slotIndex, new ItemStack(Material.AIR));
-                    item.setType(Material.AIR);
+//                    ply.getInventory().setItem(slotIndex, new ItemStack(Material.AIR));
+                    item.setAmount(item.getAmount() - 1);
+                    damageableMeta.setDamage(0);
+                    item.setItemMeta(meta);
+
                     ply.getWorld().playSound(ply.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.8f, 0.8f);
                 }
 
