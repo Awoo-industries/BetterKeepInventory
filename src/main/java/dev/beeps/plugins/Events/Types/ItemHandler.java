@@ -28,8 +28,6 @@ public class ItemHandler {
 
         BetterConfig config = plugin.config;
         config_prefix = String.format("items.%s", slot.toString());
-
-
         plugin.log(Level.FINE, ply, "ItemHandler->START");
         plugin.log(Level.FINE, ply, "Item: " + item.getType());
         plugin.log(Level.FINE, ply, "Slot Type: " + slot + " ("+slotIndex+")");
@@ -75,11 +73,17 @@ public class ItemHandler {
 
             plugin.log(Level.FINE, ply, "initialDamageCalc: " + damageDealt);
 
-            // enchantments
-            if( !config.getBoolean(path("use_enchantments")) && item.getEnchantments().containsKey(Enchantment.DURABILITY)){
+            // Vanishing Curse
+            if( use_enchantments && item.getEnchantments().containsKey(Enchantment.VANISHING_CURSE)){
+                plugin.log(Level.FINE, ply, "Found vanishing curse!!!");
+                item.setAmount(item.getAmount() - 1);
+            };
+
+            // Unbreaking Enchant
+            if( use_enchantments && item.getEnchantments().containsKey(Enchantment.DURABILITY)){
 
                 int level = item.getEnchantmentLevel(Enchantment.DURABILITY);
-                if(level == 10){
+                if(level > 9){
                     damageDealt = 0;
                 }
 

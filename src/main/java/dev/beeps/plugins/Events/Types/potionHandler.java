@@ -19,8 +19,6 @@ public class potionHandler {
         int reduce_potency = plugin.config.getInt("potions.reduce_potency");
         int max_duration = plugin.config.getInt("potions.max_duration") * 20;
         int duration_penalty = plugin.config.getInt("potions.duration_penalty") * 20;
-
-
         boolean change_duration = plugin.config.getBoolean("potions.max_duration", true);
 
         // get effect stuff
