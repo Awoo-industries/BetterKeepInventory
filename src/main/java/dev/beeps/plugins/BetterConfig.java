@@ -283,7 +283,7 @@ public class BetterConfig {
 
         assert list != null;
         for(String material : list) {
-            materials.add(Material.getMaterial(material));
+            materials.add(Material.getMaterial(material.toUpperCase()));
         }
 
         return materials;
@@ -302,17 +302,17 @@ public class BetterConfig {
 
     public ItemMode getItemMode(String path){
         String value = this.getString(path, ItemMode.NONE.toString());
-        return ItemMode.valueOf(value);
+        return ItemMode.valueOf(value.toUpperCase());
     }
 
     public ExpMode getExpMode(String path){
         String value = this.getString(path, ExpMode.NONE.toString());
-        return ExpMode.valueOf(value);
+        return ExpMode.valueOf(value.toUpperCase());
     }
 
     public HungerMode getHungerMode(String path){
         String value = this.getString(path, HungerMode.NONE.toString());
-        return HungerMode.valueOf(value);
+        return HungerMode.valueOf(value.toUpperCase());
     }
 
     public List<String> getDisabledModesInWorld(String world){
