@@ -169,9 +169,27 @@ potions:
 # Requires Vault
 eco:
 
-  # Amount of money lost on death
+  # economy features are enabled/disabled?
+  enabled: false
+
+  # Sets the mode used for calculating economy lost
+  # Valid options are:
+  # "SIMPLE"          Lose a set amount on death
+  # "PERCENTAGE"      Lose a percentage of the current balance
+  mode: "SIMPLE"
+
+  # Amount of money lost on death (Or the percentage if percentage mode is used)
   amount: 0
 
+  # if set to a positive number, the amount taken is limited to this (only useful when percentage mode is used)
+  max_amount: -1
+
+  # Minimum balance of the player, if the player has less than this amount they will not be charged.
+  min_balance: 0
+
+  # If enabled, the balance lost is paid out to the killer of the player
+  # Only applicable in PvP Situations!
+  pay_to_killer: false
 
 overrides:
 

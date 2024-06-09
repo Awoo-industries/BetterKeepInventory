@@ -201,22 +201,48 @@ public class OnPlayerDeath  implements Listener {
 
     public void handleEcon(Player ply, Event evt){
 
+        // Ensure econ is enabled
+        if(!plugin.config.getBoolean("eco.enabled")){
+            return;
+        }
+
         if(plugin.checkDependency("Vault")){
 
-            if(plugin.config.getDouble("eco.amount") > 0){
-                Vault v = new Vault(plugin);
-                boolean r = v.takeMoney(ply, plugin.config.getDouble("eco.amount"));
+            Vault v = new Vault(plugin);
+            double amount = 0;
+
+            if(v.getPlayerBalance(ply) < plugin.config.getDouble("eco.min_balance")){
+                return;
+            }
+
+            switch(plugin.config.getEconMode("eco.mode")){
+
+                case SIMPLE:
+                    plugin.log(Level.FINE, ply, "PlayerHasDied->Econ:mode=SIMPLE");
+                    amount = plugin.config.getDouble("eco.amount");
+                    break;
+                case PERCENTAGE:
+                    plugin.log(Level.FINE, ply, "PlayerHasDied->Econ:mode=PERCENTAGE");
+                    double percentage = plugin.config.getDouble("eco.amount");
+                    double playerBalance = v.getPlayerBalance(ply);
+                    amount = (playerBalance / 100) * percentage;
+                    break;
+
+            }
+
+            // Round amount to nearest 2 digits
+            amount = Math.round(amount * 100.0) / 100.0;
+
+            if(amount > 0){
+                plugin.log(Level.FINE, ply, "PlayerHasDied->Econ:amount=" + amount);
+                boolean r = v.takeMoney(ply, amount);
                 if(r){
-                    ply.sendMessage(ChatColor.RED + "You lost $" + plugin.config.getDouble("eco.amount"));
+                    ply.sendMessage(ChatColor.RED + "You lost $" + amount);
                 }
             }
 
         }else{
-
-            if(plugin.config.getDouble("eco.amount") > 0){
-                plugin.log(Level.INFO, ply, "Tried to take money from the player but Vault was not detected, Or no economy plugin is installed!");
-            }
-
+            plugin.log(Level.WARNING, ply, "Tried to take money from the player but Vault was not detected, Or no economy plugin is installed!");
         }
     }
 }
