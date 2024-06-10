@@ -79,13 +79,13 @@ public class BetterConfig {
     public boolean moveConfigToOld(File file){
 
         // rename config to old config, just incase
-        boolean rDone = file.renameTo(new File(plugin.getDataFolder() + File.separator + "config.yml"));
+        boolean rDone = file.renameTo(new File(plugin.getDataFolder() + File.separator + "config.old.yml"));
         if(!rDone){
             plugin.log(Level.INFO, "ConfigMigrator", "Moving old config file failed, Disabling plugin!");
             plugin.getPluginLoader().disablePlugin(plugin);
             return false;
         }else{
-            plugin.log(Level.INFO, "ConfigMigrator", "Moved old config file to 'config.yml'");
+            plugin.log(Level.INFO, "ConfigMigrator", "Moved old config file to 'config.old.yml'");
             return true;
         }
     }
