@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -100,7 +102,17 @@ public class OnPlayerDeath  implements Listener {
 
         plugin.log(Level.FINE, ply, "###### Economy ######");
         if(!ply.hasPermission("betterkeepinventory.bypass.eco") && !config.GetOverrideForMode("ECO", ply) ) {
-            handleEcon(ply, event);
+            EntityDamageEvent dmg_event = ply.getLastDamageCause();
+            Player attacker = null;
+            if(dmg_event != null) {
+                if (dmg_event instanceof EntityDamageByEntityEvent entityDamageByEntityEvent) {
+                    if (entityDamageByEntityEvent.getDamager() instanceof Player atk) {
+                        attacker = atk;
+                    }
+                }
+            }
+
+            handleEcon(ply, attacker);
         }
 
         if(config.getBoolean("main.grace", true)){
@@ -199,7 +211,7 @@ public class OnPlayerDeath  implements Listener {
 
     }
 
-    public void handleEcon(Player ply, Event evt){
+    public void handleEcon(Player ply, Player attacker){
 
         // Ensure econ is enabled
         if(!plugin.config.getBoolean("eco.enabled")){
@@ -238,6 +250,13 @@ public class OnPlayerDeath  implements Listener {
                 boolean r = v.takeMoney(ply, amount);
                 if(r){
                     ply.sendMessage(ChatColor.RED + "You lost $" + amount);
+                }
+
+                if(attacker != null && attacker != ply && config.getBoolean("eco.pay_to_killer")) {
+                    boolean r2 = v.giveMoney(attacker, amount);
+                    if (r2) {
+                        attacker.sendMessage(ChatColor.GREEN + "You received $" + amount + " for killing " + ply.getDisplayName());
+                    }
                 }
             }
 
