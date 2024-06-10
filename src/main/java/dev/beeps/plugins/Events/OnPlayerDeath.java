@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -100,7 +102,17 @@ public class OnPlayerDeath  implements Listener {
 
         plugin.log(Level.FINE, ply, "###### Economy ######");
         if(!ply.hasPermission("betterkeepinventory.bypass.eco") && !config.GetOverrideForMode("ECO", ply) ) {
-            handleEcon(ply, event);
+            EntityDamageEvent dmg_event = ply.getLastDamageCause();
+            Player attacker = null;
+            if(dmg_event != null) {
+                if (dmg_event instanceof EntityDamageByEntityEvent entityDamageByEntityEvent) {
+                    if (entityDamageByEntityEvent.getDamager() instanceof Player atk) {
+                        attacker = atk;
+                    }
+                }
+            }
+
+            handleEcon(ply, attacker);
         }
 
         if(config.getBoolean("main.grace", true)){
@@ -199,24 +211,57 @@ public class OnPlayerDeath  implements Listener {
 
     }
 
-    public void handleEcon(Player ply, Event evt){
+    public void handleEcon(Player ply, Player attacker){
+
+        // Ensure econ is enabled
+        if(!plugin.config.getBoolean("eco.enabled")){
+            return;
+        }
 
         if(plugin.checkDependency("Vault")){
 
-            if(plugin.config.getDouble("eco.amount") > 0){
-                Vault v = new Vault(plugin);
-                boolean r = v.takeMoney(ply, plugin.config.getDouble("eco.amount"));
+            Vault v = new Vault(plugin);
+            double amount = 0;
+
+            if(v.getPlayerBalance(ply) < plugin.config.getDouble("eco.min_balance")){
+                return;
+            }
+
+            switch(plugin.config.getEconMode("eco.mode")){
+
+                case SIMPLE:
+                    plugin.log(Level.FINE, ply, "PlayerHasDied->Econ:mode=SIMPLE");
+                    amount = plugin.config.getDouble("eco.amount");
+                    break;
+                case PERCENTAGE:
+                    plugin.log(Level.FINE, ply, "PlayerHasDied->Econ:mode=PERCENTAGE");
+                    double percentage = plugin.config.getDouble("eco.amount");
+                    double playerBalance = v.getPlayerBalance(ply);
+                    amount = (playerBalance / 100) * percentage;
+                    break;
+
+            }
+
+            // Round amount to nearest 2 digits
+            amount = Math.round(amount * 100.0) / 100.0;
+
+            if(amount > 0){
+                plugin.log(Level.FINE, ply, "PlayerHasDied->Econ:amount=" + amount);
+                boolean r = v.takeMoney(ply, amount);
                 if(r){
-                    ply.sendMessage(ChatColor.RED + "You lost $" + plugin.config.getDouble("eco.amount"));
+                    ply.sendMessage(ChatColor.RED + "You lost $" + amount);
+                }
+
+                if(attacker != null && attacker != ply && config.getBoolean("eco.pay_to_killer")) {
+                    boolean r2 = v.giveMoney(attacker, amount);
+                    if (r2) {
+                        attacker.sendMessage(ChatColor.GREEN + "You received $" + amount + " for killing " + ply.getDisplayName());
+                    }
                 }
             }
 
         }else{
-
-            if(plugin.config.getDouble("eco.amount") > 0){
-                plugin.log(Level.INFO, ply, "Tried to take money from the player but Vault was not detected, Or no economy plugin is installed!");
-            }
-
+            plugin.log(Level.WARNING, ply, "Tried to take money from the player but Vault was not detected, Or no economy plugin is installed!");
         }
     }
 }

@@ -44,6 +44,11 @@ public class BetterConfig {
         KEEP,
     }
 
+    public enum EconMode {
+        SIMPLE,
+        PERCENTAGE
+    }
+
     public BetterConfig(BetterKeepInventory _plugin, FileConfiguration _config){
 
         // set instance to config object
@@ -59,6 +64,9 @@ public class BetterConfig {
                 break;
             case 2:
                 migrateTo1p4();
+                break;
+            case 3:
+                migrateToExpandedEco();
                 break;
 
         }
@@ -241,6 +249,28 @@ public class BetterConfig {
 
     }
 
+    public void migrateToExpandedEco(){
+
+        plugin.log(Level.INFO, "ConfigMigrator", "Migrating to config format 4");
+        File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
+
+        if(!moveConfigToOld(file)){
+            plugin.log(Level.WARNING, "ConfigMigrator", "Could not back up config file, stopping migration!");
+            return;
+        };
+
+        config.set("main.config_version", 4);
+        config.set("eco.enabled", false); // introduce and set basic eco toggle
+        config.set("eco.min_balance", 0); // new Min balance to trigger eco loss
+        config.set("eco.mode", "SIMPLE"); // new Eco Modes (SIMPLE & PERCENTAGE)
+        config.set("eco.pay_to_killer", false); // new Eco Pay killer (PvP Only)
+
+        plugin.saveConfig();
+        plugin.log(Level.INFO, "ConfigMigrator", "Saved new config");
+        plugin.log(Level.INFO, "ConfigMigrator", "Completed migration to format 4");
+
+    }
+
     public boolean getBoolean(String path){
         return this.config.getBoolean(path);
     }
@@ -316,6 +346,11 @@ public class BetterConfig {
     public HungerMode getHungerMode(String path){
         String value = this.getString(path, HungerMode.NONE.toString());
         return HungerMode.valueOf(value.toUpperCase());
+    }
+
+    public EconMode getEconMode(String path){
+        String value = this.getString(path, EconMode.SIMPLE.toString());
+        return EconMode.valueOf(value.toUpperCase());
     }
 
     public List<String> getDisabledModesInWorld(String world){
