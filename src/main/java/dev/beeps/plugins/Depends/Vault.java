@@ -16,8 +16,17 @@ public class Vault {
         economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
     }
 
+    public double getPlayerBalance(Player ply){
+        return economyProvider.getProvider().getBalance(ply);
+    }
+
     public boolean takeMoney(Player ply, Double amount){
-        EconomyResponse r = economyProvider.getProvider().withdrawPlayer(ply, plugin.config.getDouble("eco.amount"));
+        EconomyResponse r = economyProvider.getProvider().withdrawPlayer(ply, amount);
+        return r.transactionSuccess();
+    }
+
+    public boolean giveMoney(Player ply, Double amount){
+        EconomyResponse r = economyProvider.getProvider().depositPlayer(ply, amount);
         return r.transactionSuccess();
     }
 
