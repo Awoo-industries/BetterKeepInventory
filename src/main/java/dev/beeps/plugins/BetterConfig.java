@@ -49,6 +49,19 @@ public class BetterConfig {
         PERCENTAGE
     }
 
+    public enum OverrideTypes {
+        ALL,
+        ITEMS,
+        ARMOR,
+        INVENTORY,
+        HOTBAR,
+        EXP,
+        EXP_LEVEL,
+        POTIONS,
+        HUNGER,
+        ECO
+    }
+
     public BetterConfig(BetterKeepInventory _plugin, FileConfiguration _config){
 
         // set instance to config object
