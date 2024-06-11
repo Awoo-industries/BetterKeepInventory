@@ -6,12 +6,16 @@ prefix: BetterKeepInventory
 authors: [ BeepSterr ]
 website: beeps.dev
 
-softdepend: [Vault,Towny,Essentials]
+softdepend: [Vault,Towny,Essentials,GriefPrevention]
 
-# AutoPlug support
+# AutoPlug
 spigot-id: 93081
 
 permissions:
+
+  betterkeepinventory.test:
+    description: Test overrides at your location
+    default: false
 
   betterkeepinventory.bypass:
     description: Group node for bypassing all plugin functionality (revert to vanilla keepInventory)

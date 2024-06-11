@@ -249,4 +249,23 @@ overrides:
         - ITEMS
         - HUNGER
 
+  grief_prevention:
 
+    enabled: false
+    claims:
+      own:    # Claims owned by the user
+        - ALL
+      admin:    # Admin claims
+        - NONE
+      edit:   # Claims where the user has "edit" permission
+        - NONE
+      build:   # Claims where the user has "build" permission
+        - NONE
+      inventory:   # Claims where the user has "inventory" permission
+        - NONE
+      access:   # Claims where the user has "access" permission
+        - NONE
+      manage:   # Claims where the user has "manage" permission
+        - NONE
+      any:   # Any claim
+        - NONE

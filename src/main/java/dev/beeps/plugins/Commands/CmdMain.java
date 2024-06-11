@@ -6,11 +6,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+
+import java.util.*;
 
 public class CmdMain implements CommandExecutor {
 
@@ -35,6 +35,9 @@ public class CmdMain implements CommandExecutor {
             case "info":
                 return sendPluginInfo(sender);
 
+            case "test":
+                return sendTestMessage(sender, command, label, args);
+
             default:
                 sender.sendMessage(ChatColor.RED + "Invalid subcommand");
 
@@ -54,6 +57,10 @@ public class CmdMain implements CommandExecutor {
         sender.sendMessage(ChatColor.GRAY + "");
         sender.sendMessage(ChatColor.BLUE + "/bki info");
         sender.sendMessage(ChatColor.AQUA + "Gets the current settings for BetterKeepInventory");
+
+        sender.sendMessage(ChatColor.GRAY + "");
+        sender.sendMessage(ChatColor.BLUE + "/bki test");
+        sender.sendMessage(ChatColor.AQUA + "Tests your location for overrides");
 
         sender.sendMessage(ChatColor.GRAY + "");
         sender.sendMessage(ChatColor.BLUE + "/bki reload");
@@ -144,8 +151,7 @@ public class CmdMain implements CommandExecutor {
 
     private boolean reload(CommandSender sender, Command command, String label, String[] args){
 
-        if (sender instanceof Player) {
-            Player ply = (Player) sender;
+        if (sender instanceof Player ply) {
             if(!ply.hasPermission("betterkeepinventory.reload")){
                 sender.sendMessage(ChatColor.RED + "Missing permission.");
                 return true;
@@ -157,6 +163,51 @@ public class CmdMain implements CommandExecutor {
 
 
         return true;
+    }
+
+    private boolean sendTestMessage(CommandSender sender, Command command, String label, String[] args){
+
+        if (sender instanceof Player ply) {
+            if(!ply.hasPermission("betterkeepinventory.test")){
+                sender.sendMessage(ChatColor.RED + "Missing permission.");
+                return true;
+            }
+
+            if(plugin.config.GetOverrideForMode("ALL", ply)){
+                ply.sendMessage(ChatColor.GREEN + "✔" + ChatColor.GRAY + " All modes are overridden.");
+            }else{
+
+                Map<String, Boolean> typeMap = new HashMap<String, Boolean>();
+                typeMap.put("ALL", plugin.config.GetOverrideForMode("ALL", ply));
+                typeMap.put("ITEMS", plugin.config.GetOverrideForMode("ITEMS", ply));
+                typeMap.put("ARMOR", plugin.config.GetOverrideForMode("ARMOR", ply));
+                typeMap.put("HOTBAR", plugin.config.GetOverrideForMode("HOTBAR", ply));
+                typeMap.put("INVENTORY", plugin.config.GetOverrideForMode("INVENTORY", ply));
+                typeMap.put("EXP", plugin.config.GetOverrideForMode("EXP", ply));
+                typeMap.put("HUNGER", plugin.config.GetOverrideForMode("HUNGER", ply));
+                typeMap.put("POTIONS", plugin.config.GetOverrideForMode("POTIONS", ply));
+                typeMap.put("ECO", plugin.config.GetOverrideForMode("ECO", ply));
+
+                StringBuilder mainResponse = new StringBuilder();
+                for(Map.Entry<String, Boolean> entry : typeMap.entrySet()){
+                    mainResponse.append(entry.getValue() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖").append(entry.getKey()).append(ChatColor.GRAY).append(" | ");
+                }
+
+                ply.sendMessage(mainResponse.toString());
+            }
+
+            ply.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "Location tested only. Gamemode, Gamerule and Permission Bypasses were not checked.");
+
+            return true;
+
+        }
+
+        if(sender instanceof ConsoleCommandSender){
+            sender.sendMessage("This command can only be run by a player.");
+            return true;
+        }
+
+        return false;
     }
 
 

@@ -1,6 +1,9 @@
 package dev.beeps.plugins;
 
+import dev.beeps.plugins.Depends.GriefPreventionApi;
 import dev.beeps.plugins.Depends.Towny;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.ClaimPermission;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -63,7 +66,7 @@ public class BetterConfig {
                 migrateTo1p4();
                 break;
             case 3:
-                migrateToExpandedEco();
+                migrateToExpandedEcoAndGriefPrevention();
                 break;
 
         }
@@ -246,7 +249,7 @@ public class BetterConfig {
 
     }
 
-    public void migrateToExpandedEco(){
+    public void migrateToExpandedEcoAndGriefPrevention(){
 
         plugin.log(Level.INFO, "ConfigMigrator", "Migrating to config format 4");
         File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
@@ -261,6 +264,21 @@ public class BetterConfig {
         config.set("eco.min_balance", 0); // new Min balance to trigger eco loss
         config.set("eco.mode", "SIMPLE"); // new Eco Modes (SIMPLE & PERCENTAGE)
         config.set("eco.pay_to_killer", false); // new Eco Pay killer (PvP Only)
+
+        // Grief Prevention Overrides
+
+        config.set("overrides.grief_prevention.enabled", false);
+
+        String[] default_overrides = {"NONE"};
+        String[] own_claim = {"ALL"};
+
+        config.set("overrides.grief_prevention.claims.own", own_claim);
+        config.set("overrides.grief_prevention.claims.admin", default_overrides);
+        config.set("overrides.grief_prevention.claims.edit", default_overrides);
+        config.set("overrides.grief_prevention.claims.build", default_overrides);
+        config.set("overrides.grief_prevention.claims.inventory", default_overrides);
+        config.set("overrides.grief_prevention.claims.access", default_overrides);
+        config.set("overrides.grief_prevention.claims.any", default_overrides);
 
         plugin.saveConfig();
         plugin.log(Level.INFO, "ConfigMigrator", "Saved new config");
@@ -356,19 +374,42 @@ public class BetterConfig {
         List<String> anylist = this.config.getStringList("overrides.worlds.all");
         return Stream.concat(worldlist.stream(), anylist.stream()).toList();
     }
+
     public List<String> getDisabledModesInWorldByDamageType(String world, String damageType){
         plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.worlds." + world);
         List<String> worldlist = this.config.getStringList("overrides.worlds." + world + ".damage_types." + damageType);
         List<String> anylist = this.config.getStringList("overrides.worlds.all.damage_types." + damageType);
         return Stream.concat(worldlist.stream(), anylist.stream()).toList();
     }
+
     public List<String> getDisabledModesInTown(String town_name){
         plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.towny.towns." + town_name);
         return this.config.getStringList("overrides.towny.towns." + town_name);
     }
+
     public List<String> getDisabledModesInNation(String nation_name){
         plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.towny.nations." + nation_name);
         return this.config.getStringList("overrides.towny.nations." + nation_name);
+    }
+
+    public List<String> getDisabledModesInGPClaim(ClaimPermission perm){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.grief_prevention.claims." + perm.toString().toLowerCase());
+        return this.config.getStringList("overrides.grief_prevention.claims." + perm.toString().toLowerCase());
+    }
+
+    public List<String> getDisabledModesInOwnGPClaim(){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.grief_prevention.claims.own");
+        return this.config.getStringList("overrides.grief_prevention.claims.own");
+    }
+
+    public List<String> getDisabledModesInAnyGPClaim(){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.grief_prevention.claims.any");
+        return this.config.getStringList("overrides.grief_prevention.claims.any");
+    }
+
+    public List<String> getDisabledModesinAdminGPClaim(){
+        plugin.log(Level.FINE, "GetOverrideForMode->GetPath:" + "overrides.grief_prevention.claims.admin");
+        return this.config.getStringList("overrides.grief_prevention.claims.admin");
     }
 
     public boolean GetOverrideForMode(String mode, Player ply){
@@ -455,7 +496,59 @@ public class BetterConfig {
 
         }
 
-        plugin.log(Level.FINE, ply, "GetOverrideForMode->None");
+        // TODO Implement overrides for Grief Prevention!
+        if(config.getBoolean("overrides.grief_prevention.enabled") && plugin.checkDependency("GriefPrevention")){
+
+            plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention");
+
+            GriefPreventionApi gpApi = new GriefPreventionApi(ply);
+            Claim playerInClaim = gpApi.GetClaimAtPlayerPos(ply);
+
+            if(playerInClaim != null){
+
+                plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:OwnedBy:" + playerInClaim.getOwnerName());
+                
+                if(getDisabledModesInGPClaim(ClaimPermission.Edit).contains(mode) && playerInClaim.hasExplicitPermission(ply, ClaimPermission.Edit) ){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Edit");
+                    return true;
+                }
+                if(getDisabledModesInGPClaim(ClaimPermission.Build).contains(mode) && playerInClaim.hasExplicitPermission(ply, ClaimPermission.Build) ){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Build");
+                    return true;
+                }
+                if(getDisabledModesInGPClaim(ClaimPermission.Inventory).contains(mode) && playerInClaim.hasExplicitPermission(ply, ClaimPermission.Inventory) ){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Inventory");
+                    return true;
+                }
+                if(getDisabledModesInGPClaim(ClaimPermission.Access).contains(mode) && playerInClaim.hasExplicitPermission(ply, ClaimPermission.Access) ){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Access");
+                    return true;
+                }
+                if(getDisabledModesInGPClaim(ClaimPermission.Manage).contains(mode) && playerInClaim.hasExplicitPermission(ply, ClaimPermission.Manage) ){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Manage");
+                    return true;
+                }
+
+                if(getDisabledModesInOwnGPClaim().contains(mode) && playerInClaim.ownerID != null && playerInClaim.ownerID.equals(ply.getUniqueId()) ){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Owned");
+                    return true;
+                }
+
+                if(getDisabledModesinAdminGPClaim().contains(mode) && playerInClaim.isAdminClaim()){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Admin");
+                    return true;
+                }
+
+                if(getDisabledModesInAnyGPClaim().contains(mode)){
+                    plugin.log(Level.FINE, ply, "GetOverrideForMode->GriefPrevention->Claim:Any");
+                    return true;
+                }
+            }
+
+        }
+
+
+        plugin.log(Level.FINE, ply, "GetOverrideForMode->Finished (No Override Triggered)");
         return false;
 
     }
