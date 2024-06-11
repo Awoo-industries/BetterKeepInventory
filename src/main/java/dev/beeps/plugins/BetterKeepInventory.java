@@ -6,6 +6,7 @@ package dev.beeps.plugins;
  */
 
 import dev.beeps.plugins.Commands.CmdMain;
+import dev.beeps.plugins.Depends.Papi;
 import dev.beeps.plugins.Events.OnPlayerDeath;
 import dev.beeps.plugins.Events.OnPlayerRespawn;
 import org.bstats.bukkit.Metrics;
@@ -34,9 +35,12 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     public Map<UUID, ArrayList<PotionEffect>> potionMap = new HashMap<UUID, ArrayList<org.bukkit.potion.PotionEffect>>();
     public Map<UUID, Integer> graceMap = new HashMap<UUID, Integer>();
 
+    static public BetterKeepInventory instance;
+
     @Override
     public void onEnable() {
 
+        instance = this;
         config = new BetterConfig(this, _config);
 
         // event handlers
@@ -52,6 +56,12 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
         // loops
         startGraceCheck();
+
+        // Enable PAPI Integration
+        if(checkDependency("PlaceholderAPI")){
+            log(Level.INFO, "PlaceholderAPI found, enabling extension");
+            new Papi().register();
+        }
 
     }
 

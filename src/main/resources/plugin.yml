@@ -6,7 +6,7 @@ prefix: BetterKeepInventory
 authors: [ BeepSterr ]
 website: beeps.dev
 
-softdepend: [Vault,Towny,Essentials,GriefPrevention]
+softdepend: [Vault,Towny,Essentials,GriefPrevention,PlaceholderAPI]
 
 # AutoPlug
 spigot-id: 93081
