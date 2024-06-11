@@ -91,6 +91,8 @@ public class ItemHandler {
 
             }
 
+            damageDealt = Math.max(0, Math.min(damageDealt, type.getMaxDurability() - damageableMeta.getDamage()));
+            plugin.durabilityPointsLost += damageDealt;
             plugin.log(Level.FINE, ply, "finalDamageCalc:" + damageDealt);
 
             // set damage

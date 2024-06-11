@@ -10,6 +10,7 @@ import dev.beeps.plugins.Depends.Papi;
 import dev.beeps.plugins.Events.OnPlayerDeath;
 import dev.beeps.plugins.Events.OnPlayerRespawn;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,12 +19,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     public int[] armorSlots = new int[]{ 36,37,38,39 };
     public int[] hotbarSlots = new int[]{ 0,1,2,3,4,5,6,7,8,40 };
+
+    public int durabilityPointsLost = 0;
 
     public FileConfiguration _config = getConfig();
     public BetterConfig config;
@@ -53,6 +57,16 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         // misc
         getServer().getPluginManager().registerEvents(this, this);
         Metrics metrics = new Metrics(this, 11596);
+
+        metrics.addCustomChart(new SingleLineChart("durability_lost", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                log(Level.FINE, "Metrics", "durability_lost: " + durabilityPointsLost);
+                int amount = durabilityPointsLost;
+                durabilityPointsLost = 0;
+                return amount;
+            }
+        }));
 
         // loops
         startGraceCheck();

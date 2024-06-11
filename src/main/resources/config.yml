@@ -1,10 +1,11 @@
 #
 #   BetterKeepInventory By BeepSterr
-#   Version 1.4
+#   Version 1.6
 #
 #   SpigotMC:         https://www.spigotmc.org/resources/betterkeepinventory.93081/
 #   Documentation:    https://beeps.notion.site/Better-Keep-Inventory-f5d49a15a8174ce598bbb876d3003e46
-#   GitHub:           https://github.com/beepsdev/BetterKeepInventory
+#   GitHub:           https://github.com/Awoo-industries/BetterKeepInventory
+#   Discord:          https://leafcat.live/discord
 #
 
 main:
@@ -18,7 +19,7 @@ main:
 
   # Used internally to determine if migrations need to happen
   # You should __NEVER__ have to change this. (And you might break it if you do)
-  config_version: 3
+  config_version: 4
 
   # Allows users to have a "grace period" after dying where they wont be affected by the plugin
   # in seconds (300 = 5 minutes) set to 0 to disable
