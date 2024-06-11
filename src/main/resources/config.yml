@@ -255,15 +255,17 @@ overrides:
     claims:
       own:    # Claims owned by the user
         - ALL
+      admin:    # Admin claims
+        - NONE
       edit:   # Claims where the user has "edit" permission
-        - ALL
+        - NONE
       build:   # Claims where the user has "build" permission
-        - ALL
+        - NONE
       inventory:   # Claims where the user has "inventory" permission
-        - ALL
+        - NONE
       access:   # Claims where the user has "access" permission
-        - ALL
+        - NONE
       manage:   # Claims where the user has "manage" permission
-        - ALL
+        - NONE
       any:   # Any claim
-        - ALL
+        - NONE

@@ -59,6 +59,10 @@ public class CmdMain implements CommandExecutor {
         sender.sendMessage(ChatColor.AQUA + "Gets the current settings for BetterKeepInventory");
 
         sender.sendMessage(ChatColor.GRAY + "");
+        sender.sendMessage(ChatColor.BLUE + "/bki test");
+        sender.sendMessage(ChatColor.AQUA + "Tests your location for overrides");
+
+        sender.sendMessage(ChatColor.GRAY + "");
         sender.sendMessage(ChatColor.BLUE + "/bki reload");
         sender.sendMessage(ChatColor.AQUA + "Reloads the plugin");
         return true;
@@ -169,22 +173,29 @@ public class CmdMain implements CommandExecutor {
                 return true;
             }
 
-            Map<String, Boolean> typeMap = new HashMap<String, Boolean>();
-            typeMap.put("ALL", plugin.config.GetOverrideForMode("ALL", ply));
-            typeMap.put("ITEMS", plugin.config.GetOverrideForMode("ITEMS", ply));
-            typeMap.put("ARMOR", plugin.config.GetOverrideForMode("ARMOR", ply));
-            typeMap.put("HOTBAR", plugin.config.GetOverrideForMode("HOTBAR", ply));
-            typeMap.put("INVENTORY", plugin.config.GetOverrideForMode("INVENTORY", ply));
-            typeMap.put("EXP", plugin.config.GetOverrideForMode("EXP", ply));
-            typeMap.put("HUNGER", plugin.config.GetOverrideForMode("HUNGER", ply));
-            typeMap.put("POTIONS", plugin.config.GetOverrideForMode("POTIONS", ply));
+            if(plugin.config.GetOverrideForMode("ALL", ply)){
+                ply.sendMessage(ChatColor.GREEN + "✔" + ChatColor.GRAY + " All modes are overridden.");
+            }else{
 
-            StringBuilder mainResponse = new StringBuilder();
-            for(Map.Entry<String, Boolean> entry : typeMap.entrySet()){
-                mainResponse.append(entry.getValue() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖").append(entry.getKey()).append(ChatColor.GRAY).append(" | ");
+                Map<String, Boolean> typeMap = new HashMap<String, Boolean>();
+                typeMap.put("ALL", plugin.config.GetOverrideForMode("ALL", ply));
+                typeMap.put("ITEMS", plugin.config.GetOverrideForMode("ITEMS", ply));
+                typeMap.put("ARMOR", plugin.config.GetOverrideForMode("ARMOR", ply));
+                typeMap.put("HOTBAR", plugin.config.GetOverrideForMode("HOTBAR", ply));
+                typeMap.put("INVENTORY", plugin.config.GetOverrideForMode("INVENTORY", ply));
+                typeMap.put("EXP", plugin.config.GetOverrideForMode("EXP", ply));
+                typeMap.put("HUNGER", plugin.config.GetOverrideForMode("HUNGER", ply));
+                typeMap.put("POTIONS", plugin.config.GetOverrideForMode("POTIONS", ply));
+                typeMap.put("ECO", plugin.config.GetOverrideForMode("ECO", ply));
+
+                StringBuilder mainResponse = new StringBuilder();
+                for(Map.Entry<String, Boolean> entry : typeMap.entrySet()){
+                    mainResponse.append(entry.getValue() ? ChatColor.GREEN + "✔" : ChatColor.RED + "✖").append(entry.getKey()).append(ChatColor.GRAY).append(" | ");
+                }
+
+                ply.sendMessage(mainResponse.toString());
             }
 
-            ply.sendMessage(mainResponse.toString());
             ply.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "Location tested only. Gamemode, Gamerule and Permission Bypasses were not checked.");
 
             return true;
