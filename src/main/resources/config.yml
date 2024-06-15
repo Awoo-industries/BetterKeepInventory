@@ -43,6 +43,12 @@ items:
     # Should we always leave at least 1 use left on items?
     dont_break: true
 
+    # Any item with a custom name that includes this text will be ignored and left alone. set to "NONE" to disable.
+    ignored_name: "NONE"
+
+    # Any item with a custom lore that includes this text will be ignored and left alone. set to "NONE" to disable.
+    ignored_lore: "NONE"
+
     # Materials in this list will be ignored
     # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
     # Example:
@@ -71,6 +77,12 @@ items:
     # Should we always leave at least 1 use left on items?
     dont_break: true
 
+    # Any item with a custom name that includes this text will be ignored and left alone. set to "NONE" to disable.
+    ignored_name: "NONE"
+
+    # Any item with a custom lore that includes this text will be ignored and left alone. set to "NONE" to disable.
+    ignored_lore: "NONE"
+
     # Materials in this list will be ignored
     # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
     # Example:
@@ -98,6 +110,12 @@ items:
 
     # Should we always leave at least 1 use left on items?
     dont_break: true
+
+    # Any item with a custom name that includes this text will be ignored and left alone. set to "NONE" to disable.
+    ignored_name: "NONE"
+
+    # Any item with a custom lore that includes this text will be ignored and left alone. set to "NONE" to disable.
+    ignored_lore: "NONE"
 
     # Materials in this list will be ignored
     # Use names from this list: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html

@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class ItemHandler {
@@ -38,18 +39,36 @@ public class ItemHandler {
         boolean use_enchantments = config.getBoolean(path("use_enchantments"), true);
         boolean dont_break = config.getBoolean(path("dont_break"), true);
 
-//        String ingored_name = config.getString(path("name"), "NONE");
-//        String ignored_lore = config.getString(path("lore"), "NONE");
-
         List<Material> ignored_materials = config.getMaterialList(path("ignored_materials"));
 
-        if(ignored_materials.contains(item.getType())){
+        ItemMeta meta = item.getItemMeta();
+        Material type = item.getType();
+
+        if(ignored_materials.contains(type)){
             plugin.log(Level.FINE, ply, "Exited Early: Item is in ignored_materials");
             return;
         }
 
-        ItemMeta meta = item.getItemMeta();
-        Material type = item.getType();
+        if(meta != null){
+            String ingored_name = config.getString(path("ignored_name"), "NONE");
+            String ignored_lore = config.getString(path("ignored_lore"), "NONE");
+
+            if(!Objects.equals(ingored_name, "NONE") && meta.getDisplayName().toLowerCase().contains(ingored_name.toLowerCase())){
+                plugin.log(Level.FINE, ply, "Exited Early: Item contains ignored name");
+                return;
+            }
+
+            if(!Objects.equals(ignored_lore, "NONE") && meta.getLore() != null) {
+                for (String lore : Objects.requireNonNull(meta.getLore())) {
+                    if (lore.toLowerCase().contains(ignored_lore.toLowerCase())) {
+                        plugin.log(Level.FINE, ply, "Exited Early: Item contains ignored lore");
+                        return;
+                    }
+                }
+            }
+        }
+
+
 
         if(meta instanceof Damageable damageableMeta) {
 

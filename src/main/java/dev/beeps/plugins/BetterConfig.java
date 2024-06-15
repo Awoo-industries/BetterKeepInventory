@@ -81,6 +81,9 @@ public class BetterConfig {
             case 3:
                 migrateToExpandedEcoAndGriefPrevention();
                 break;
+            case 4:
+                migrateToNameAndLore();
+                break;
 
         }
 
@@ -296,6 +299,33 @@ public class BetterConfig {
         plugin.saveConfig();
         plugin.log(Level.INFO, "ConfigMigrator", "Saved new config");
         plugin.log(Level.INFO, "ConfigMigrator", "Completed migration to format 4");
+
+    }
+
+    public void migrateToNameAndLore(){
+
+        plugin.log(Level.INFO, "ConfigMigrator", "Migrating to config format 5");
+        File file = new File(plugin.getDataFolder() + File.separator + "config.yml");
+
+        if(!moveConfigToOld(file)){
+            plugin.log(Level.WARNING, "ConfigMigrator", "Could not back up config file, stopping migration!");
+            return;
+        };
+
+        config.set("main.config_version", 5);
+
+        config.set("items.hotbar.ignored_name", "NONE");
+        config.set("items.hotbar.ignored_lore", "NONE");
+
+        config.set("items.inventory.ignored_name", "NONE");
+        config.set("items.inventory.ignored_lore", "NONE");
+
+        config.set("items.armor.ignored_name", "NONE");
+        config.set("items.armor.ignored_lore", "NONE");
+
+        plugin.saveConfig();
+        plugin.log(Level.INFO, "ConfigMigrator", "Saved new config");
+        plugin.log(Level.INFO, "ConfigMigrator", "Completed migration to format 5");
 
     }
 
