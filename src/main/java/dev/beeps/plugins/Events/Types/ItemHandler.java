@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -39,8 +38,8 @@ public class ItemHandler {
         boolean use_enchantments = config.getBoolean(path("use_enchantments"), true);
         boolean dont_break = config.getBoolean(path("dont_break"), true);
 
-        String ingored_name = config.getString(path("name"), "NONE");
-        String ignored_lore = config.getString(path("lore"), "NONE");
+//        String ingored_name = config.getString(path("name"), "NONE");
+//        String ignored_lore = config.getString(path("lore"), "NONE");
 
         List<Material> ignored_materials = config.getMaterialList(path("ignored_materials"));
 
@@ -52,9 +51,8 @@ public class ItemHandler {
         ItemMeta meta = item.getItemMeta();
         Material type = item.getType();
 
-        if(meta instanceof Damageable) {
+        if(meta instanceof Damageable damageableMeta) {
 
-            Damageable damageableMeta = (Damageable) meta;
             int damageDealt = 0;
 
             plugin.log(Level.FINE, ply, "Using Damage mode " + mode);
@@ -77,7 +75,7 @@ public class ItemHandler {
             if( use_enchantments && item.getEnchantments().containsKey(Enchantment.VANISHING_CURSE)){
                 plugin.log(Level.FINE, ply, "Found vanishing curse!!!");
                 item.setAmount(item.getAmount() - 1);
-            };
+            }
 
             // Unbreaking Enchant
             if( use_enchantments && item.getEnchantments().containsKey(Enchantment.DURABILITY)){
@@ -88,24 +86,23 @@ public class ItemHandler {
                 }
 
                 damageDealt = damageDealt / (level+1);
-
             }
 
-            damageDealt = Math.max(0, Math.min(damageDealt, type.getMaxDurability() - damageableMeta.getDamage()));
-            plugin.durabilityPointsLost += damageDealt;
-            plugin.log(Level.FINE, ply, "finalDamageCalc:" + damageDealt);
+            // bStats flair
+            int reportedDamageDealt = Math.max(0, Math.min(damageDealt, type.getMaxDurability() - damageableMeta.getDamage()));
+            plugin.durabilityPointsLost += reportedDamageDealt;
 
-            // set damage
-            damageableMeta.setDamage(damageableMeta.getDamage() + damageDealt);
-            item.setItemMeta(meta);
 
-            if(type.getMaxDurability() - damageableMeta.getDamage() < 0){
+            if( ( type.getMaxDurability() - damageableMeta.getDamage()) - damageDealt < 0){
 
-                if( config.getBoolean(path("dont_break"))){
+                if( dont_break ){
+
                     plugin.log(Level.FINE, ply, "Item was left with 0 durability.");
                     damageableMeta.setDamage(type.getMaxDurability());
                     item.setItemMeta(meta);
+
                 }else{
+
                     plugin.log(Level.FINE, ply, "Item was destroyed.");
 
 //                    ply.getInventory().setItem(slotIndex, new ItemStack(Material.AIR));
@@ -115,6 +112,12 @@ public class ItemHandler {
 
                     ply.getWorld().playSound(ply.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.8f, 0.8f);
                 }
+
+            }else{
+
+                // set damage
+                damageableMeta.setDamage(damageableMeta.getDamage() + damageDealt);
+                item.setItemMeta(meta);
 
             }
 
