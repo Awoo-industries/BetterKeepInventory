@@ -11,10 +11,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
+import java.util.Random;
 import java.util.logging.Level;
 
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
+    public Random rng = new Random();
     public Config config;
     static public BetterKeepInventory instance;
 
@@ -43,6 +45,16 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         if(checkDependency("PlaceholderAPI")){
             getLogger().log(Level.INFO, "Hello PlaceholderAPI! It's good to see you!");
             new BetterKeepInventoryPlaceholderExpansion().register();
+        }
+
+        // Enable PAPI Integration
+        if(checkDependency("Vault")){
+            getLogger().log(Level.INFO, "Hello Vault! How's the economy?");
+        }
+
+        // Enable PAPI Integration
+        if(checkDependency("Towny")){
+            getLogger().log(Level.INFO, "Hello Towny! How are the kids?");
         }
 
     }

@@ -1,5 +1,6 @@
 package com.beepsterr.plugins.Effects;
 
+import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.ConfigRule;
 import com.beepsterr.plugins.Library.DropItems;
 import org.bukkit.Material;
@@ -8,6 +9,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.List;
+import java.util.Random;
 
 public class DropItemEffect extends Effect {
 
@@ -26,6 +28,8 @@ public class DropItemEffect extends Effect {
     @Override
     public void runDeath(Player ply, PlayerDeathEvent event) {
 
+        Random rng = BetterKeepInventory.getInstance().rng;
+
         // get items to drop
         List<Material> items = drop.getItems().getMaterials();
 
@@ -35,9 +39,55 @@ public class DropItemEffect extends Effect {
             var item = ply.getInventory().getItem(i);
             if (item != null && items.contains(item.getType())) {
 
-                // drop the item
-                ply.getWorld().dropItemNaturally(ply.getLocation(), item);
-                ply.getInventory().setItem(i, null);
+                // We can simply drop it all if mode is set to ALL.
+                if(drop.getMode() == DropItems.Mode.ALL){
+                    ply.getWorld().dropItemNaturally(ply.getLocation(), item);
+                    ply.getInventory().setItem(i, null);
+                }
+
+                // Now this is where it gets complicated kid
+                // SIMPLE will drop a random amount of items between min and max
+                // PERCENTAGE will dorp a percentage of items between min and max pct's
+
+                int inventoryCount = item.getAmount();
+
+                int removalCount = 0;
+                switch(drop.getMode()){
+                    case SIMPLE: // drop a random amount of items between min and max
+                        removalCount = (int) (drop.getMin() + (drop.getMax() - drop.getMin()) * rng.nextDouble());
+                        break;
+                    case PERCENTAGE:
+                        // drop a percentage of items between min and max pct's
+                        double percentage = drop.getMin() + (drop.getMax() - drop.getMin()) * rng.nextDouble();
+                        removalCount = (int) (inventoryCount * (percentage / 100.0));
+                        break;
+
+                }
+
+                BetterKeepInventory.getInstance().getLogger().info(removalCount + " items to drop from " + item.getType() + " in slot " + i);
+
+                // make sure we don't drop more items than we have
+                if(inventoryCount - removalCount < 0){
+                    removalCount = inventoryCount;
+                }
+
+                // if removalCount is 0, we don't drop anything
+                if(removalCount == 0){
+                    continue;
+                }
+
+                // clone and drop item
+                var itemClone = item.clone();
+                itemClone.setAmount(removalCount);
+                ply.getWorld().dropItemNaturally(ply.getLocation(), itemClone);
+
+                // update the inventory with the new amount
+                if(inventoryCount - removalCount == 0){
+                    ply.getInventory().setItem(i, null); // if we have no items left, set to null
+                }else{
+                    item.setAmount(inventoryCount - removalCount);
+                    ply.getInventory().setItem(i, item);
+                }
 
             }
         }

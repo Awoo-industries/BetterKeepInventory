@@ -40,15 +40,21 @@ public class ConfigRule {
             this.conditions = new Conditions(Objects.requireNonNull(config.getConfigurationSection("conditions")));
         }
 
-        // Parse damage configuration
-        if (config.isConfigurationSection( "damage")) {
-            this.damage = new DamageItems(Objects.requireNonNull(config.getConfigurationSection("damage")));
+        if(config.isConfigurationSection("effects")){
+            ConfigurationSection effects = config.getConfigurationSection("effects");
+            if(effects != null){
+                // Parse damage configuration
+                if (effects.isConfigurationSection( "damage")) {
+                    this.damage = new DamageItems(Objects.requireNonNull(effects.getConfigurationSection("damage")));
+                }
+
+                // Parse drop configuration
+                if (effects.isConfigurationSection( "drop")) {
+                    this.drop = new DropItems(Objects.requireNonNull(effects.getConfigurationSection("drop")));
+                }
+            }
         }
 
-        // Parse drop configuration
-        if (config.isConfigurationSection( "drop")) {
-            this.drop = new DropItems(Objects.requireNonNull(config.getConfigurationSection("drop")));
-        }
 
         // Parse children rules
         this.children = new ArrayList<>();
