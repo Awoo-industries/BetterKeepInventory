@@ -62,7 +62,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>dev.beeps.plugins.BetterKeepInventory</shadedPattern>
+                                    <shadedPattern>com.beepsterr.plugins.BetterKeepInventory</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

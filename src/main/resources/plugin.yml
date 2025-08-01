@@ -1,6 +1,6 @@
 name: BetterKeepInventory
 version: ${project.version}
-main: dev.beeps.plugins.BetterKeepInventory
+main: com.beepsterr.plugins.BetterKeepInventory
 api-version: 1.19
 prefix: BetterKeepInventory
 authors: [ BeepSterr ]
