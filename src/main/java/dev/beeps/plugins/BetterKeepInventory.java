@@ -1,80 +1,50 @@
 package dev.beeps.plugins;
 
-/*
-    COPYRIGHT (c) 2021 Jill "BeepSterr" Megens
-    @author BeepSterr
- */
-
-import dev.beeps.plugins.Commands.CmdMain;
-import dev.beeps.plugins.Depends.Papi;
+import dev.beeps.plugins.Commands.MainCommand;
+import dev.beeps.plugins.Depends.BetterKeepInventoryPlaceholderExpansion;
 import dev.beeps.plugins.Events.OnPlayerDeath;
-import dev.beeps.plugins.Events.OnPlayerRespawn;
+import dev.beeps.plugins.Exceptions.ConfigurationException;
+import dev.beeps.plugins.Library.Config;
+import dev.beeps.plugins.Library.Version;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 
-import java.util.*;
-import java.util.concurrent.Callable;
+import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
-    public int[] armorSlots = new int[]{ 36,37,38,39 };
-    public int[] hotbarSlots = new int[]{ 0,1,2,3,4,5,6,7,8,40 };
-
-    public int durabilityPointsLost = 0;
-
-    public FileConfiguration _config = getConfig();
-    public BetterConfig config;
-
-    public Random randomizer = new Random();
-
-    // Cache maps
-    public Map<UUID, Integer> hungerMap = new HashMap<UUID, Integer>();
-    public Map<UUID, ArrayList<PotionEffect>> potionMap = new HashMap<UUID, ArrayList<org.bukkit.potion.PotionEffect>>();
-    public Map<UUID, Integer> graceMap = new HashMap<UUID, Integer>();
-
+    public Config config;
     static public BetterKeepInventory instance;
 
     @Override
     public void onEnable() {
 
         instance = this;
-        config = new BetterConfig(this, _config);
+        try {
+            config = new Config(getConfig());
+        }catch (ConfigurationException e){
+            CrashAndDisable("Configuration failed to load!\n" + e.getMessage() + "\nCaused at path: " + e.path);
+            return;
+        }
 
         // event handlers
         getServer().getPluginManager().registerEvents(new OnPlayerDeath(this), this);
-        getServer().getPluginManager().registerEvents(new OnPlayerRespawn(this), this);
 
-        // command handlers
-        Objects.requireNonNull(this.getCommand("betterkeepinventory")).setExecutor(new CmdMain(this));
+        // Command registration
+        Objects.requireNonNull(this.getCommand("betterkeepinventory")).setExecutor(new MainCommand());
 
         // misc
         getServer().getPluginManager().registerEvents(this, this);
         Metrics metrics = new Metrics(this, 11596);
 
-        metrics.addCustomChart(new SingleLineChart("durability_lost", new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                log(Level.FINE, "Metrics", "durability_lost: " + durabilityPointsLost);
-                int amount = durabilityPointsLost;
-                durabilityPointsLost = 0;
-                return amount;
-            }
-        }));
-
-        // loops
-        startGraceCheck();
-
         // Enable PAPI Integration
         if(checkDependency("PlaceholderAPI")){
-            log(Level.INFO, "PlaceholderAPI found, enabling extension");
-            new Papi().register();
+            getLogger().log(Level.INFO, "Hello PlaceholderAPI! It's good to see you!");
+            new BetterKeepInventoryPlaceholderExpansion().register();
         }
 
     }
@@ -84,63 +54,35 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     }
 
-    public static boolean contains(final int[] arr, final int key) {
-        return Arrays.stream(arr).anyMatch(i -> i == key);
-    }
-
-    public void log(Level level, Player cause, String message){
-
-        if(level == Level.FINE){
-            if(!config.getBoolean("main.debug")){
-                return;
-            }
-        }
-
-        getLogger().log(Level.INFO, String.format("[%s] %s", cause.getDisplayName(), message));
-
-    }
-
-    public void log(Level level, String source, String message){
-
-        if(level == Level.FINE){
-            if(!config.getBoolean("main.debug")){
-                return;
-            }
-        }
-
-        getLogger().log(Level.INFO, String.format("[%s] %s", source, message));
-
-    }
-
-    public void log(Level level, String message) {
-        if(level == Level.FINE){
-            if(!config.getBoolean("main.debug")){
-                return;
-            }
-        }
-        getLogger().log(Level.INFO, String.format("[%s] %s", "Unknown Player", message));
+    public static BetterKeepInventory getInstance(){
+        return instance;
     }
 
     public boolean checkDependency(String dep){
         return Bukkit.getServer().getPluginManager().getPlugin(dep) != null;
     }
 
-    public void startGraceCheck()
-    {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                Iterator<Map.Entry<UUID, Integer>> it = graceMap.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry<UUID, Integer> i = it.next();
-                    int newval = i.getValue() - 1;
-                    if(newval <= 0){
-                        it.remove();
-                    }else{
-                        graceMap.put(i.getKey(), newval);
-                    }
-                }
-            }
-        }, 0L, 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+    public void CrashAndDisable(String message) {
+        String alert = "\n"
+                + "=====================[ CRITICAL ERROR ]=====================\n"
+                + "BetterKeepInventory encountered a irrecoverable error:\n\n"
+                + message + "\n\n"
+                + "The plugin has been disabled, and deaths will be handled by vanilla (!!)\n"
+                + "You should fix the issue, and restart the server to re-enable the plugin\n"
+                + "============================================================\n";
+
+        getServer().getPluginManager().disablePlugin(this);
+        getLogger().log(Level.SEVERE, alert);
+        getLogger().log(Level.INFO, "Continuing with server start in 10 seconds...");
+
+        try{
+            // Pause the server for 5 seconds to allow the message to be read (hopefully)
+            // this should only ever be called during startup or by dummies using /reload
+            Thread.sleep(10000);
+        }catch (InterruptedException e){
+           // do nothing, we're crashing anyway
+        }
+
     }
+
 }

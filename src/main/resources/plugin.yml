@@ -1,10 +1,10 @@
 name: BetterKeepInventory
 version: ${project.version}
 main: dev.beeps.plugins.BetterKeepInventory
-api-version: 1.17
+api-version: 1.19
 prefix: BetterKeepInventory
 authors: [ BeepSterr ]
-website: beeps.dev
+website: leafcat.live
 
 softdepend: [Vault,Towny,Essentials,GriefPrevention,PlaceholderAPI]
 
@@ -13,64 +13,12 @@ spigot-id: 93081
 
 permissions:
 
-  betterkeepinventory.test:
-    description: Test overrides at your location
-    default: false
-
-  betterkeepinventory.bypass:
-    description: Group node for bypassing all plugin functionality (revert to vanilla keepInventory)
-    default: false
-    children:
-      betterkeepinventory.bypass.hotbar: true
-      betterkeepinventory.bypass.inventory: true
-      betterkeepinventory.bypass.armor: true
-      betterkeepinventory.bypass.exp: true
-      betterkeepinventory.bypass.hunger: true
-      betterkeepinventory.bypass.potions: true
-      betterkeepinventory.bypass.econ: true
-
-  betterkeepinventory.bypass.hotbar:
-    description: Dont affect hotbar when dying
-    default: false
-
-  betterkeepinventory.bypass.inventory:
-    description: Dont affect inventory slots when dying
-    default: false
-
-  betterkeepinventory.bypass.armor:
-    description: Don't affect armor slots when dying
-    default: false
-
-  betterkeepinventory.bypass.exp:
-    description: Dont change EXp when dying
-    default: false
-
-  betterkeepinventory.bypass.hunger:
-    description: Dont affect hunger on dying
-    default: false
-
-  betterkeepinventory.bypass.potions:
-    description: Don't reapply potions when dying
-    default: false
-
-  betterkeepinventory.bypass.eco:
-    description: Don't lose money when dying
-    default: false
-
-  betterkeepinventory.admin:
-    description: Group node for all /betterki commands
-    default: op
-    children:
-      betterkeepinventory.help: true
-      betterkeepinventory.info: true
-      betterkeepinventory.reload: true
-
-  betterkeepinventory.help:
-    description: View the plugin help and version
-    default: true
-
   betterkeepinventory.info:
-    description: View current settings for the plugin
+    description: Allows execution of the help command
+    default: op
+
+  betterkeepinventory.version:
+    description: Display the plugin version in the help command
     default: true
 
   betterkeepinventory.reload:

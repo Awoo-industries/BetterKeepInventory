@@ -21,6 +21,11 @@
 #
 
 kits:
+  fn_test:
+    delay: 0
+    items:
+      - netheritepickaxe:2029 1 mending:1
+      - diamondpickaxe:1000 1 mending:1
   bke_test:
     delay: 0
     items:

@@ -25,7 +25,7 @@ public class Vault {
         return r.transactionSuccess();
     }
 
-    public boolean giveMoney(Player ply, Double amount){
+    public boolean grantMoney(Player ply, Double amount){
         EconomyResponse r = economyProvider.getProvider().depositPlayer(ply, amount);
         return r.transactionSuccess();
     }
