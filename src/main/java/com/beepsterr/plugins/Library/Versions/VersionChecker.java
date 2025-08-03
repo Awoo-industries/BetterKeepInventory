@@ -11,8 +11,8 @@ import java.net.URL;
 
 public class VersionChecker {
 
-    public static final String URL_STABLE = "https://raw.githubusercontent.com/BeepSterr/BetterKeepInventory/refs/heads/next/versions/stable.txt";
-    public static final String URL_GIT = "https://api.github.com/repos/beepsterr/BetterKeepInventory/commits/next";
+    public static final String URL_STABLE = "https://raw.githubusercontent.com/BeepSterr/BetterKeepInventory/refs/heads/master/versions/stable.txt";
+    public static final String URL_GIT = "https://api.github.com/repos/beepsterr/BetterKeepInventory/commits/master";
     public static final String URL_LATEST = "https://api.spigotmc.org/legacy/update.php?resource=93081";
 
     public Version foundVersion;
