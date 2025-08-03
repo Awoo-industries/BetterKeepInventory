@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class OnPlayerDeath  implements Listener {
 
@@ -40,8 +41,18 @@ public class OnPlayerDeath  implements Listener {
 
         // Time to process the top level rules
         for(ConfigRule rule : plugin.config.getRules()){
-            rule.trigger(ply, event);
+            rule.trigger(ply, event, null);
         }
 
     }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+
+        // Time to process the top level rules
+        for(ConfigRule rule : plugin.config.getRules()){
+            rule.trigger(event.getPlayer(), null, event);
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.beepsterr.plugins.Library;
+package com.beepsterr.plugins.Library.Conditions.PlaceholderAPI;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Depends.PlaceholderAPI;
@@ -90,9 +90,8 @@ public class PlaceholderCondition {
 
         String resolvedPlaceholder = PlaceholderAPI.setPlaceholders(player, this.placeholder);
 
-        BetterKeepInventory.getInstance().getLogger().info("Resolved Placeholder: " + resolvedPlaceholder);
-        BetterKeepInventory.getInstance().getLogger().info("Requested Value: " + this.value);
-        BetterKeepInventory.getInstance().getLogger().info("Requested operator: " + this.operator);
+        BetterKeepInventory plugin = BetterKeepInventory.getInstance();
+        plugin.debug(player, "Going to test placeholder " + resolvedPlaceholder + " against " + this.value + " with operator " + this.operator);
 
         switch(operator) {
             case EQUALS:

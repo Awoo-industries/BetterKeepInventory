@@ -3,10 +3,13 @@ package com.beepsterr.plugins.Library;
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Effects.DamageItemEffect;
 import com.beepsterr.plugins.Effects.DropItemEffect;
+import com.beepsterr.plugins.Effects.ExpEffect;
+import com.beepsterr.plugins.Effects.HungerEffect;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +19,22 @@ public class ConfigRule {
 
     // config properties
     private String name;
+    private ConfigRule parent;
     private boolean enabled;
-    private Conditions conditions;
+    private ConditionList conditionList;
 
     // effect runners
-    private DamageItems damage;
-    private DropItems drop;
+    private DamageItemsConfig damage;
+    private DropItemsConfig drop;
+    private ExpConfig exp;
+    private HungerConfig hunger;
 
     // Children rules that will need to be triggered if this rule passes checks
     private List<ConfigRule> children;
 
-    public ConfigRule(ConfigurationSection config) throws ConfigurationException {
+    public ConfigRule(ConfigurationSection config, ConfigRule parent) throws ConfigurationException {
+
+        this.parent = parent;
 
         BetterKeepInventory.getInstance().getLogger().info("Parsing RulesEntry for " + config.getCurrentPath());
 
@@ -35,9 +43,8 @@ public class ConfigRule {
         this.enabled = config.getBoolean("enabled", false);
 
         // Parse conditions configuration
-
         if (config.isConfigurationSection("conditions")) {
-            this.conditions = new Conditions(Objects.requireNonNull(config.getConfigurationSection("conditions")));
+            this.conditionList = new ConditionList(Objects.requireNonNull(config.getConfigurationSection("conditions")));
         }
 
         if(config.isConfigurationSection("effects")){
@@ -45,12 +52,22 @@ public class ConfigRule {
             if(effects != null){
                 // Parse damage configuration
                 if (effects.isConfigurationSection( "damage")) {
-                    this.damage = new DamageItems(Objects.requireNonNull(effects.getConfigurationSection("damage")));
+                    this.damage = new DamageItemsConfig(Objects.requireNonNull(effects.getConfigurationSection("damage")));
                 }
 
                 // Parse drop configuration
                 if (effects.isConfigurationSection( "drop")) {
-                    this.drop = new DropItems(Objects.requireNonNull(effects.getConfigurationSection("drop")));
+                    this.drop = new DropItemsConfig(Objects.requireNonNull(effects.getConfigurationSection("drop")));
+                }
+
+                // Parse exp configuration
+                if (effects.isConfigurationSection( "exp")) {
+                    this.exp = new ExpConfig(Objects.requireNonNull(effects.getConfigurationSection("exp")));
+                }
+
+                // Parse hunger configuration
+                if (effects.isConfigurationSection( "hunger")) {
+                    this.hunger = new HungerConfig(Objects.requireNonNull(effects.getConfigurationSection("hunger")));
                 }
             }
         }
@@ -67,7 +84,8 @@ public class ConfigRule {
                             new ConfigRule(
                                     Objects.requireNonNull(
                                             children.getConfigurationSection(childKey)
-                                    )
+                                    ),
+                                    this
                             )
                     );
                 }
@@ -83,26 +101,33 @@ public class ConfigRule {
         return enabled;
     }
 
-    public Conditions getConditions() {
-        return conditions;
+    public ConditionList getConditions() {
+        return conditionList;
     }
 
-    public void trigger(Player ply, PlayerDeathEvent event){
+    public void trigger(Player ply, PlayerDeathEvent deathEvent, PlayerRespawnEvent respawnEvent){
+
+        BetterKeepInventory plugin = BetterKeepInventory.getInstance();
+
         if(enabled){
-            if(conditions == null || conditions.check(ply, event)){
-                BetterKeepInventory.getInstance().getLogger().info("Rule " + name + " met conditions, running effects!");
-                runDeath(ply, event);
+            if(conditionList == null || conditionList.check(ply, deathEvent)){
+                plugin.debug(ply, "Rule " + this + " met conditions, running effects!");
+                if(deathEvent != null){
+                    runDeath(ply, deathEvent);
+                }
+                if(respawnEvent != null){
+                    runRespawn(ply, respawnEvent);
+                }
             }else{
-                BetterKeepInventory.getInstance().getLogger().info("Rule " + name + " did not meet conditions, skipping");
+                plugin.debug(ply, "Rule " + this + " was skipped (conditions not met)");
             }
 
             for(ConfigRule child : children){
-                BetterKeepInventory.getInstance().getLogger().info("Triggering child rule " + name + "::" + child.getName());
-                BetterKeepInventory.getInstance().getLogger().info(child.toString());
-                child.trigger(ply, event);
+                child.trigger(ply, deathEvent, respawnEvent);
             }
+
         }else{
-            BetterKeepInventory.getInstance().getLogger().info("Rule " + name + " is disabled, skipping");
+            plugin.debug(ply, "Rule " + this + " was skipped (not enabled)");
         }
 
     }
@@ -113,6 +138,36 @@ public class ConfigRule {
         }
         if(this.drop != null){
             new DropItemEffect(this, this.drop).runDeath(ply, event);
+        }
+        if(this.exp != null){
+            new ExpEffect(this, this.exp).runDeath(ply, event);
+        }
+        if(this.hunger != null){
+            new HungerEffect(this, this.hunger).runDeath(ply, event);
+        }
+    }
+
+    private void runRespawn(Player ply, PlayerRespawnEvent event){
+        if(this.damage != null){
+            new DamageItemEffect(this, this.damage).runRespawn(ply, event);
+        }
+        if(this.drop != null){
+            new DropItemEffect(this, this.drop).runRespawn(ply, event);
+        }
+        if(this.exp != null){
+            new ExpEffect(this, this.exp).runRespawn(ply, event);
+        }
+        if(this.hunger != null){
+            new HungerEffect(this, this.hunger).runRespawn(ply, event);
+        }
+    }
+
+    @Override
+    public String toString() {
+        if(this.parent != null){
+            return "ConfigRule{" + parent.getName() + " > " + name + "}";
+        }else{
+            return "ConfigRule{" + name + "}";
         }
     }
 }

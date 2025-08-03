@@ -32,8 +32,8 @@ public class MainCommand implements CommandExecutor {
 
             BetterKeepInventory plugin = BetterKeepInventory.getInstance();
             sender.sendMessage(ChatColor.AQUA + plugin.getDescription().getName());
-            if(sender.hasPermission("betterkeepinventory.version") || sender instanceof org.bukkit.command.ConsoleCommandSender){
-                sender.sendMessage(ChatColor.GRAY + "Version: " + plugin.getDescription().getVersion() + " (" + plugin.getDescription().getAPIVersion() + ") " + ChatColor.DARK_GRAY + Version.getCommitHash());
+            if(sender.hasPermission("betterkeepinventory.info.version") || sender instanceof org.bukkit.command.ConsoleCommandSender){
+                sender.sendMessage(ChatColor.GRAY + "Version: " + plugin.getDescription().getVersion() + " (MC " + plugin.getDescription().getAPIVersion() + ") " + ChatColor.DARK_GRAY + Version.getCommitHash());
             }
 
             sender.sendMessage("");
@@ -42,9 +42,6 @@ public class MainCommand implements CommandExecutor {
 
             if(sender.hasPermission("betterkeepinventory.reload") || sender instanceof org.bukkit.command.ConsoleCommandSender){
                 sender.sendMessage(ChatColor.YELLOW + "/betterkeepinventory reload\n" + ChatColor.GRAY + " to reload the configuration.\n\n");
-            }
-            if(sender.hasPermission("betterkeepinventory.simulate") || sender instanceof org.bukkit.command.ConsoleCommandSender){
-                sender.sendMessage(ChatColor.YELLOW + "/betterkeepinventory simulate\n" + ChatColor.GRAY + " to reload the configuration.\n\n");
             }
 
         }

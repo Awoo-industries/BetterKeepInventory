@@ -1,10 +1,40 @@
-# Configuration for BetterKeepInventory plugin
+#
+#   BetterKeepInventory By BeepSterr
+#   Version 2.0.0
+#
+#   SpigotMC:         https://www.spigotmc.org/resources/betterkeepinventory.93081/
+#   Documentation:    https://beeps.notion.site/Better-Keep-Inventory-f5d49a15a8174ce598bbb876d3003e46
+#   GitHub:           https://github.com/Awoo-industries/BetterKeepInventory
+#   Discord:          https://leafcat.live/discord
+#
+
+# Do not touch, unless you know what you are doing
 version: "2.0"
-hash: "abc123"
+hash: ""
+
+# Update notifications can be sent to anyone with the 'betterkeepinventory.notify' permission.
+# You have control over when these notifications are sent.
+# Options:
+# - NONE: No notifications will be sent
+# - MINOR: Notifications for minor updates (bug fixes, small changes)
+# - MAJOR: Notifications for major updates (new features, significant changes)
+# - ALL: Notifications for all updates, including minor and major
+
+update_notifications: "MAJOR"
+
+# Enable this if you want to see debug messages in the console
 debug: true
 
-default_behavior: "DROP"
+# Defines what the "default" KeepInventory behavior is for players
+# Options:
+# - INHERIT: Inherits from the server or world KeepInventory gamerule
+# - DROP: Drops items on death
+# - KEEP: Keeps items on death
+default_behavior: "INHERIT"
 
+# Rules let you define the actions to take when a player dies.
+# Please check the documentation link above for more details on how to configure rules and their conditions.
+# If you need additional help, feel free to ask in the Discord server.
 rules:
   1:
     name: "Default"

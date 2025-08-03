@@ -4,7 +4,7 @@ import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.Types.MaterialType;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class DropItems {
+public class DropItemsConfig {
 
     public enum Mode {
         SIMPLE, PERCENTAGE, ALL
@@ -15,8 +15,8 @@ public class DropItems {
     private float max;
     private MaterialType items;
 
-    public DropItems(ConfigurationSection dropConfig) {
-        mode = DropItems.Mode.valueOf(dropConfig.getString("mode", "DAMAGE_PERCENTAGE").toUpperCase());
+    public DropItemsConfig(ConfigurationSection dropConfig) {
+        mode = DropItemsConfig.Mode.valueOf(dropConfig.getString("mode", "DAMAGE_PERCENTAGE").toUpperCase());
         min = (float)dropConfig.getDouble("min", 0.0);
         max = (float)dropConfig.getDouble("max", 0.0);
 

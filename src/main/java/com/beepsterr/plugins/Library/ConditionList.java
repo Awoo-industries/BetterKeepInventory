@@ -2,6 +2,7 @@ package com.beepsterr.plugins.Library;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
+import com.beepsterr.plugins.Library.Conditions.PlaceholderAPI.PlaceholderCondition;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Conditions {
+public class ConditionList {
 
     private List<String> permissions;
     private List<String> worlds;
@@ -19,7 +20,7 @@ public class Conditions {
     private List<String> griefPreventionClaims;
     private List<PlaceholderCondition> placeholderConditions;
 
-    public Conditions(ConfigurationSection config) throws ConfigurationException {
+    public ConditionList(ConfigurationSection config) throws ConfigurationException {
 
         BetterKeepInventory plugin = BetterKeepInventory.getInstance();
 
@@ -107,7 +108,6 @@ public class Conditions {
             placeholderMatched = false;
 
             for(PlaceholderCondition condition : this.placeholderConditions){
-                BetterKeepInventory.getInstance().getLogger().info("Placeholder Condition...");
                 if(condition.test(ply)){
                     placeholderMatched = true;
                     break;

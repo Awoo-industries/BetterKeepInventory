@@ -2,7 +2,7 @@ package com.beepsterr.plugins.Effects;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.ConfigRule;
-import com.beepsterr.plugins.Library.DropItems;
+import com.beepsterr.plugins.Library.DropItemsConfig;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -13,9 +13,9 @@ import java.util.Random;
 
 public class DropItemEffect extends Effect {
 
-    DropItems drop;
+    DropItemsConfig drop;
 
-    public DropItemEffect(ConfigRule rule, DropItems drop){
+    public DropItemEffect(ConfigRule rule, DropItemsConfig drop){
         super(rule);
         this.drop = drop;
     }
@@ -28,7 +28,8 @@ public class DropItemEffect extends Effect {
     @Override
     public void runDeath(Player ply, PlayerDeathEvent event) {
 
-        Random rng = BetterKeepInventory.getInstance().rng;
+        BetterKeepInventory plugin = BetterKeepInventory.getInstance();
+        Random rng = plugin.rng;
 
         // get items to drop
         List<Material> items = drop.getItems().getMaterials();
@@ -40,7 +41,7 @@ public class DropItemEffect extends Effect {
             if (item != null && items.contains(item.getType())) {
 
                 // We can simply drop it all if mode is set to ALL.
-                if(drop.getMode() == DropItems.Mode.ALL){
+                if(drop.getMode() == DropItemsConfig.Mode.ALL){
                     ply.getWorld().dropItemNaturally(ply.getLocation(), item);
                     ply.getInventory().setItem(i, null);
                 }
@@ -61,10 +62,9 @@ public class DropItemEffect extends Effect {
                         double percentage = drop.getMin() + (drop.getMax() - drop.getMin()) * rng.nextDouble();
                         removalCount = (int) (inventoryCount * (percentage / 100.0));
                         break;
-
                 }
 
-                BetterKeepInventory.getInstance().getLogger().info(removalCount + " items to drop from " + item.getType() + " in slot " + i);
+                plugin.debug(ply, "DropItemEffect: Dropping " + removalCount + " items from slot " + i + " (" + item.getType() + ")");
 
                 // make sure we don't drop more items than we have
                 if(inventoryCount - removalCount < 0){

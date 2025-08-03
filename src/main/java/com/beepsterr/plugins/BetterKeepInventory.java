@@ -5,8 +5,11 @@ import com.beepsterr.plugins.Depends.BetterKeepInventoryPlaceholderExpansion;
 import com.beepsterr.plugins.Events.OnPlayerDeath;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
 import com.beepsterr.plugins.Library.Config;
+import com.beepsterr.plugins.Library.Version;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +19,7 @@ import java.util.logging.Level;
 
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
+    public Version version = new Version(getDescription().getVersion());
     public Random rng = new Random();
     public Config config;
     static public BetterKeepInventory instance;
@@ -43,18 +47,18 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
         // Enable PAPI Integration
         if(checkDependency("PlaceholderAPI")){
-            getLogger().log(Level.INFO, "Hello PlaceholderAPI! It's good to see you!");
+            log("Hello PlaceholderAPI!");
             new BetterKeepInventoryPlaceholderExpansion().register();
         }
 
         // Enable PAPI Integration
         if(checkDependency("Vault")){
-            getLogger().log(Level.INFO, "Hello Vault! How's the economy?");
+            log("Hello Vault!");
         }
 
         // Enable PAPI Integration
         if(checkDependency("Towny")){
-            getLogger().log(Level.INFO, "Hello Towny! How are the kids?");
+            log("Hello Towny!");
         }
 
     }
@@ -73,26 +77,47 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     }
 
     public void CrashAndDisable(String message) {
-        String alert = "\n"
-                + "=====================[ CRITICAL ERROR ]=====================\n"
-                + "BetterKeepInventory encountered a irrecoverable error:\n\n"
-                + message + "\n\n"
-                + "The plugin has been disabled, and deaths will be handled by vanilla (!!)\n"
-                + "You should fix the issue, and restart the server to re-enable the plugin\n"
-                + "============================================================\n";
+        String alert = "\n" +
+                ChatColor.DARK_RED + "=====================[ CRITICAL ERROR ]=====================\n"
+                + ChatColor.RED +  "BetterKeepInventory encountered a irrecoverable error:\n\n"
+                + ChatColor.YELLOW +  message + "\n\n"
+                + ChatColor.RED + "The plugin has been disabled, and deaths will be handled by vanilla (!!)\n"
+                + ChatColor.RED + "You should fix the issue, and restart the server to re-enable the plugin\n"
+                + ChatColor.DARK_RED + "============================================================\n";
 
         getServer().getPluginManager().disablePlugin(this);
         getLogger().log(Level.SEVERE, alert);
+        getServer().getConsoleSender().sendMessage(alert);
         getLogger().log(Level.INFO, "Continuing with server start in 10 seconds...");
 
         try{
-            // Pause the server for 5 seconds to allow the message to be read (hopefully)
-            // this should only ever be called during startup or by dummies using /reload
+            // Intentionally introduces a large delay during startup to hopefully catch the administrator's attention
+            // Because this plugin is critical to death handling, we want to make sure the admin sees the error
+            // This method should only be called if the plugin CANNOT continue working.
             Thread.sleep(10000);
         }catch (InterruptedException e){
            // do nothing, we're crashing anyway
         }
 
+        // Disable the plugin
+        getServer().getPluginManager().disablePlugin(this);
+
+    }
+
+    public void debug(Player player, String message){
+        if(config.isDebug()){
+            log("[DEBUG] (" + player.getName() + ") " + message);
+        }
+    }
+
+    public void debug(String message){
+        if(config.isDebug()){
+            getLogger().log(Level.INFO, "[DEBUG] " + message);
+        }
+    }
+
+    public void log(String message){
+        getLogger().log(Level.INFO, message);
     }
 
 }

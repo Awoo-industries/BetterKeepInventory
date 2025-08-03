@@ -4,10 +4,10 @@ import com.beepsterr.plugins.Library.Types.MaterialType;
 import com.beepsterr.plugins.Library.Types.SlotType;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class DamageItems {
+public class DamageItemsConfig {
 
     public enum Mode {
-        PERCENTAGE, SIMPLE
+        PERCENTAGE, PERCENTAGE_REMAINING, SIMPLE
     }
 
     private Mode mode;
@@ -18,7 +18,7 @@ public class DamageItems {
     private SlotType slots;
     private MaterialType items;
 
-    public DamageItems(ConfigurationSection damageConfig) {
+    public DamageItemsConfig(ConfigurationSection damageConfig) {
         // Parse damage configuration
         mode = Mode.valueOf(damageConfig.getString("mode", "DAMAGE_PERCENTAGE").toUpperCase());
         min = (float)damageConfig.getDouble("min", 0.0);

@@ -18,15 +18,6 @@ public class SlotType {
 
     private List<Integer> slotIds = new ArrayList<>();
 
-
-    // damageConfig.slots is list of strings
-    // example:
-    //          slots:
-    //            - "ARMOR"
-    //            - "12"
-    //            - "14"
-    // so parse the slot IDS from the list of strings
-    // "ARMOR",  "HOTBAR", "INVENTORY", "OFFHAND" and "ALL" should parse to the list
     public SlotType(List<String> slots) {
 
         // loop over all slots
@@ -64,6 +55,7 @@ public class SlotType {
                         }
                         break;
                     case "ALL":
+                    case "*":
                         for (int i = 0; i < 41; i++) {
                             slotIds.add(i);
                         }
