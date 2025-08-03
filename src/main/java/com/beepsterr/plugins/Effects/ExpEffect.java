@@ -33,7 +33,7 @@ public class ExpEffect extends Effect {
         int playerExpLevel = ply.getLevel();
         int levelsToLose = 0;
 
-        plugin.debug("Player " + ply.getName() + " has " + playerExpLevel + " levels of experience.");
+        plugin.debug(ply," has " + playerExpLevel + " levels of experience.");
 
 
         switch(expConfig.getMode()){

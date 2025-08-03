@@ -42,7 +42,7 @@ public class PlaceholderCondition {
                     operator = PlaceholderConditionType.CONTAINS;
                     break;
                 case "*.":
-                case "BEINGS_WITH":
+                case "BEGINS_WITH":
                     operator = PlaceholderConditionType.STARTS_WITH;
                     break;
                 case ".*":
