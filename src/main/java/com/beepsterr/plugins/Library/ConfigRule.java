@@ -1,10 +1,8 @@
 package com.beepsterr.plugins.Library;
 
 import com.beepsterr.plugins.BetterKeepInventory;
-import com.beepsterr.plugins.Effects.DamageItemEffect;
-import com.beepsterr.plugins.Effects.DropItemEffect;
-import com.beepsterr.plugins.Effects.ExpEffect;
-import com.beepsterr.plugins.Effects.HungerEffect;
+import com.beepsterr.plugins.Effects.*;
+import com.beepsterr.plugins.Effects.Configs.*;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -28,6 +26,7 @@ public class ConfigRule {
     private DropItemsConfig drop;
     private ExpConfig exp;
     private HungerConfig hunger;
+    private EconomyConfig economy;
 
     // Children rules that will need to be triggered if this rule passes checks
     private List<ConfigRule> children;
@@ -68,6 +67,11 @@ public class ConfigRule {
                 // Parse hunger configuration
                 if (effects.isConfigurationSection( "hunger")) {
                     this.hunger = new HungerConfig(Objects.requireNonNull(effects.getConfigurationSection("hunger")));
+                }
+
+                // Parse economy configuration
+                if (effects.isConfigurationSection( "economy")) {
+                    this.economy = new EconomyConfig(Objects.requireNonNull(effects.getConfigurationSection("economy")));
                 }
             }
         }
@@ -145,6 +149,9 @@ public class ConfigRule {
         if(this.hunger != null){
             new HungerEffect(this, this.hunger).runDeath(ply, event);
         }
+        if(this.economy != null){
+            new EconomyEffect(this, this.economy).runDeath(ply, event);
+        }
     }
 
     private void runRespawn(Player ply, PlayerRespawnEvent event){
@@ -159,6 +166,9 @@ public class ConfigRule {
         }
         if(this.hunger != null){
             new HungerEffect(this, this.hunger).runRespawn(ply, event);
+        }
+        if(this.economy != null){
+            new EconomyEffect(this, this.economy).runRespawn(ply, event);
         }
     }
 

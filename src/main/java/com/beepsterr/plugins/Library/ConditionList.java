@@ -2,10 +2,16 @@ package com.beepsterr.plugins.Library;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
+import com.beepsterr.plugins.Library.Conditions.BetterKeepInventory.PermissionCondition;
+import com.beepsterr.plugins.Library.Conditions.BetterKeepInventory.WorldCondition;
+import com.beepsterr.plugins.Library.Conditions.Condition;
 import com.beepsterr.plugins.Library.Conditions.PlaceholderAPI.PlaceholderCondition;
+import com.beepsterr.plugins.Library.Conditions.PlaceholderAPI.PlaceholderConditionItem;
+import com.beepsterr.plugins.Library.Conditions.Vault.EconomyCondition;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,111 +19,39 @@ import java.util.regex.Pattern;
 
 public class ConditionList {
 
-    private List<String> permissions;
-    private List<String> worlds;
-    private List<String> townyTowns;
-    private List<String> townyNations;
-    private List<String> griefPreventionClaims;
-    private List<PlaceholderCondition> placeholderConditions;
+    private final List<Condition> conditions = new ArrayList<>();
 
     public ConditionList(ConfigurationSection config) throws ConfigurationException {
 
         BetterKeepInventory plugin = BetterKeepInventory.getInstance();
 
-        this.permissions = config.getStringList( "permissions");
-        this.worlds = config.getStringList("worlds");
-
-        // Ensure Towny is loaded if Towny conditions are present
-        if(config.contains("towny_towns") && !plugin.checkDependency("Towny")){
-            throw new ConfigurationException(config.getCurrentPath() + ".towny_towns", "The condition requires Towny, but it is not loaded!");
+        if(!config.getStringList("permissions").isEmpty()){
+            conditions.add(new PermissionCondition(config));
         }
 
-        if(config.contains("towny_nations") && !plugin.checkDependency("Towny")){
-            throw new ConfigurationException(config.getCurrentPath() + ".towny_nations", "The condition requires Towny, but it is not loaded!");
+        if(!config.getStringList("worlds").isEmpty()){
+            conditions.add(new WorldCondition(config));
         }
 
-        this.townyTowns = config.getStringList("towny_towns");
-        this.townyNations = config.getStringList("towny_nations");
-
-        // Ensure GriefPrevention is loaded if GriefPrevention conditions are present
-        if(config.contains("griefprevention_claims") && !plugin.checkDependency("GriefPrevention")){
-            throw new ConfigurationException(config.getCurrentPath() + ".griefprevention_claims", "The condition requires GriefPrevention, but it is not loaded!");
-        }
-        this.griefPreventionClaims = config.getStringList( "griefprevention_claims");
-
-        // Ensure PlaceholderAPI is loaded if Placeholder conditions are present
-        if(config.contains("placeholders") && !plugin.checkDependency("PlaceholderAPI")){
-            throw new ConfigurationException(config.getCurrentPath() + ".placeholders", "The condition requires PlaceholderAPI, but it is not loaded!");
+        if(!config.getStringList("placeholders").isEmpty() && plugin.checkDependency("PlaceholderAPI")) {
+            conditions.add(new PlaceholderCondition(config));
         }
 
-        this.placeholderConditions = new ArrayList<>();
-        ConfigurationSection placeholderConditions = config.getConfigurationSection("placeholders");
-        if (placeholderConditions != null) {
-            for (String placeholderKey : placeholderConditions.getKeys(false)) {
-                ConfigurationSection placeholderConditionSection = placeholderConditions.getConfigurationSection(placeholderKey);
-                if (placeholderConditionSection != null) {
-                    this.placeholderConditions.add(new PlaceholderCondition(placeholderConditionSection));
-                }
-            }
+        if(config.isConfigurationSection("economy") && plugin.checkDependency("Vault")) {
+            conditions.add(new EconomyCondition(config));
         }
+
     }
 
-    public boolean check(Player ply, PlayerDeathEvent event) {
-
-        boolean permissionMatched = true;
-        boolean worldMatched = true;
-        boolean placeholderMatched = true;
-
-        if(permissions != null && !permissions.isEmpty()){
-            permissionMatched = false;
-
-            // Check permissions (prefixed with ! for negation)
-            for (String perm : permissions) {
-                boolean isNegated = perm.startsWith("!");
-                String actualPerm = isNegated ? perm.substring(1) : perm;
-
-                if (isNegated != ply.hasPermission(actualPerm)) {
-                    permissionMatched = true;
-                    break; // No need to check further once a match is found
-                }
-            }
-
-        }
-
-        if(worlds != null && !worlds.isEmpty()){
-            worldMatched = false;
-
-            // Check worlds (prefixed with ! for negation and supports regex)
-            for (String world : worlds) {
-                boolean isNegated = world.startsWith("!");
-                String actualWorldPattern = isNegated ? world.substring(1) : world;
-
-                // Convert wildcard (*) to regex pattern
-                String regex = actualWorldPattern.replace("*", ".*");
-                Pattern pattern = Pattern.compile(regex);
-                boolean matches = pattern.matcher(ply.getWorld().getName()).matches();
-
-                if (isNegated != matches) {
-                    worldMatched = true;
-                    break; // No need to check further once a match is found
-                }
+    public boolean check(Player ply, PlayerDeathEvent deathEvent) {
+        for(Condition condition : conditions) {
+            if (!condition.check(ply, deathEvent)) {
+                BetterKeepInventory.getInstance().debug(ply, "Condition failed: " + condition.getClass().getSimpleName());
+                return false;
             }
         }
-
-        if(this.placeholderConditions != null && !this.placeholderConditions.isEmpty()){
-            placeholderMatched = false;
-
-            for(PlaceholderCondition condition : this.placeholderConditions){
-                if(condition.test(ply)){
-                    placeholderMatched = true;
-                    break;
-                }
-
-            }
-        }
-
-        // Return true only if both conditions are satisfied
-        return permissionMatched && worldMatched && placeholderMatched;
+        BetterKeepInventory.getInstance().debug(ply, "All conditions passed.");
+        return true;
     }
 }
 

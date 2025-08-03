@@ -1,4 +1,4 @@
-package com.beepsterr.plugins.Library;
+package com.beepsterr.plugins.Effects.Configs;
 
 import org.bukkit.configuration.ConfigurationSection;
 

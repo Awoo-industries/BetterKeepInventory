@@ -20,6 +20,10 @@ public class Vault {
         return economyProvider.getProvider().getBalance(ply);
     }
 
+    public String format(double amount){
+        return economyProvider.getProvider().format(amount);
+    }
+
     public boolean takeMoney(Player ply, Double amount){
         EconomyResponse r = economyProvider.getProvider().withdrawPlayer(ply, amount);
         return r.transactionSuccess();

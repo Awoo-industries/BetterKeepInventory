@@ -2,13 +2,16 @@ package com.beepsterr.plugins.Effects;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.ConfigRule;
-import com.beepsterr.plugins.Library.DropItemsConfig;
+import com.beepsterr.plugins.Effects.Configs.DropItemsConfig;
+import com.beepsterr.plugins.Library.Types.MaterialType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class DropItemEffect extends Effect {
@@ -63,6 +66,16 @@ public class DropItemEffect extends Effect {
                         removalCount = (int) (inventoryCount * (percentage / 100.0));
                         break;
                 }
+
+                // Nothing to do...
+                if(removalCount <= 0){
+                    continue;
+                }
+
+                Map<String, String> replacements = new HashMap<>();
+                replacements.put("amount", String.valueOf(removalCount));
+                replacements.put("item", MaterialType.GetName(item));
+                plugin.config.sendMessage(ply, "effects.drop", replacements);
 
                 plugin.debug(ply, "DropItemEffect: Dropping " + removalCount + " items from slot " + i + " (" + item.getType() + ")");
 

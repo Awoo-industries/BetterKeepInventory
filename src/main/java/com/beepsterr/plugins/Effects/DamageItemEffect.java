@@ -2,7 +2,8 @@ package com.beepsterr.plugins.Effects;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.ConfigRule;
-import com.beepsterr.plugins.Library.DamageItemsConfig;
+import com.beepsterr.plugins.Effects.Configs.DamageItemsConfig;
+import com.beepsterr.plugins.Library.Types.MaterialType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -12,7 +13,9 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class DamageItemEffect extends Effect {
@@ -86,9 +89,17 @@ public class DamageItemEffect extends Effect {
 
                     }
 
+
+                    // guhhh
+                    if(damageToTake < 0){
+                        continue;
+                    }
+
+                    Map<String, String> replacements = new HashMap<>();
+                    replacements.put("amount", String.valueOf(damageToTake));
+                    replacements.put("item", MaterialType.GetName(item));
+
                     plugin.debug(ply, "Applying " + damageToTake + " damage to item in slot " + i + " (" + item.getType() + ")");
-
-
                     // Check wether the item would break
                     if( maxDurability - currentDamageTaken - damageToTake < 0 ){
 
@@ -97,6 +108,10 @@ public class DamageItemEffect extends Effect {
                             damageableMeta.setDamage(maxDurability);
                             item.setItemMeta(damageableMeta);
                             plugin.debug(ply, "Item in slot " + i + " (" + item.getType() + ") was saved from breaking.");
+
+                            plugin.config.sendMessage(ply, "effects.damage", replacements);
+
+
                         }else{
                             // Remove 1 from the item (some servers let you stack item with durability)
                             item.setAmount(item.getAmount() - 1);
@@ -104,11 +119,14 @@ public class DamageItemEffect extends Effect {
                             item.setItemMeta(meta);
                             ply.getWorld().playSound(ply.getLocation(), Sound.ENTITY_ITEM_BREAK, 0.8f, 0.8f);
                             plugin.debug(ply, "Item in slot " + i + " (" + item.getType() + ") broke.");
+
+                            plugin.config.sendMessage(ply, "effects.damage_break", replacements);
                         }
 
                     }else{
                         damageableMeta.setDamage(currentDamageTaken + damageToTake);
                         item.setItemMeta(meta);
+                        plugin.config.sendMessage(ply, "effects.damage", replacements);
                     }
 
                 }

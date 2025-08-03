@@ -1,0 +1,7 @@
+effects:
+  drop: "&7&oYou dropped x{amount} {item}."
+  damage: "&7&oYour {item} took {amount} points of damage."
+  damage_break: "&cYour {item} broke!"
+  exp_loss: "&7&oYou lost {amount} experience levels."
+  exp_dropped: "&7&oYou dropped {amount} experience levels."
+  economy: "&7&oYou lost {amount}."

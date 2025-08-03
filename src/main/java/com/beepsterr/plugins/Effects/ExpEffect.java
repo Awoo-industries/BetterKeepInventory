@@ -2,14 +2,15 @@ package com.beepsterr.plugins.Effects;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.ConfigRule;
-import com.beepsterr.plugins.Library.ExpConfig;
+import com.beepsterr.plugins.Effects.Configs.ExpConfig;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
-import java.util.logging.Logger;
 
 public class ExpEffect extends Effect {
 
@@ -48,7 +49,10 @@ public class ExpEffect extends Effect {
             case ALL:
                 levelsToLose = playerExpLevel;
         }
+
         plugin.debug(ply, "is losing " + levelsToLose + " levels of experience.");
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("amount", String.valueOf(levelsToLose));
 
         switch(expConfig.getHow()){
             case DELETE:
@@ -67,6 +71,7 @@ public class ExpEffect extends Effect {
                     ply.setLevel(playerExpLevel - levelsToLose);
                     ply.setExp(0);
                 }
+
 
                 plugin.debug(ply, "dropping " + expToDrop + " experience points.");
 

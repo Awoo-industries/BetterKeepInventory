@@ -2,10 +2,13 @@ package com.beepsterr.plugins.Library.Types;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MaterialType {
@@ -280,5 +283,21 @@ public class MaterialType {
 
     public List<Material> getMaterials() {
         return materials;
+    }
+
+    // TODO: When dropping 1.19, migrate to use Material#GetTranslationKey()
+    public static String GetName(ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+        String displayName;
+
+        if (meta != null && meta.hasDisplayName()) {
+            displayName = meta.getDisplayName(); // Use the custom name if present
+        } else {
+            // Fallback to a readable name from the enum
+            displayName = Arrays.stream(item.getType().toString().split("_"))
+                    .map(part -> part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase())
+                    .collect(Collectors.joining(" "));
+        }
+        return displayName;
     }
 }

@@ -10,21 +10,19 @@ public class Version {
     public int major = 0;
     public int minor = 0;
     public int patch = 0;
-    public String channel;
     public String commitHash;
 
     private boolean scheduled = false;
 
     public Version(String versionStr) {
         if (versionStr.matches("\\d+\\.\\d+\\.\\d+(-[A-Za-z]+)?")) {
-            String[] parts = versionStr.split("\\.");
-            this.major = Integer.parseInt(parts[0]);
-            this.minor = Integer.parseInt(parts[1]);
-            this.patch = Integer.parseInt(parts[2].split("-")[0]);
-            this.channel = parts[2].contains("-") ? parts[2].split("-")[1].toUpperCase() : "STABLE";
+            String[] parts = versionStr.split("[-]");
+            String[] numbers = parts[0].split("\\.");
+            this.major = Integer.parseInt(numbers[0]);
+            this.minor = Integer.parseInt(numbers[1]);
+            this.patch = Integer.parseInt(numbers[2]);
             this.commitHash = getCommitHash();
         } else if (versionStr.matches("[a-fA-F0-9]{7,40}")) {
-            this.channel = "GIT";
             this.commitHash = versionStr;
         } else {
             throw new IllegalArgumentException("Unknown version format: " + versionStr);
@@ -69,7 +67,10 @@ public class Version {
 
     @Override
     public String toString() {
-        if (commitHash != null) return "0.0.0-" + channel + " (" + commitHash + ")";
-        return major + "." + minor + "." + patch + "-" + channel;
+        String version = major + "." + minor + "." + patch;
+        if(commitHash != null) {
+            version += " (" + commitHash + ")";
+        }
+        return version;
     }
 }

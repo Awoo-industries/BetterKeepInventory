@@ -2,10 +2,8 @@ package com.beepsterr.plugins.Effects;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.ConfigRule;
-import com.beepsterr.plugins.Library.ExpConfig;
-import com.beepsterr.plugins.Library.HungerConfig;
+import com.beepsterr.plugins.Effects.Configs.HungerConfig;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -13,7 +11,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class HungerEffect extends Effect {
 
