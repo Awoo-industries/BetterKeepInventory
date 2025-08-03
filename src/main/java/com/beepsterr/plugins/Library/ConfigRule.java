@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * TODO: Refactor this class to not require a field for every effect type.
+ * We should format Effects the same way we format Conditions
+ * this also makes it easier to later implement API for custom effects/conditions
+ */
 public class ConfigRule {
 
     // config properties
