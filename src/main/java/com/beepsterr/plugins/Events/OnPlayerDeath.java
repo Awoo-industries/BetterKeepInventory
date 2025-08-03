@@ -2,10 +2,13 @@ package com.beepsterr.plugins.Events;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Library.ConfigRule;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class OnPlayerDeath  implements Listener {
@@ -54,5 +57,33 @@ public class OnPlayerDeath  implements Listener {
             rule.trigger(event.getPlayer(), null, event);
         }
     }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+
+        Player ply = event.getPlayer();
+        if(ply.hasPermission("betterkeepinventory.notify")){
+
+            // Delay the message to hopefully catch more attention
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    // If the version checker is enabled, and the found version is newer...
+                    if(
+                            plugin.versionChecker != null
+                         && plugin.versionChecker.IsUpdateAvailable()){
+                        // Send a message to the player
+                        ply.sendMessage(ChatColor.YELLOW + "A new version of BetterKeepInventory is available!");
+                        ply.sendMessage( ChatColor.GREEN + plugin.versionChecker.foundVersion.toString() + ChatColor.YELLOW + " (Installed: " + plugin.version.toString() + ")");
+
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "A new version of BetterKeepInventory is available!");
+                        Bukkit.getConsoleSender().sendMessage( ChatColor.GREEN + plugin.versionChecker.foundVersion.toString() + ChatColor.YELLOW + " (Installed: " + plugin.version.toString() + ")");
+                    }
+                }
+            }, 20L);
+        }
+
+    }
+
 
 }

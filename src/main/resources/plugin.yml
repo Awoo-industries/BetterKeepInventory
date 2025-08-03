@@ -13,6 +13,14 @@ spigot-id: 93081
 
 permissions:
 
+  betterkeepinventory.admin:
+    default: op
+    children:
+      betterkeepinventory.info: true
+      betterkeepinventory.version: true
+      betterkeepinventory.notify: true
+      betterkeepinventory.reload: true
+
   betterkeepinventory.info:
     description: Allows execution of the help command
     default: op

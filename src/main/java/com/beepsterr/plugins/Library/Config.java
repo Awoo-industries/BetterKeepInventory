@@ -2,10 +2,11 @@ package com.beepsterr.plugins.Library;
 
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
+import com.beepsterr.plugins.Library.Versions.Version;
+import com.beepsterr.plugins.Library.Versions.VersionChannel;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class Config {
 
     private final FileConfiguration rawConfig;
     private final String version;
+    private final VersionChannel notifyChannel;
     private final String hash;
     private final boolean debug;
     private final DefaultBehavior defaultBehavior;
@@ -32,6 +34,7 @@ public class Config {
         BetterKeepInventory.getInstance().log("Loading configuration from " + config.getCurrentPath());
 
         version = config.getString("version", "2.0.0");
+        notifyChannel = VersionChannel.valueOf(config.getString("notify_channel", "STABLE").toUpperCase());
         hash = config.getString("hash", "OLD");
         debug = config.getBoolean("debug", false);
 
@@ -72,6 +75,10 @@ public class Config {
         return rules;
     }
 
+    public VersionChannel getNotifyChannel() {
+        return notifyChannel;
+    }
+
     public void MigrateConfiguration() throws ConfigurationException {
 
         // Detect pre 2.0 configuration files
@@ -85,10 +92,15 @@ public class Config {
         }
 
         String installedVersion = Version.getVersionWithoutChannel();
-        String configVersion = this.version;
-
-        if(!installedVersion.equals(configVersion)){
+        if(!installedVersion.equals(this.version)){
             // ... Create migrations here when needed
+
+
         }
+
+        // Migration completed, write new changes
+        rawConfig.set("version", installedVersion);
+        rawConfig.set("hash", Version.getCommitHash());
+        BetterKeepInventory.getInstance().saveConfig();
     }
 }

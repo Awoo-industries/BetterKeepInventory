@@ -1,9 +1,12 @@
 # BetterKeepInventory 2.0
 A Plugin by BeepSterr
 
-### Upgrading to 2.0
-Are you currently using 6.1? If so please be aware that the upgrade process to 2.0 is NOT a drop in replacement. Please refer to this migration guide to update.
-
+### Support & Versions
+BetterKeepInventory supports the 3 latests major releases of minecraft. (1.19, 1.20 and 1.21 at the time of writing)
+Support is only given for the LTS versions of the plugin.
+Currently the LTS versions are:
+- 1.6.2
+- 2.0.0
 
 
 ### Issues?

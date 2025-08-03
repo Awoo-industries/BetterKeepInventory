@@ -3,7 +3,8 @@ package com.beepsterr.plugins.Commands;
 import com.beepsterr.plugins.BetterKeepInventory;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
 import com.beepsterr.plugins.Library.Config;
-import com.beepsterr.plugins.Library.Version;
+import com.beepsterr.plugins.Library.Versions.Version;
+import com.beepsterr.plugins.Library.Versions.VersionChecker;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -76,6 +77,14 @@ public class MainCommand implements CommandExecutor {
         }
 
         sender.sendMessage(ChatColor.GREEN + "Configuration reloaded successfully.");
+
+        // Cancel version checks
+        if(plugin.versionChecker != null){
+            plugin.versionChecker.CancelCheck();
+        }
+
+        // Create a new VersionChecker, which will start checking for updates again
+        plugin.versionChecker = new VersionChecker(plugin.config.getNotifyChannel());
 
         return true;
 

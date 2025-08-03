@@ -5,7 +5,9 @@ import com.beepsterr.plugins.Depends.BetterKeepInventoryPlaceholderExpansion;
 import com.beepsterr.plugins.Events.OnPlayerDeath;
 import com.beepsterr.plugins.Exceptions.ConfigurationException;
 import com.beepsterr.plugins.Library.Config;
-import com.beepsterr.plugins.Library.Version;
+import com.beepsterr.plugins.Library.Versions.Version;
+import com.beepsterr.plugins.Library.Versions.VersionChannel;
+import com.beepsterr.plugins.Library.Versions.VersionChecker;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +22,7 @@ import java.util.logging.Level;
 public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     public Version version = new Version(getDescription().getVersion());
+    public VersionChecker versionChecker;
     public Random rng = new Random();
     public Config config;
     static public BetterKeepInventory instance;
@@ -28,11 +31,16 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     public void onEnable() {
 
         instance = this;
+
         try {
             config = new Config(getConfig());
         }catch (ConfigurationException e){
             CrashAndDisable("Configuration failed to load!\n" + e.getMessage() + "\nCaused at path: " + e.path);
             return;
+        }
+
+        if(config.getNotifyChannel() != VersionChannel.NONE){
+            versionChecker = new VersionChecker(config.getNotifyChannel());
         }
 
         // event handlers
@@ -65,7 +73,10 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-
+        // Cancel version checks (not sure if needed in onDisable? but can't hurt. (hopefully)
+        if(versionChecker != null){
+            versionChecker.CancelCheck();
+        }
     }
 
     public static BetterKeepInventory getInstance(){
