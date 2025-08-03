@@ -72,6 +72,10 @@ public class ItemHandler {
 
         if(meta instanceof Damageable damageableMeta) {
 
+            if(type.getMaxDurability() < 1){
+                return;
+            }
+
             int damageDealt = 0;
 
             plugin.log(Level.FINE, ply, "Using Damage mode " + mode);
