@@ -11,6 +11,7 @@
         <version>2.0.0</version>
     </parent>
 
+    <groupId>com.github.beepsterr</groupId>
     <artifactId>betterkeepinventory-api</artifactId>
     <packaging>jar</packaging>
     <name>BetterKeepInventory API</name>
