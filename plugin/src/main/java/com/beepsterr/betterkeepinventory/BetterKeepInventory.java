@@ -122,10 +122,10 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         api.conditionRegistry().register(this, "permissions", PermissionsCondition::new);
 
         if(checkDependency("Vault")){
-            api.conditionRegistry().register(this, "economy", EconomyCondition::new); // Wrong class!
+            api.conditionRegistry().register(this, "economy", EconomyCondition::new);
         }
         if(checkDependency("PlaceholderAPI")){
-            api.conditionRegistry().register(this, "placeholders", PlaceholderCondition::new); // Wrong class!
+            api.conditionRegistry().register(this, "placeholders", PlaceholderCondition::new);
         }
 
     }
