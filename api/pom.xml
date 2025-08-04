@@ -16,6 +16,14 @@
     <packaging>jar</packaging>
     <name>BetterKeepInventory API</name>
 
+
+    <repositories>
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- Bukkit API for annotations / types like Material -->
         <dependency>
@@ -25,6 +33,9 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+
+
     <build>
         <plugins>
             <plugin>
