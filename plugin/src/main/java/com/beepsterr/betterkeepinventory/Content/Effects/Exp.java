@@ -51,16 +51,20 @@ public class Exp implements Effect {
             case ALL -> playerExpLevel;
         };
 
-        plugin.debug(ply, "has " + playerExpLevel + " levels of experience.");
         plugin.debug(ply, "is losing " + levelsToLose + " levels of experience.");
 
         Map<String, String> replacements = new HashMap<>();
-        replacements.put("amount", String.valueOf(levelsToLose));
+        replacements.put("amount", String.valueOf(Math.min(levelsToLose, playerExpLevel)));
+
+        if(levelsToLose < 1){
+            return;
+        }
 
         switch (how) {
             case DELETE -> {
                 ply.setLevel(playerExpLevel - levelsToLose);
                 ply.setExp(0);
+                plugin.config.sendMessage(ply, "effects.exp_loss", replacements);
             }
             case DROP -> {
                 float expToDrop;
@@ -78,6 +82,7 @@ public class Exp implements Effect {
 
                 ExperienceOrb orb = ply.getWorld().spawn(ply.getLocation(), ExperienceOrb.class);
                 orb.setExperience((int) Math.round(expToDrop));
+                plugin.config.sendMessage(ply, "effects.exp_dropped", replacements);
             }
         }
     }
