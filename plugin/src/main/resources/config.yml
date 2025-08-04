@@ -22,7 +22,7 @@ hash: ""
 update_notifications: "MAJOR"
 
 # Enable this if you want to see debug messages in the console or if the developer asked nicely
-debug: true
+debug: false
 
 # Defines what the "default" KeepInventory behavior is for players
 # Options:
