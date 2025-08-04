@@ -3,8 +3,8 @@ name: Deploy to GitHub Packages
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'v*'
+#    tags:
+#      - 'v*'
 
 permissions:
   contents: read
@@ -24,6 +24,8 @@ jobs:
           cache: maven
 
       - name: Publish with Maven
-        run: mvn deploy -DskipTests
+        run: |
+          cd api
+          mvn deploy -Dgpg.skip=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
