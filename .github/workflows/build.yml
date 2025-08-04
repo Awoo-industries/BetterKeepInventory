@@ -1,10 +1,15 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Development Build
+name: Build Jar
 
 on:
   push:
+    paths:
+        - 'plugin/**'
+        - 'api/**'
+        - '.github/workflows/build.yml'
+        - 'pom.xml'
   pull_request:
     types: [opened, reopened, ready_for_review, synchronize]
   workflow_dispatch:
@@ -31,20 +36,11 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots clean validate package install
 
-      - name: Rename Jar (Plugin)
+      - name: Rename Jar
         run: mv ./plugin/target/BetterKeepInventory-*.jar ./BetterKeepInventory.jar
 
-      - name: Rename Jar (API)
-        run: mv ./api/target/BetterKeepInventory-*.jar ./BetterKeepInventory-api.jar
-
-      - name: Publish artifact (Plugin)
+      - name: Publish artifact
         uses: actions/upload-artifact@v4
         with:
           name: plugin
           path: ./BetterKeepInventory.jar
-
-      - name: Publish artifact (API)
-        uses: actions/upload-artifact@v4
-        with:
-          name: plugin
-          path: ./BetterKeepInventory-api.jar
