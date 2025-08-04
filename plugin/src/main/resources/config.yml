@@ -1,0 +1,57 @@
+#
+#   BetterKeepInventory By BeepSterr
+#   Version 2.0.0
+#
+#   SpigotMC:         https://www.spigotmc.org/resources/betterkeepinventory.93081/
+#   Documentation:    https://beeps.notion.site/Better-Keep-Inventory-f5d49a15a8174ce598bbb876d3003e46
+#   GitHub:           https://github.com/Awoo-industries/BetterKeepInventory
+#   Discord:          https://leafcat.live/discord
+#
+
+# Do not touch, unless you know what you are doing
+version: "2.0"
+hash: ""
+
+# Update notifications can be sent to anyone with the 'betterkeepinventory.notify' permission.
+# You have control over when these notifications are sent.
+# Options:
+# - NONE: No notifications will be sent
+# - MINOR: Notifications for minor updates (bug fixes, small changes)
+# - MAJOR: Notifications for major updates (new features, significant changes)
+# - ALL: Notifications for all updates, including minor and major
+update_notifications: "MAJOR"
+
+# Enable this if you want to see debug messages in the console or if the developer asked nicely
+debug: false
+
+# Defines what the "default" KeepInventory behavior is for players
+# Options:
+# - INHERIT: Inherits from the server or world KeepInventory gamerule
+# - DROP: Drops items on death
+# - KEEP: Keeps items on death
+default_behavior: "INHERIT"
+
+# Rules let you define the actions to take when a player dies.
+# Please check the documentation link above for more details on how to configure rules and their conditions.
+# If you need additional help, feel free to ask in the Discord server.
+# You can define multiple rules, and they will be evaluated in the order they are defined.
+rules:
+
+  example_rule:
+    name: "Example Rule"
+    enabled: false # <-- Look here!
+    conditions:
+      worlds:
+        nodes:
+          - "*"
+    damage:
+      mode: "PERCENTAGE"
+      min: 0.0
+      max: 0.0 # Change if you want equipment to be damages
+      slots:
+        - "ARMOR"
+      items:
+        - "G:ARMOR"
+
+# There is a lot more you can do, but to keep the default config slim and clean, we will not include it here.
+# Please do check the documentation linked on the top of this file for more information on how to configure the plugin
