@@ -77,5 +77,10 @@ BetterKeepInventory supports the latest 3 major Minecraft versions, and is compi
 | 1.17, 1.18        | 1.6.2          | 16           |
 | 1.19+             | Latest         | 17           |
 
+### Stable Versions
+The latest and stable version of BetterKeepInventory is not always the same version. The latest release will be posted to SpigotMC but the stable release is defined in [This File](versions/stable.txt).
+
+Set your `notify_channel` to `stable` to receive notifications whenever the stable version is newer than the version you have installed.
+
 ### Issues?
 Please either create a issue here on GitHub or join my [Discord](https://discord.gg/fFvFXPvtty) for support
