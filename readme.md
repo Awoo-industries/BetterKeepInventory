@@ -1,13 +1,44 @@
 # BetterKeepInventory 2.0
 A Plugin by BeepSterr
 
-### Support & Versions
-BetterKeepInventory supports the 3 latests major releases of minecraft. (1.19, 1.20 and 1.21 at the time of writing)
-Support is only given for the LTS versions of the plugin.
-Currently the LTS versions are:
-- 1.6.2
-- 2.0.0
+## API
+BetterKeepInventory exposes a API to allow other plugins to extend its features.
+### Installation
+Installation instructions will follow soon
 
+### Adding a Condition
+A condition is a checked when it is applied to a rule, it allows end users to create their own rules
+for when certain effects should be ran. some examples could be: if player is in a party, or the player has a hardcore difficulty
+#### Definition
+```java
+// An example condition definition
+public static class AlwaysTrueCondition implements Condition {
+    public AlwaysTrueCondition(ConfigurationSection section) {
+        // no config needed in this example
+        // but here you can use standard bukkit config API to read your conditions values
+    }
+
+    @Override
+    public boolean check(Player player, PlayerDeathEvent deathEvent, PlayerRespawnEvent respawnEvent) {
+        return false;
+    }
+}
+```
+
+#### Register the condition
+```java
+BetterKeepInventoryAPI api = Bukkit.getServicesManager().load(BetterKeepInventoryAPI.class);
+// don't forget null checks!
+api.conditionRegistry().register(this, "always_true", AlwaysTrueCondition::new);
+```
+And your condition is now available under `always_true` and `plugin_name.always_true`
+
+### Adding a Effect
+a effect is a "thing" that happens whenever a rule is triggered.
+Some examples could be: loss levels, temporary restrictions or anything your plugin can offer 
+#### Definition
+
+#### Register the effect
 
 ### Issues?
 Please either create a issue here on GitHub or join my [Discord](https://discord.gg/fFvFXPvtty) for support

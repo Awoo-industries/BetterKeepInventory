@@ -1,0 +1,58 @@
+name: BetterKeepInventory
+version: ${project.version}-ALPHA
+main: com.beepsterr.betterkeepinventory.BetterKeepInventory
+api-version: 1.19
+prefix: BetterKeepInventory
+authors: [ BeepSterr ]
+website: leafcat.live
+
+description: Customize the KeepInventory behavior on your server with rules and conditions.
+
+softdepend: [Vault,Towny,Essentials,GriefPrevention,PlaceholderAPI]
+
+# AutoPlug
+spigot-id: 93081
+
+permissions:
+
+  betterkeepinventory.player:
+    default: true
+    children:
+      betterkeepinventory.command.help: true
+      betterkeepinventory.version: true
+
+  betterkeepinventory.admin:
+    default: op
+    children:
+      betterkeepinventory.command.help: true
+      betterkeepinventory.command.reload: true
+      betterkeepinventory.command.registry: true
+      betterkeepinventory.version: true
+      betterkeepinventory.version.notify: true
+      betterkeepinventory.reload: true
+
+  betterkeepinventory.version:
+    description: Able to view the plugins version in the main command
+    default: true
+
+  betterkeepinventory.version.notify:
+    description: Get notified about new plugin versions
+    default: op
+
+  betterkeepinventory.command.help:
+    description: Show the main help menu
+    default: true
+
+  betterkeepinventory.command.registry:
+    description: View the plugins registries
+    default: op
+
+  betterkeepinventory.command.reload:
+    description: Reload the plugin config
+    default: op
+
+commands:
+  betterkeepinventory:
+    description: Better KeepInventory
+    aliases: [ betterki, bki ]
+    usage: /betterki <command>

@@ -1,0 +1,4 @@
+name: BKITestPlugin
+version: 1.0
+main: com.beepsterr.plugin_api_consumer.BKITestPlugin
+depend: [BetterKeepInventory]
