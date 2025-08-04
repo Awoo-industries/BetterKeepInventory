@@ -1,7 +1,13 @@
 # BetterKeepInventory 2.0
-A Plugin by BeepSterr
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F93081&query=downloads&logo=spigotmc&label=Downloads&color=%23ED8106)](https://www.spigotmc.org/resources/betterkeepinventory.93081/)
 
-## API
+Take control of KeepInventory.
+No longer shall your players jump into lava to get home. Weep they shall, for the mercy of their benevolent admins.
+
+
+*(This plugin lets take fine grained control over KeepInventory, choosing to drop certain items, damage durability and many more effects)*
+
+## Developer API
 BetterKeepInventory exposes a API to allow other plugins to extend its features.
 ### Installation
 Follow the instructions [here](https://github.com/BeepSterr/BetterKeepInventory/packages/2605938) to install the API package into your project
@@ -37,9 +43,31 @@ And your condition is now available under `always_true` and `plugin_name.always_
 a effect is a "thing" that happens whenever a rule is triggered.
 Some examples could be: loss levels, temporary restrictions or anything your plugin can offer 
 #### Definition
+```java
+// An example condition definition
+public static class BroadcastEffect implements Effect {
+    public BroadcastEffect(ConfigurationSection section) {
+        // no config needed in this example
+        // but here you can use standard bukkit config API to read your conditions values
+    }
 
+    @Override
+    public void onRespawn(Player player, PlayerRespawnEvent event) {
+        // This effect doesn't do anything on respawn (yet)
+    }
+
+    @Override
+    public void onDeath(Player ply, PlayerDeathEvent event) {
+        plugin.getServer().broadcastMessage(ply.getName() + " died a gruesome death.");
+    }
+}
+```
 #### Register the effect
-
+```java
+BetterKeepInventoryAPI api = Bukkit.getServicesManager().load(BetterKeepInventoryAPI.class);
+// don't forget null checks!
+api.effectRegistry().register(this, "broadcast", BroadcastEffect::new);
+```
 ## Supported Versions
 BetterKeepInventory supports the latest 3 major Minecraft versions, and is compiled using the native Java version of the oldest supported Minecraft version.
 
