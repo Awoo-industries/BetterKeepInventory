@@ -40,5 +40,14 @@ Some examples could be: loss levels, temporary restrictions or anything your plu
 
 #### Register the effect
 
+## Supported Versions
+BetterKeepInventory supports the latest 3 major Minecraft versions, and is compiled using the native Java version of the oldest supported Minecraft version.
+
+| Minecraft Version | Plugin Version | Java Version |
+|-------------------|----------------|--------------|
+| 1.16 and below    | 1.3            | 11           |
+| 1.17, 1.18        | 1.6.2          | 16           |
+| 1.19+             | Latest         | 17           |
+
 ### Issues?
 Please either create a issue here on GitHub or join my [Discord](https://discord.gg/fFvFXPvtty) for support

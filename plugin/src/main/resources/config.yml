@@ -19,10 +19,9 @@ hash: ""
 # - MINOR: Notifications for minor updates (bug fixes, small changes)
 # - MAJOR: Notifications for major updates (new features, significant changes)
 # - ALL: Notifications for all updates, including minor and major
-
 update_notifications: "MAJOR"
 
-# Enable this if you want to see debug messages in the console
+# Enable this if you want to see debug messages in the console or if the developer asked nicely
 debug: true
 
 # Defines what the "default" KeepInventory behavior is for players
@@ -35,21 +34,24 @@ default_behavior: "INHERIT"
 # Rules let you define the actions to take when a player dies.
 # Please check the documentation link above for more details on how to configure rules and their conditions.
 # If you need additional help, feel free to ask in the Discord server.
+# You can define multiple rules, and they will be evaluated in the order they are defined.
 rules:
-  1:
-    name: "Default"
-    enabled: true
+
+  example_rule:
+    name: "Example Rule"
+    enabled: false # <-- Look here!
     conditions:
-      permission:
-        - "!player.keepinventory"
-      world:
-        - "*"
-    drop:
-      mode: "ALL"
-      affects:
-        - "IRON_INGOT"
-        - "DIAMOND"
-      with_lore:
-        - ".*Kept on Death.*"
-      with_name:
-        - "Soundbound"
+      worlds:
+        nodes:
+          - "*"
+    damage:
+      mode: "PERCENTAGE"
+      min: 0.0
+      max: 0.0 # Change if you want equipment to be damages
+      slots:
+        - "ARMOR"
+      items:
+        - "G:ARMOR"
+
+# There is a lot more you can do, but to keep the default config slim and clean, we will not include it here.
+# Please do check the documentation linked on the top of this file for more information on how to configure the plugin
