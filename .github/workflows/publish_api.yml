@@ -25,7 +25,7 @@ jobs:
 
       - name: Publish with Maven
         run: |
-          mvn clean validate package install
+          mvn clean install
           cd api
           mvn deploy -Dgpg.skip=true
         env:
