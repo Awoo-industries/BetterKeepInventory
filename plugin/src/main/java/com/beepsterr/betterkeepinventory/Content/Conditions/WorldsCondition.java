@@ -19,6 +19,18 @@ public class WorldsCondition implements Condition {
 
     @Override
     public boolean check(Player ply, PlayerDeathEvent deathEvent, PlayerRespawnEvent respawnEvent) {
-        return true;
+        for (String world : worlds) {
+            boolean isNegated = world.startsWith("!");
+            String actual = isNegated ? world.substring(1) : world;
+
+            String regex = actual.replace("*", ".*");
+            Pattern pattern = Pattern.compile(regex);
+            boolean matches = pattern.matcher(ply.getWorld().getName()).matches();
+
+            if (isNegated != matches) {
+                return true;
+            }
+        }
+        return false;
     }
 }
