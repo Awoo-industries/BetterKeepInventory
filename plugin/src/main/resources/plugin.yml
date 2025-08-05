@@ -1,5 +1,5 @@
 name: BetterKeepInventory
-version: ${project.version}-ALPHA
+version: ${project.version}
 main: com.beepsterr.betterkeepinventory.BetterKeepInventory
 api-version: 1.19
 prefix: BetterKeepInventory

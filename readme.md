@@ -10,7 +10,7 @@ No longer shall your players jump into lava to get home. Weep they shall, for th
 ## Developer API
 BetterKeepInventory exposes a API to allow other plugins to extend its features.
 ### Installation
-Follow the instructions [here](https://github.com/BeepSterr/BetterKeepInventory/packages/2605938) to install the API package into your project
+Follow the instructions [here](https://github.com/BeepSterr/BetterKeepInventory/packages/) to install the API package into your project
 
 ### Adding a Condition
 A condition is a checked when it is applied to a rule, it allows end users to create their own rules

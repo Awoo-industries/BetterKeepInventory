@@ -89,8 +89,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 }
 
                 // Alpha warning
-                if("ALPHA".equals(Version.getChannel())){
-                    TextComponent betaWarning = new TextComponent("You are running a ALPHA version of BetterKeepInventory! Expect things to not work and report any bugs you find on the Discord Server!");
+                if("SNAPSHOT".equals(Version.getChannel())){
+                    TextComponent betaWarning = new TextComponent("You are running a SNAPSHOT version of BetterKeepInventory! Expect things to not work and report any bugs you find on the Discord Server!");
                     betaWarning.setColor(ChatColor.DARK_RED);
                     betaWarning.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://leafcat.live/discord"));
                     betaWarning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
