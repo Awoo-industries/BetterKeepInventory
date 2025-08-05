@@ -1,4 +1,4 @@
-name: Nightly Snapshot Build
+name: Snapshot Build
 
 on:
   push:
@@ -6,11 +6,10 @@ on:
       - 'master'
     paths:
       - 'plugin/**'
-      - 'api/**'
-      - '.github/workflows/build.yml'
+      - '.github/workflows/build_snapshot.yml'
       - 'pom.xml'
-#  schedule:
-#    - cron: '0 10 * * *' # Every day at 10AM UTC
+  schedule:
+    - cron: '0 10 * * *' # Every day at 10AM UTC
   workflow_dispatch:
 
 jobs:

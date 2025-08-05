@@ -63,10 +63,16 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     if (!isUpdateAvailable) {
                         sender.sendMessage("" + ChatColor.GREEN + ChatColor.ITALIC + "No updates available.");
                     }else{
+
+                        String updateURL = switch(plugin.versionChecker.channel) {
+                            case SNAPSHOT -> "https://github.com/BeepSterr/BetterKeepInventory/actions/workflows/build_snapshot.yml";
+                            default -> "https://www.spigotmc.org/resources/betterkeepinventory.93081/";
+                        };
+
                         TextComponent updateAvailableComponent = new TextComponent(plugin.versionChecker.foundVersion.toString() + " is available for download!");
                         updateAvailableComponent.setColor(ChatColor.GOLD);
                         updateAvailableComponent.setItalic(true);
-                        updateAvailableComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/betterkeepinventory.93081/updates"));
+                        updateAvailableComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, updateURL));
                         updateAvailableComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 new ComponentBuilder(ChatColor.GOLD + "Download Update").create()));
 
