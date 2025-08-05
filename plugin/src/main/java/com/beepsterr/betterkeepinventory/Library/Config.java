@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 
@@ -148,6 +147,8 @@ public class Config {
 
     public void MigrateConfiguration() throws UnloadableConfiguration {
 
+        BetterKeepInventory plugin = BetterKeepInventory.getInstance();
+
         // Detect pre 2.0 configuration files
         int legacyConfigVersion = rawConfig.getInt("main.config_version", 0);
         if(legacyConfigVersion > 0){
@@ -158,7 +159,7 @@ public class Config {
             );
         }
 
-        String installedVersion = Version.getVersionWithoutChannel();
+        String installedVersion = plugin.version.major + "." + plugin.version.minor + "." + plugin.version.patch;
         if(!installedVersion.equals(this.version)){
             // ... Create migrations here when needed
         }

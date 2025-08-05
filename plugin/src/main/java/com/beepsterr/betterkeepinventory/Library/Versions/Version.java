@@ -1,63 +1,42 @@
 package com.beepsterr.betterkeepinventory.Library.Versions;
 
-import com.beepsterr.betterkeepinventory.BetterKeepInventory;
-
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
-public class Version {
+public class Version implements Comparable<Version> {
 
-    public int major = 0;
-    public int minor = 0;
-    public int patch = 0;
-    public String commitHash;
+    public final int major;
+    public final int minor;
+    public final int patch;
+    public final String flavor; // informational only
+    public final int build;     // used in comparison if present
 
     public Version(String versionStr) {
-        if (versionStr.matches("\\d+\\.\\d+\\.\\d+(-[A-Za-z]+)?")) {
-            String[] parts = versionStr.split("[-]");
-            String[] numbers = parts[0].split("\\.");
-            this.major = Integer.parseInt(numbers[0]);
-            this.minor = Integer.parseInt(numbers[1]);
-            this.patch = Integer.parseInt(numbers[2]);
-            this.commitHash = getCommitHash();
-        } else if (versionStr.matches("[a-fA-F0-9]{7,40}")) {
-            this.commitHash = versionStr;
+        String[] mainParts = versionStr.split("-");
+
+        // Parse core version: major.minor.patch
+        String[] versionNumbers = mainParts[0].split("\\.");
+        if (versionNumbers.length != 3) {
+            throw new IllegalArgumentException("Invalid version format: " + versionStr);
+        }
+
+        this.major = Integer.parseInt(versionNumbers[0]);
+        this.minor = Integer.parseInt(versionNumbers[1]);
+        this.patch = Integer.parseInt(versionNumbers[2]);
+
+        // Handle flavor/build info
+        if (mainParts.length >= 2) {
+            this.flavor = mainParts[1].toUpperCase();
         } else {
-            throw new IllegalArgumentException("Unknown version format: " + versionStr);
-        }
-    }
-
-    public int Compare(Version other) {
-        int result = Integer.compare(this.major, other.major);
-        if (result != 0) return result;
-
-        result = Integer.compare(this.minor, other.minor);
-        if (result != 0) return result;
-
-        result = Integer.compare(this.patch, other.patch);
-        if (result != 0) return result;
-
-        if (this.commitHash != null && other.commitHash != null) {
-            return this.commitHash.equals(other.commitHash) ? 0 : -1;
+            this.flavor = "STABLE";
         }
 
-        return 0;
-    }
-
-    public static String getChannel(){
-        String version = BetterKeepInventory.getInstance().getDescription().getVersion();
-        if (version.contains("-")) {
-            return version.split("-")[1];
+        if (mainParts.length >= 3) {
+            this.build = Integer.parseInt(mainParts[2]);
+        } else {
+            this.build = 0;
         }
-        return "stable"; // Default channel if not specified
-    }
-
-    public static String getVersionWithoutChannel() {
-        String version = BetterKeepInventory.getInstance().getDescription().getVersion();
-        if (version.contains("-")) {
-            return version.split("-")[0];
-        }
-        return version;
     }
 
     public static String getCommitHash() {
@@ -72,11 +51,33 @@ public class Version {
     }
 
     @Override
+    public int compareTo(Version other) {
+        if (this.major != other.major) return Integer.compare(this.major, other.major);
+        if (this.minor != other.minor) return Integer.compare(this.minor, other.minor);
+        if (this.patch != other.patch) return Integer.compare(this.patch, other.patch);
+        return Integer.compare(this.build, other.build);
+    }
+
+    @Override
     public String toString() {
-        String version = major + "." + minor + "." + patch;
-        if(commitHash != null) {
-            version += " (" + commitHash + ")";
+        String base = major + "." + minor + "." + patch;
+        if (!flavor.equals("STABLE") || build > 0) {
+            base += "-" + flavor;
         }
-        return version;
+        if (build > 0) {
+            base += "-" + build;
+        }
+        return base;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Version v)) return false;
+        return this.compareTo(v) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(major, minor, patch, build);
     }
 }

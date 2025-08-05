@@ -78,7 +78,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage("");
 
                 // Beta warning
-                if("BETA".equals(Version.getChannel())){
+                if("BETA".equals(plugin.version.flavor)){
                     TextComponent betaWarning = new TextComponent("You are running a BETA version of BetterKeepInventory! If you run into any bugs, please make a post on the Discord Server!");
                     betaWarning.setColor(ChatColor.RED);
                     betaWarning.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://leafcat.live/discord"));
@@ -88,8 +88,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("");
                 }
 
-                // Alpha warning
-                if("SNAPSHOT".equals(Version.getChannel())){
+                // SNAPSHOT warning
+                if("SNAPSHOT".equals(plugin.version.flavor)){
                     TextComponent betaWarning = new TextComponent("You are running a SNAPSHOT version of BetterKeepInventory! Expect things to not work and report any bugs you find on the Discord Server!");
                     betaWarning.setColor(ChatColor.DARK_RED);
                     betaWarning.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://leafcat.live/discord"));
