@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Economy implements Effect {
+public class VaultEffect implements Effect {
 
     public enum Mode {
         SIMPLE, PERCENTAGE
@@ -23,7 +23,7 @@ public class Economy implements Effect {
     private final double max;
     private final boolean allowNegativeBalance;
 
-    public Economy(ConfigurationSection config) {
+    public VaultEffect(ConfigurationSection config) {
         this.mode = Mode.valueOf(config.getString("mode", "PERCENTAGE").toUpperCase());
         this.min = config.getDouble("min", 0.0);
         this.max = config.getDouble("max", 0.0);

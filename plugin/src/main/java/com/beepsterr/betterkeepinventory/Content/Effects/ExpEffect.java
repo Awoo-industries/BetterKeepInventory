@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class Exp implements Effect {
+public class ExpEffect implements Effect {
 
     public enum Mode {
         SIMPLE, PERCENTAGE, ALL
@@ -27,7 +27,7 @@ public class Exp implements Effect {
     private final float min;
     private final float max;
 
-    public Exp(ConfigurationSection config) {
+    public ExpEffect(ConfigurationSection config) {
         this.mode = Mode.valueOf(config.getString("mode", "PERCENTAGE").toUpperCase());
         this.how = How.valueOf(config.getString("how", "DROP").toUpperCase());
         this.min = (float) config.getDouble("min", 0.0);

@@ -74,7 +74,10 @@ public class ConfigRule {
                 if (effConfig == null) continue;
 
                 Effect effect = api.effectRegistry().create(key, effConfig);
-                if (effect == null) throw new RuntimeException("Unknown effect: " + key);
+                if (effect == null){
+                    BetterKeepInventory.getInstance().getLogger().warning("Effect '" + key + "' is not registered in rule '" + name + "'!!!");
+                    continue;
+                }
 
                 effects.add(effect);
             }

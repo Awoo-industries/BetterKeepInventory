@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class DamageItem implements Effect {
+public class DamageItemEffect implements Effect {
 
     public enum Mode {
         PERCENTAGE, PERCENTAGE_REMAINING, SIMPLE
@@ -33,7 +33,7 @@ public class DamageItem implements Effect {
     private final SlotType slots;
     private final MaterialType items;
 
-    public DamageItem(ConfigurationSection config) {
+    public DamageItemEffect(ConfigurationSection config) {
         this.mode = Mode.valueOf(config.getString("mode", "PERCENTAGE").toUpperCase());
         this.min = (float) config.getDouble("min", 0.0);
         this.max = (float) config.getDouble("max", 0.0);

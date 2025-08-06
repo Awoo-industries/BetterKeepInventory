@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-public class EconomyCondition implements Condition {
+public class VaultCondition implements Condition {
 
     private final double minBalance;
 
-    public EconomyCondition(ConfigurationSection config) {
+    public VaultCondition(ConfigurationSection config) {
         this.minBalance = config.getDouble("min_balance", 0.0);
     }
 

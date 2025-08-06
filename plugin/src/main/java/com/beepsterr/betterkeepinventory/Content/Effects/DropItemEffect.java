@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class DropItem implements Effect {
+public class DropItemEffect implements Effect {
 
     public enum Mode {
         SIMPLE, PERCENTAGE, ALL
@@ -25,7 +25,7 @@ public class DropItem implements Effect {
     private final float max;
     private final MaterialType items;
 
-    public DropItem(ConfigurationSection config) {
+    public DropItemEffect(ConfigurationSection config) {
         this.mode = Mode.valueOf(config.getString("mode", "SIMPLE").toUpperCase());
         this.min = (float) config.getDouble("min", 0.0);
         this.max = (float) config.getDouble("max", 0.0);

@@ -62,7 +62,7 @@ public class OnPlayerDeath  implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
 
         Player ply = event.getPlayer();
-        if(ply.hasPermission("betterkeepinventory.notify")){
+        if(ply.hasPermission("betterkeepinventory.version.notify")){
 
             // Delay the message to hopefully catch more attention
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {

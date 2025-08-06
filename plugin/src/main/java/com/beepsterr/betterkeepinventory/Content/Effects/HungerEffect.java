@@ -12,13 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Hunger implements Effect {
+public class HungerEffect implements Effect {
 
     private final int min;
     private final int amount;
     public static final Map<UUID, Integer> hungerMap = new HashMap<>();
 
-    public Hunger(ConfigurationSection config) {
+    public HungerEffect(ConfigurationSection config) {
         this.min = config.getInt("min", 0);
         this.amount = config.getInt("amount", 0);
     }
