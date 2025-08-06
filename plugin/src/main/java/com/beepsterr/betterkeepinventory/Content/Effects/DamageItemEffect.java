@@ -1,8 +1,8 @@
 package com.beepsterr.betterkeepinventory.Content.Effects;
 
 import com.beepsterr.betterkeepinventory.BetterKeepInventory;
-import com.beepsterr.betterkeepinventory.Library.Types.MaterialType;
-import com.beepsterr.betterkeepinventory.Library.Types.SlotType;
+import com.beepsterr.betterkeepinventory.api.Types.MaterialType;
+import com.beepsterr.betterkeepinventory.api.Types.SlotType;
 import com.beepsterr.betterkeepinventory.api.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;

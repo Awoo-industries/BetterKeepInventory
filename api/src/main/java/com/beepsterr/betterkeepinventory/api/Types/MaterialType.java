@@ -1,6 +1,6 @@
-package com.beepsterr.betterkeepinventory.Library.Types;
+package com.beepsterr.betterkeepinventory.api.Types;
 
-import com.beepsterr.betterkeepinventory.BetterKeepInventory;
+import com.beepsterr.betterkeepinventory.api.Exceptions.TypeError;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -270,8 +270,7 @@ public class MaterialType {
                             break;
                         default:
                             // Invalid group name, ignore
-                            BetterKeepInventory.getInstance().getLogger().warning("Tried to parse invalid material: " + materialName);
-                            break;
+                            throw new TypeError("Tried to parse invalid material: " + materialName);
                     }
                 } else {
                     // Invalid material name, ignore

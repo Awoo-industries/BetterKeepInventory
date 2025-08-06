@@ -1,6 +1,6 @@
-package com.beepsterr.betterkeepinventory.Library.Types;
+package com.beepsterr.betterkeepinventory.api.Types;
 
-import com.beepsterr.betterkeepinventory.BetterKeepInventory;
+import com.beepsterr.betterkeepinventory.api.Exceptions.TypeError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class SlotType {
                         break;
                     default:
                         // Invalid slot type, ignore
-                        BetterKeepInventory.getInstance().getLogger().warning("Tried to parse invalid slot type: " + slot + ". Valid types are: ARMOR, HOTBAR, INVENTORY, OFFHAND, ALL or a number between 0 and 40.");
+                        throw new TypeError("Tried to parse invalid slot type: " + slot + ". Valid types are: ARMOR, HOTBAR, INVENTORY, OFFHAND, ALL or a number between 0 and 40.");
                 }
             }
         }
