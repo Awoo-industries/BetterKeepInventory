@@ -3,13 +3,13 @@ package com.beepsterr.betterkeepinventory;
 import com.beepsterr.betterkeepinventory.Commands.MainCommand;
 import com.beepsterr.betterkeepinventory.Content.Conditions.PermissionsCondition;
 import com.beepsterr.betterkeepinventory.Content.Conditions.PlaceholderAPI.PlaceholderCondition;
-import com.beepsterr.betterkeepinventory.Content.Conditions.Vault.EconomyCondition;
+import com.beepsterr.betterkeepinventory.Content.Conditions.Vault.VaultCondition;
 import com.beepsterr.betterkeepinventory.Content.Conditions.WorldsCondition;
-import com.beepsterr.betterkeepinventory.Content.Effects.DamageItem;
-import com.beepsterr.betterkeepinventory.Content.Effects.DropItem;
-import com.beepsterr.betterkeepinventory.Content.Effects.Exp;
-import com.beepsterr.betterkeepinventory.Content.Effects.Hunger;
-import com.beepsterr.betterkeepinventory.Content.Effects.Vault.Economy;
+import com.beepsterr.betterkeepinventory.Content.Effects.DamageItemEffect;
+import com.beepsterr.betterkeepinventory.Content.Effects.DropItemEffect;
+import com.beepsterr.betterkeepinventory.Content.Effects.ExpEffect;
+import com.beepsterr.betterkeepinventory.Content.Effects.HungerEffect;
+import com.beepsterr.betterkeepinventory.Content.Effects.Vault.VaultEffect;
 import com.beepsterr.betterkeepinventory.Depends.BetterKeepInventoryPlaceholderExpansion;
 import com.beepsterr.betterkeepinventory.Events.OnPlayerDeath;
 import com.beepsterr.betterkeepinventory.Exceptions.UnloadableConfiguration;
@@ -104,13 +104,13 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     private void registerEffects(BetterKeepInventoryAPI api) {
 
         // register built-in effects
-        api.effectRegistry().register(this, "damage", DamageItem::new);
-        api.effectRegistry().register(this, "drop", DropItem::new);
-        api.effectRegistry().register(this, "exp", Exp::new);
-        api.effectRegistry().register(this, "hunger", Hunger::new);
+        api.effectRegistry().register(this, "damage", DamageItemEffect::new);
+        api.effectRegistry().register(this, "drop", DropItemEffect::new);
+        api.effectRegistry().register(this, "exp", ExpEffect::new);
+        api.effectRegistry().register(this, "hunger", HungerEffect::new);
 
         if(checkDependency("Vault")){
-            api.effectRegistry().register(this, "economy", Economy::new);
+            api.effectRegistry().register(this, "vault", VaultEffect::new);
         }
 
     }
@@ -122,7 +122,7 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
         api.conditionRegistry().register(this, "permissions", PermissionsCondition::new);
 
         if(checkDependency("Vault")){
-            api.conditionRegistry().register(this, "economy", EconomyCondition::new);
+            api.conditionRegistry().register(this, "vault", VaultCondition::new);
         }
         if(checkDependency("PlaceholderAPI")){
             api.conditionRegistry().register(this, "placeholders", PlaceholderCondition::new);
