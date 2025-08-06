@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Config {
 
@@ -27,7 +28,7 @@ public class Config {
 
     private static Config instance;
 
-    private final FileConfiguration rawConfig;
+    private FileConfiguration rawConfig;
     private FileConfiguration rawMessages;
     private final String version;
     private final VersionChannel notifyChannel;
@@ -41,6 +42,14 @@ public class Config {
 
         instance = this;
         this.rawConfig = config;
+
+
+        if(Objects.equals(this.rawConfig.getString("version"), "default")) {
+            plugin.log("Creating defalt config.yml file");
+            plugin.saveDefaultConfig();
+            plugin.reloadConfig();
+            this.rawConfig = plugin.getConfig();
+        }
 
         plugin.saveResource("messages.yml", false);
         this.rawMessages = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "messages.yml"));
@@ -164,7 +173,7 @@ public class Config {
             // ... Create migrations here when needed
         }
 
-        // Migration completed, write new changes
+//         Migration completed, write new versions
         rawConfig.set("version", installedVersion);
         rawConfig.set("hash", Version.getCommitHash());
         BetterKeepInventory.getInstance().saveConfig();

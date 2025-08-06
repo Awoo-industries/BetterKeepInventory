@@ -85,7 +85,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
                 // Beta warning
                 if("BETA".equals(plugin.version.flavor)){
-                    TextComponent betaWarning = new TextComponent("You are running a BETA version of BetterKeepInventory! If you run into any bugs, please make a post on the Discord Server!");
+                    TextComponent betaWarning = new TextComponent("You are running a BETA version of BetterKeepInventory! If things don't work or you find bugs, please report them on Github or Discord!");
                     betaWarning.setColor(ChatColor.RED);
                     betaWarning.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://leafcat.live/discord"));
                     betaWarning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -96,7 +96,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
                 // SNAPSHOT warning
                 if("SNAPSHOT".equals(plugin.version.flavor)){
-                    TextComponent betaWarning = new TextComponent("You are running a SNAPSHOT version of BetterKeepInventory! Expect things to not work and report any bugs you find on the Discord Server!");
+                    TextComponent betaWarning = new TextComponent("You are running a SNAPSHOT version of BetterKeepInventory! Expect things to not work and report any bugs you find on GitHub or Discord!");
                     betaWarning.setColor(ChatColor.DARK_RED);
                     betaWarning.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://leafcat.live/discord"));
                     betaWarning.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,

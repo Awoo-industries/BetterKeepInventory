@@ -9,16 +9,16 @@
 #
 
 # Do not touch, unless you know what you are doing
-version: "2.0"
+version: "default"
 hash: ""
 
-# Update notifications can be sent to anyone with the 'betterkeepinventory.notify' permission.
+# Update notifications can be sent to anyone with the 'betterkeepinventory.version.notify' permission.
 # You have control over when these notifications are sent.
 # Options:
-# - NONE: No notifications will be sent
-# - MINOR: Notifications for minor updates (bug fixes, small changes)
-# - MAJOR: Notifications for major updates (new features, significant changes)
-# - ALL: Notifications for all updates, including minor and major
+# - NONE: Do not check for updates or send notifications
+# - SNAPSHOT: Receive notifications for snapshot builds (Dev-Builds)
+# - LATEST: Receive notifications for the latest release
+# - STABLE: Receive notifications for releases marked as stable only.
 notify_channel: "STABLE"
 
 # Enable this if you want to see debug messages in the console or if the developer asked nicely
@@ -43,7 +43,7 @@ rules:
     conditions:
       worlds:
         nodes:
-          - "*"
+          - "world_*"
     effects:
       damage:
         mode: "PERCENTAGE"
@@ -52,7 +52,7 @@ rules:
         slots:
           - "ARMOR"
         items:
-          - "G:ARMOR"
+          - "G:ARMOR" # Material Group! Check the documentation for more information
 
 # There is a lot more you can do, but to keep the default config slim and clean, we will not include it here.
 # Please do check the documentation linked on the top of this file for more information on how to configure the plugin
