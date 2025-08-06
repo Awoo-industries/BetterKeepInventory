@@ -36,7 +36,27 @@ Please either create a issue here on GitHub or join the [Discord](https://discor
 BetterKeepInventory exposes a API to allow other plugins to extend its features.
 
 ### Installation
-Follow the instructions [here](https://github.com/BeepSterr/BetterKeepInventory/packages/) to install the API package into your project
+The easiest way to get a hold of the API is to use JitPack. Just add your dependencies like this:
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<depencencies>
+    <dependency>
+        <!-- Keep not that we're using the 'betterkeepinventory-api' artifact -->
+        <groupId>com.github.BeepSterr.BetterKeepInventory</groupId>
+        <artifactId>betterkeepinventory-api</artifactId>
+        <version>v2.0.0-BETA-1</version>
+        <!-- You should not shade the API, but use it as a provided dependency -->
+        <!-- If you don't do this, you will not be able to register anything -->
+        <scope>provided</scope>
+    </dependency>
+</depencencies>
+```
 
 ### Adding a Condition
 A condition is a checked when it is applied to a rule, it allows end users to create their own rules

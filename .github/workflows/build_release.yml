@@ -1,0 +1,68 @@
+name: Release build
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build and upload'
+        required: true
+
+jobs:
+  build-release:
+    name: Build Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Maven
+        uses: stCarolas/setup-maven@v4.2
+        with:
+          maven-version: 3.8.2
+
+      - name: Determine version
+        id: versioning
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.tag }}"
+          else
+            VERSION="${GITHUB_REF##*/}"
+          fi
+          echo "Using version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Apply version
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.versioning.outputs.version }} -DgenerateBackupPoms=false
+
+      - name: Build JAR
+        run: mvn clean package -DskipTests
+
+      - name: Rename JAR
+        run: |
+          mkdir out
+          mv ./plugin/target/BetterKeepInventory-*.jar ./out/BetterKeepInventory-${{ steps.versioning.outputs.version }}.jar
+
+      - name: Upload to Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./out/BetterKeepInventory-${{ steps.versioning.outputs.version }}.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifact (fallback/manual use)
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: BetterKeepInventory-${{ steps.versioning.outputs.version }}
+          path: ./out/BetterKeepInventory-${{ steps.versioning.outputs.version }}.jar
