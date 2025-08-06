@@ -33,11 +33,13 @@ jobs:
         id: versioning
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            VERSION="${{ github.event.inputs.tag }}"
+            RAW_TAG="${{ github.event.inputs.tag }}"
           else
-            VERSION="${GITHUB_REF##*/}"
+            RAW_TAG="${GITHUB_REF##*/}"
           fi
-          echo "Using version: $VERSION"
+
+          VERSION="${RAW_TAG#v}"  # Strip leading 'v'
+          echo "Using tag: $RAW_TAG -> version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Apply version
