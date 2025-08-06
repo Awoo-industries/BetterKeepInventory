@@ -19,7 +19,7 @@ hash: ""
 # - MINOR: Notifications for minor updates (bug fixes, small changes)
 # - MAJOR: Notifications for major updates (new features, significant changes)
 # - ALL: Notifications for all updates, including minor and major
-update_notifications: "MAJOR"
+notify_channel: "STABLE"
 
 # Enable this if you want to see debug messages in the console or if the developer asked nicely
 debug: false
@@ -44,14 +44,15 @@ rules:
       worlds:
         nodes:
           - "*"
-    damage:
-      mode: "PERCENTAGE"
-      min: 0.0
-      max: 0.0 # Change if you want equipment to be damages
-      slots:
-        - "ARMOR"
-      items:
-        - "G:ARMOR"
+    effects:
+      damage:
+        mode: "PERCENTAGE"
+        min: 0.0
+        max: 0.0 # Change if you want equipment to be damages
+        slots:
+          - "ARMOR"
+        items:
+          - "G:ARMOR"
 
 # There is a lot more you can do, but to keep the default config slim and clean, we will not include it here.
 # Please do check the documentation linked on the top of this file for more information on how to configure the plugin

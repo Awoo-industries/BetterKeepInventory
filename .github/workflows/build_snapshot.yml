@@ -1,16 +1,16 @@
 name: Snapshot Build
 
 on:
-  push:
-    branches:
-      - 'master'
-    paths:
-      - 'plugin/**'
-      - '.github/workflows/build_snapshot.yml'
-      - 'pom.xml'
+#  push:
+#    branches:
+#      - 'master'
+#    paths:
+#      - 'plugin/**'
+#      - '.github/workflows/build_snapshot.yml'
+#      - 'pom.xml'
+  workflow_dispatch:
   schedule:
     - cron: '0 10 * * *' # Every day at 10AM UTC
-  workflow_dispatch:
 
 jobs:
   build-snapshot:

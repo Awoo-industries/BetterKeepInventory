@@ -38,7 +38,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
             };
         }else{
 
-            if(!checkPerm(sender, "betterkeepinventory.help")){
+            if(!checkPerm(sender, "betterkeepinventory.command.help")){
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
                 return true;
             }
@@ -114,13 +114,13 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
             // command index
 
-            if(checkPerm(sender, "betterkeepinventory.reload")){
+            if(checkPerm(sender, "betterkeepinventory.command.reload")){
                 TextComponent reloadCommand = new TextComponent("/betterki reload");
                 reloadCommand.setColor(ChatColor.AQUA);
                 reloadCommand.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/betterkeepinventory reload"));
                 sender.spigot().sendMessage(reloadCommand);
             }
-            if(checkPerm(sender, "betterkeepinventory.registry")){
+            if(checkPerm(sender, "betterkeepinventory.command.registry")){
                 TextComponent registryEffectsCommand = new TextComponent("/betterki registry effects");
                 registryEffectsCommand.setColor(ChatColor.AQUA);
                 registryEffectsCommand.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/betterkeepinventory registry effects"));
@@ -151,7 +151,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     public boolean OnRegistryCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(!checkPerm(sender, "betterkeepinventory.registry")){
+        if(!checkPerm(sender, "betterkeepinventory.command.registry")){
             sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             return true;
         }
@@ -234,7 +234,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     public boolean OnReloadCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(!checkPerm(sender, "betterkeepinventory.reload")){
+        if(!checkPerm(sender, "betterkeepinventory.command.reload")){
             sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             return true;
         }
@@ -273,17 +273,24 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     }
 
+    // TODO: implement new permissions
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (!sender.hasPermission("betterkeepinventory.admin")) return Collections.emptyList();
+        if (!sender.hasPermission("betterkeepinventory.command.help")) return Collections.emptyList();
 
         if (args.length == 1) {
-            return List.of("reload", "registry").stream()
+            List<String> options = new ArrayList<>();
+            if (sender.hasPermission("betterkeepinventory.command.reload")) options.add("reload");
+            if (sender.hasPermission("betterkeepinventory.command.registry")) options.add("registry");
+
+            return options.stream()
                     .filter(opt -> opt.startsWith(args[0].toLowerCase()))
                     .toList();
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("registry")) {
+            if (!sender.hasPermission("betterkeepinventory.command.registry")) return Collections.emptyList();
+
             return List.of("effects", "conditions").stream()
                     .filter(opt -> opt.startsWith(args[1].toLowerCase()))
                     .toList();

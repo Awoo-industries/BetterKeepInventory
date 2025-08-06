@@ -12,4 +12,4 @@ jenv local $1
 
 curl -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
 java -jar BuildTools.jar --rev $2
-mv ./spigot-*.jar ../../dev_server/spigot.jar
+mv ./spigot-*.jar ../../_dev_server/spigot.jar

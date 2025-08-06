@@ -33,7 +33,7 @@ permissions:
 
   betterkeepinventory.version:
     description: Able to view the plugins version in the main command
-    default: true
+    default: op
 
   betterkeepinventory.version.notify:
     description: Get notified about new plugin versions
@@ -41,7 +41,7 @@ permissions:
 
   betterkeepinventory.command.help:
     description: Show the main help menu
-    default: true
+    default: op
 
   betterkeepinventory.command.registry:
     description: View the plugins registries
