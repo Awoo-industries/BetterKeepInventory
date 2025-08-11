@@ -14,6 +14,7 @@ import com.beepsterr.betterkeepinventory.Depends.BetterKeepInventoryPlaceholderE
 import com.beepsterr.betterkeepinventory.Events.OnPlayerDeath;
 import com.beepsterr.betterkeepinventory.Exceptions.UnloadableConfiguration;
 import com.beepsterr.betterkeepinventory.Library.Config;
+import com.beepsterr.betterkeepinventory.Library.MetricContainer;
 import com.beepsterr.betterkeepinventory.Library.Versions.Version;
 import com.beepsterr.betterkeepinventory.Library.Versions.VersionChannel;
 import com.beepsterr.betterkeepinventory.Library.Versions.VersionChecker;
@@ -42,6 +43,7 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
     public VersionChecker versionChecker;
 
     public Random rng = new Random();
+    public MetricContainer metrics;
 
     // Plugin Registries
     private final PluginConditionRegistry conditionRegistry = new PluginConditionRegistry();
@@ -80,7 +82,7 @@ public final class BetterKeepInventory extends JavaPlugin implements Listener {
 
         // misc
         getServer().getPluginManager().registerEvents(this, this);
-        Metrics metrics = new Metrics(this, 11596);
+        metrics = new MetricContainer();
 
         // Enable PAPI Integration
         if(checkDependency("PlaceholderAPI")){
