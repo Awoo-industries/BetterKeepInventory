@@ -3,6 +3,7 @@ package com.beepsterr.betterkeepinventory.Content.Effects;
 import com.beepsterr.betterkeepinventory.BetterKeepInventory;
 import com.beepsterr.betterkeepinventory.api.Types.MaterialType;
 import com.beepsterr.betterkeepinventory.api.Effect;
+import com.beepsterr.betterkeepinventory.api.Types.SlotType;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -23,13 +24,23 @@ public class DropItemEffect implements Effect {
     private final Mode mode;
     private final float min;
     private final float max;
-    private final MaterialType items;
+    private List<String> nameFilters = List.of();
+    private List<String> loreFilters = List.of();
+    private SlotType slots = new SlotType(List.of());
+    private MaterialType items = new MaterialType(List.of());
 
     public DropItemEffect(ConfigurationSection config) {
         this.mode = Mode.valueOf(config.getString("mode", "SIMPLE").toUpperCase());
         this.min = (float) config.getDouble("min", 0.0);
         this.max = (float) config.getDouble("max", 0.0);
-        this.items = new MaterialType(config.getStringList("items"));
+
+        ConfigurationSection filters = config.getConfigurationSection("filters");
+        if(filters != null) {
+            this.slots = new SlotType(config.getStringList("slots"));
+            this.items = new MaterialType(config.getStringList("items"));
+            this.nameFilters = filters.getStringList("name");
+            this.loreFilters = filters.getStringList("lore");
+        }
     }
 
     @Override
@@ -42,11 +53,14 @@ public class DropItemEffect implements Effect {
         BetterKeepInventory plugin = BetterKeepInventory.getInstance();
         Random rng = plugin.rng;
 
+        List<Integer> dropSlots = this.slots.getSlotIds();
         List<Material> dropItems = items.getMaterials();
 
         for (int i = 0; i < ply.getInventory().getSize(); i++) {
+
             var item = ply.getInventory().getItem(i);
-            if (item == null || !dropItems.contains(item.getType())) continue;
+            if (!dropItems.isEmpty() || !dropItems.contains(item.getType())) continue;
+            if (!dropSlots.isEmpty() && !dropSlots.contains(i)) continue;
 
             // Drop all
             if (mode == Mode.ALL) {
