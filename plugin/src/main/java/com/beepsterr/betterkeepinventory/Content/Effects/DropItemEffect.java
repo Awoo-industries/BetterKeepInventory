@@ -1,6 +1,7 @@
 package com.beepsterr.betterkeepinventory.Content.Effects;
 
 import com.beepsterr.betterkeepinventory.BetterKeepInventory;
+import com.beepsterr.betterkeepinventory.Library.Utilities;
 import com.beepsterr.betterkeepinventory.api.Types.MaterialType;
 import com.beepsterr.betterkeepinventory.api.Effect;
 import com.beepsterr.betterkeepinventory.api.Types.SlotType;
@@ -36,10 +37,10 @@ public class DropItemEffect implements Effect {
 
         ConfigurationSection filters = config.getConfigurationSection("filters");
         if(filters != null) {
-            this.slots = new SlotType(config.getStringList("slots"));
-            this.items = new MaterialType(config.getStringList("items"));
-            this.nameFilters = filters.getStringList("name");
-            this.loreFilters = filters.getStringList("lore");
+            this.slots = new SlotType(Utilities.ConfigList(filters, "slots"));
+            this.items = new MaterialType(Utilities.ConfigList(filters, "items"));
+            this.nameFilters = Utilities.ConfigList(filters, "name");
+            this.loreFilters = Utilities.ConfigList(filters, "lore");
         }
     }
 
@@ -59,8 +60,39 @@ public class DropItemEffect implements Effect {
         for (int i = 0; i < ply.getInventory().getSize(); i++) {
 
             var item = ply.getInventory().getItem(i);
-            if (!dropItems.isEmpty() || !dropItems.contains(item.getType())) continue;
-            if (!dropSlots.isEmpty() && !dropSlots.contains(i)) continue;
+            if(item == null) continue;
+
+            var meta = item.getItemMeta();
+
+            // Check the filters
+            if (!dropItems.isEmpty() && !this.items.isIncludeAll() && !dropItems.contains(item.getType())){
+                plugin.debug(ply, "Drop skipped due to item filter: " + item.getType());
+                continue;
+            };
+            if (!dropSlots.isEmpty() && !dropSlots.contains(i)){
+                plugin.debug(ply, "Drop skipped due to slot filter: " + item.getType() + " at slot " + i);
+                continue;
+            };
+
+            if(meta != null){
+                if (!nameFilters.isEmpty() && !Utilities.advancedStringCompare(meta.getDisplayName(), nameFilters)){
+                    plugin.debug(ply, "Drop skipped due to name filter: " + item.getType() + " with name " + meta.getDisplayName());
+                    continue;
+                };
+                if(meta.getLore() != null){
+                    boolean loreFilterMatched = false;
+                    for( String lore : meta.getLore()){
+                        if (!loreFilters.isEmpty() && !Utilities.advancedStringCompare(lore, loreFilters)) {
+                            plugin.debug(ply, "Drop skipped due to lore filter: " + item.getType() + " with lore " + lore);
+                            loreFilterMatched = true;
+                        }
+                    }
+                    if(loreFilterMatched){
+                        continue;
+                    }
+                }
+            }
+
 
             // Drop all
             if (mode == Mode.ALL) {

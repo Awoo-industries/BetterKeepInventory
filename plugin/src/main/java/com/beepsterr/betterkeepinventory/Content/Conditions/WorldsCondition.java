@@ -1,5 +1,6 @@
 package com.beepsterr.betterkeepinventory.Content.Conditions;
 
+import com.beepsterr.betterkeepinventory.Library.Utilities;
 import com.beepsterr.betterkeepinventory.api.Condition;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -19,18 +20,6 @@ public class WorldsCondition implements Condition {
 
     @Override
     public boolean check(Player ply, PlayerDeathEvent deathEvent, PlayerRespawnEvent respawnEvent) {
-        for (String world : worlds) {
-            boolean isNegated = world.startsWith("!");
-            String actual = isNegated ? world.substring(1) : world;
-
-            String regex = actual.replace("*", ".*");
-            Pattern pattern = Pattern.compile(regex);
-            boolean matches = pattern.matcher(ply.getWorld().getName()).matches();
-
-            if (isNegated != matches) {
-                return true;
-            }
-        }
-        return false;
+        return Utilities.advancedStringCompare(ply.getWorld().getName(), worlds);
     }
 }

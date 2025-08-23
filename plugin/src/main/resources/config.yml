@@ -19,7 +19,7 @@ hash: ""
 # - SNAPSHOT: Receive notifications for snapshot builds (Dev-Builds)
 # - LATEST: Receive notifications for the latest release
 # - STABLE: Receive notifications for releases marked as stable only.
-notify_channel: "STABLE"
+notify_channel: "LATEST"
 
 # Enable this if you want to see debug messages in the console or if the developer asked nicely
 debug: false
@@ -37,22 +37,23 @@ default_behavior: "INHERIT"
 # You can define multiple rules, and they will be evaluated in the order they are defined.
 rules:
 
-  example_rule:
-    name: "Example Rule"
-    enabled: false # <-- Look here!
-    conditions:
-      worlds:
-        nodes:
-          - "world_*"
-    effects:
-      damage:
-        mode: "PERCENTAGE"
-        min: 0.0
-        max: 0.0 # Change if you want equipment to be damages
-        slots:
-          - "ARMOR"
-        items:
-          - "G:ARMOR" # Material Group! Check the documentation for more information
+#  example_rule:
+#    name: "Example Rule"
+#    enabled: false # <-- Look here!
+#    conditions:
+#      worlds:
+#        nodes:
+#          - "world_*"
+#    effects:
+#      damage:
+#        mode: "PERCENTAGE"
+#        min: 0.0
+#        max: 0.0 # Change if you want equipment to be damages
+#        filters:
+#          slots:
+#            - "ARMOR"
+#          items:
+#            - "G:ARMOR" # Material Group! Check the documentation for more information
 
 # There is a lot more you can do, but to keep the default config slim and clean, we will not include it here.
 # Please do check the documentation linked on the top of this file for more information on how to configure the plugin

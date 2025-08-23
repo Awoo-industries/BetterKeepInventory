@@ -88,8 +88,6 @@ public class MaterialType {
             MaterialType.RESOURCE_MISC
     ).flatMap(Arrays::stream).toArray(Material[]::new);
 
-    private List<Material> materials = new ArrayList<>();
-
     public static Material[] ARMOR = new Material[]{
             Material.LEATHER_HELMET,
             Material.LEATHER_CHESTPLATE,
@@ -200,11 +198,15 @@ public class MaterialType {
             MaterialType.TOOLS
     ).flatMap(Arrays::stream).toArray(Material[]::new);
 
+    private List<Material> materials = new ArrayList<>();
+    private boolean includeAll = false;
+
     public MaterialType(List<String> materialConfig) {
 
         for(String materialName : materialConfig) {
+            materialName = materialName.trim().toUpperCase();
             try {
-                Material material = Material.valueOf(materialName.toUpperCase());
+                Material material = Material.valueOf(materialName);
                 if (material.isItem()) {
                     materials.add(material);
                 }
@@ -212,7 +214,8 @@ public class MaterialType {
 
                 // yeah.
                 if(materialName.equals("*") || materialName.equals("ALL")) {
-                    materials.addAll(Arrays.asList(Material.values()));
+                    includeAll = true;
+                    continue;
                 }
 
                 // String might be a material group (prefixed with G:)
@@ -278,6 +281,10 @@ public class MaterialType {
             }
         }
 
+    }
+
+    public boolean isIncludeAll() {
+        return includeAll;
     }
 
     public List<Material> getMaterials() {

@@ -42,16 +42,16 @@ public class ConfigRule {
             assert condSection != null;
             for (String key : condSection.getKeys(false))
             {
-                BetterKeepInventory.getInstance().debug("Trying Condition '" + key);
+                BetterKeepInventory.getInstance().debug("Trying Condition '" + key + '"');
 
                 if (!api.conditionRegistry().has(key)) {
-                    BetterKeepInventory.getInstance().debug("Condition '" + key + "' is not registered in rule '" + name + "'");
+                    BetterKeepInventory.getInstance().debug("Condition '" + key + "' is not registered. Triggered in rule '" + name + ". Skipping.'");
                     continue;
                 }
 
                 ConfigurationSection section = condSection.getConfigurationSection(key);
                 if (section == null) {
-                    BetterKeepInventory.getInstance().debug("Condition '" + key + "' is missing configuration section in rule '" + name + "'");
+                    BetterKeepInventory.getInstance().debug("Condition '" + key + "' is missing configuration section in rule '" + name + "'. Skipping.");
                     continue;
                 }
 
@@ -75,7 +75,7 @@ public class ConfigRule {
 
                 Effect effect = api.effectRegistry().create(key, effConfig);
                 if (effect == null){
-                    BetterKeepInventory.getInstance().getLogger().warning("Effect '" + key + "' is not registered in rule '" + name + "'!!!");
+                    BetterKeepInventory.getInstance().getLogger().warning("Effect '" + key + "' is not registered. Triggered in rule '" + name + "'!!!");
                     continue;
                 }
 
@@ -111,21 +111,25 @@ public class ConfigRule {
             return;
         }
 
+        // log all conditions that are to be checked
+        plugin.debug(ply, "Rule " + this + " checking conditions: " + conditions.stream().map(Condition::toString).reduce((a, b) -> a + ", " + b).orElse("None"));
+
         if (conditions.isEmpty() || conditions.stream().allMatch(c -> c.check(ply, deathEvent, respawnEvent))) {
             plugin.debug(ply, "Rule " + this + " met conditions, running effects!");
 
             if (deathEvent != null) {
                 for (Effect effect : effects) {
+                    plugin.debug(ply, "Running effect (D): " + effect.toString());
                     effect.onDeath(ply, deathEvent);
                 }
             }
 
             if (respawnEvent != null) {
                 for (Effect effect : effects) {
+                    plugin.debug(ply, "Running effect (R): " + effect.toString());
                     effect.onRespawn(ply, respawnEvent);
                 }
             }
-
 
             for (ConfigRule child : children) {
                 child.trigger(ply, deathEvent, respawnEvent);

@@ -14,8 +14,8 @@ public class MetricContainer {
     Metrics metrics;
     public MetricContainer(){
         metrics = new Metrics(BetterKeepInventory.getInstance(), 11596);
-        
-        metrics.addCustomChart(new SingleLineChart("durability_lost", new Callable<Integer>() {
+
+        metrics.addCustomChart(new SingleLineChart("deaths_processed", new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 int amount = deathsProcessed;

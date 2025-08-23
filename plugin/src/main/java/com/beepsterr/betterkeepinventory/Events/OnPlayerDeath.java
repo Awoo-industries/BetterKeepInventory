@@ -42,6 +42,8 @@ public class OnPlayerDeath  implements Listener {
             // No case needed for INHERIT, as it will default to the world/other plugins behavior
         }
 
+        BetterKeepInventory.instance.metrics.deathsProcessed +=1;
+
         // Time to process the top level rules
         for(ConfigRule rule : plugin.config.getRules()){
             rule.trigger(ply, event, null);

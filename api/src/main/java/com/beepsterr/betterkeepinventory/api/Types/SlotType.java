@@ -1,9 +1,11 @@
 package com.beepsterr.betterkeepinventory.api.Types;
 
 import com.beepsterr.betterkeepinventory.api.Exceptions.TypeError;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class SlotType {
 
@@ -64,6 +66,13 @@ public class SlotType {
                         // Invalid slot type, ignore
                         throw new TypeError("Tried to parse invalid slot type: " + slot + ". Valid types are: ARMOR, HOTBAR, INVENTORY, OFFHAND, ALL or a number between 0 and 40.");
                 }
+            }
+        }
+
+        // default to all slots if none were specified
+        if(slotIds.isEmpty()){
+            for (int i = 0; i < 41; i++) {
+                slotIds.add(i);
             }
         }
 
