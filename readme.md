@@ -15,11 +15,14 @@ The plugin can be obtained here on GitHub or trough
 ## Supported Versions
 BetterKeepInventory supports the latest 3 major Minecraft versions, and is compiled using the native Java version of the oldest supported Minecraft version.
 
-| Minecraft Version | Plugin Version | Java Version |
-|-------------------|----------------|--------------|
-| 1.16 and below    | 1.3            | 11           |
-| 1.17, 1.18        | 1.6.2          | 16           |
-| 1.19+             | Latest         | 17           |
+| Minecraft Version | Plugin Version                                                         | Java Version |
+|-------------------|------------------------------------------------------------------------|--------------|
+| 1.16 and below    | [1.3](https://modrinth.com/plugin/betterkeepinventory/version/1.3)     | 11           |
+| 1.17, 1.18        | [1.6.2](https://modrinth.com/plugin/betterkeepinventory/version/1.6.2) | 16           |
+| 1.19+             | [latest](https://modrinth.com/plugin/betterkeepinventory/versions)     | 17           |
+
+> [!NOTE]  
+> Older versions can contain bugs that are not present in the latest version. I Recommend always running the latest minecraft version so you can benefit from the most recent plugins. You can always use a plugin like [ViaBackwards](https://www.spigotmc.org/resources/viabackwards.27448/) to allow players on older versions to connect to your server.
 
 ### Stable Versions
 The latest and stable version of BetterKeepInventory is not always the same version. The latest release will be posted to SpigotMC but the stable release is defined in [This File](versions/stable.txt).
